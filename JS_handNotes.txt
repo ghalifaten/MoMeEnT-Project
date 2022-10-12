@@ -1,0 +1,49 @@
+declare a variable: const or let
+difference between == and ===
+if() else if {} else
+for(let i=0; i < A; i++){}
+typeof <variable>
+(funciton functionName() {} )(); declares and calls a function at once
+
+const arrowFunction = () => {} 
+arrowFunction();
+
+() => {} (can be used for callback)
+
+Callback functions:
+function myCallback(someNumber) {
+ return someNumber * 2;
+}
+
+function mainFunction(randomNumber, shouldcall, callback){
+ let result = randomNumber;
+ 
+ if (shouldCall){
+  result = callback(randomNumber);
+ }
+ 
+ return result;
+}
+
+-> mainFunction(20, true, myCallback)
+-> mainFunction(20, true, function(num) {return num*2;})
+-> mainFunction(20, true, num => num*2)
+
+function myCustomMapOperationCallback(itemFromArray) {return itemFromArray*2;}
+
+const newArray = myArray.map(myCustomMapOperationCallback);
+
+strArray.map(itemFromArray => itemFromArray[0])
+
+!might be interesting: asynchronous programming to make code run simultaneously, not covered here!
+
+const string1 = new String('hello world'); //is an object
+const string2 = 'hello world'; //is a string, a primitive
+string1 === string2 // false
+string1 == string2 // true
+
+primitive allow calling built-in functions that we can use on objects of same type. eg: 'hello world'.toUpperCase(); works
+
+
+const myDate = new Date();
+
