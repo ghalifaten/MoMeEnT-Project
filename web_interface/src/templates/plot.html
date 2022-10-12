@@ -4,10 +4,28 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css')}}"> <!--href is a flask function here-->
 </head>
 <body>
-    <form action="" method="post">
-        <label for="n_households">Nb. of households:</label>
-        <input type="text" id="n_households" name="n_households" placeholder="n_households">
-        <button type="submit">Submit</button>
+    <form action="" class="form" method="post">
+
+        <h1>Some explanatory text here</h1>
+
+        <div class="inputs">
+            <label for="n_households">Households:</label>
+            <input type="text" id="n_households" name="n_households" placeholder="Default is 5">    
+        </div>
+
+        <div class="inputs">
+            <label for="n_residents">Residents:</label>
+            <input type="text" id="n_residents" name="n_residents" placeholder="Default is 1">    
+        </div>
+
+        <div class="inputs">
+            <label for="household_type">Type:</label>
+            <input type="text" id="household_type" name="household_type" placeholder="Type of household">    
+        </div>
+
+        <button class="form__btn" type="submit">Submit</button>
+
+        <img class="plot_fig" src='data:image/png;base64,{{plot}}'>
+
     </form>
-    <img src='data:image/png;base64,{{plot}}'/>
 </body>

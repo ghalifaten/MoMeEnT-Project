@@ -2,6 +2,7 @@ from flask import Flask, request, render_template
 import os, sys
 
 module_path = os.path.abspath(os.path.join('..'))
+print(module_path)
 if module_path not in sys.path:
     sys.path.append(module_path)
 
@@ -18,8 +19,11 @@ def index():
 def plot():
     global n_households
     if request.method == 'POST':
-        n_households = request.form.get('n_households')
-    print(n_households)
+        n_str = request.form.get('n_households')
+    try:
+        n_households = int(n_str)
+    except:
+        n_households = 5
     plot = plot_function(n_households=int(n_households))
     return render_template("plot.html", plot=plot)
 
