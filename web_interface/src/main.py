@@ -15,6 +15,15 @@ app = Flask(__name__, template_folder='templates')
 def index():
     return render_template("index.html")
 
+@app.route('/experiment')
+def experiment():
+    return render_template("experiment.html")
+
+@app.route('/conclusion')
+def conclusion():
+    return render_template("conclusion.html")
+
+
 @app.route('/plot', methods=['GET', 'POST'])
 def plot():
     global n_households
