@@ -1,1 +1,0 @@
-console.log('I am in bar_chart.js')
