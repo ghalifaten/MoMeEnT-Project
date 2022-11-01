@@ -12,14 +12,26 @@ app = Flask(__name__, template_folder='templates')
 def index():
     return render_template("index.html")
 
-@app.route('/experiment')
-def experiment():
-    return render_template("experiment.html")
+@app.route('/experiment1')
+def experiment_1():
+    return render_template("experiment_1.html")
+
+@app.route('/experiment2')
+def experiment_2():
+    return render_template("experiment_2.html")
+
+@app.route('/experiment3')
+def experiment_3():
+    return render_template("experiment_3.html")
+
+@app.route('/experiment4')
+def experiment_4():
+    return render_template("experiment_4.html")
+
 
 @app.route('/conclusion')
 def conclusion():
     return render_template("conclusion.html")
 
 if __name__ == "__main__":
-    n_households = 5 
     app.run(debug=True)

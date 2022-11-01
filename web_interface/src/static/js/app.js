@@ -1,16 +1,4 @@
-const menu = document.querySelector('#mobile-menu')
-const menuLinks = document.querySelector('.navbar__menu')
-
-//Display mobile menu
-const mobileMenu = () => {
-    //toggle means active or inactive
-    menu.classList.toggle('is-active')
-    menuLinks.classList.toggle('active')
-}
-
-//event listener to toggle the above elements
-menu.addEventListener('click', mobileMenu)
-
+console.log('I am in app.js')//TODO remove this
 function popupFunctionExp1() {
     var popup = document.getElementById("popupExp1");
     popup.classList.toggle("show");

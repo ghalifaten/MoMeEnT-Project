@@ -91,6 +91,10 @@
         transition: all 0.5s cubic-bezier(0.47, 1.59, 0.33, 1.53);
         text-align: center;  
         width: fit-content;
+        display: block;
+        margin: auto;
+        position: relative;  
+        top: -10px;   
     }
 
     .link:hover {
@@ -101,9 +105,31 @@
         display: block;
         margin: auto;
         position: relative;  
-        top: 100px;     
+        top: 100px;   
     }
 
+    /*Repositioning graphs*/
+    svg {
+        position: relative;
+        left: 35%;
+    }
+
+    /*Styling slider*/
+    .slider text{
+        font-size: 18px;
+      }
+
+      #slider-simple text{
+        font-size: 18px;
+      }
+
+      .parameter-value path:focus{
+        fill:#0F8243;
+        stroke:orange;
+        stroke-width:3px;
+      }
+
+      
     /*Styling of slide buttons (dots)*/
     /*
     #fp-nav ul li a span, .fp-slidesNav ul li a span {
@@ -177,6 +203,9 @@
         to {opacity:1 ;}
     }
 
+    svg {
+        width:100%;
+    }
 /**********************************************************************************************************/
     /*
     .subtitle, label {
@@ -237,12 +266,13 @@
 
 
 
-    /*D3*/
+    /*D3
     .svg-container {
         display: inline-block;
         position: relative;
         width: 100%;
         padding-bottom: 50%; /* aspect ratio */
+    /*
         vertical-align: top;
         overflow: hidden;
       }
@@ -250,9 +280,10 @@
         display: inline-block;
         position: absolute;
         /*width: 80%;*/
+    /*
         top: 10px;
         left: 0;
-      }
+      }*/
   
 
 
