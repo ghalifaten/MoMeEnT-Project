@@ -109,26 +109,49 @@
     }
 
     /*Repositioning graphs*/
-    svg {
-        position: relative;
-        left: 35%;
+    #bar_chart{
+        height: 380px;
+        text-align: center;
+        text-align: center;
+        /*border: 2px solid red;*/
+    }
+    .svg-style {
+        width: 20%;
+        display:inline-block;    
     }
 
     /*Styling slider*/
-    .slider text{
-        font-size: 18px;
-      }
+    .slider-container {
+        display: block;
+        margin-top: 20px;
+        height: 230px;
+        text-align:center;
+        /*border: 2px solid red;*/
+    }
 
-      #slider-simple text{
-        font-size: 18px;
-      }
+    input[type=range][orient=vertical] {
+        writing-mode: bt-lr; /* IE */
+        -webkit-appearance: slider-vertical; /* Chromium */
+        width: 8px;
+        height: 175px;
+        padding: 0 5px;
+    }
 
-      .parameter-value path:focus{
-        fill:#0F8243;
-        stroke:orange;
-        stroke-width:3px;
-      }
+    .slider {
+        padding: 10px;
+        margin-right: 10px;
+        display:inline-block
+    }
 
+    .button { 
+        padding-bottom: 15px;
+    }
+
+    button#submit-btn {
+        display: block;
+        margin: auto;
+    }
+    
       
     /*Styling of slide buttons (dots)*/
     /*

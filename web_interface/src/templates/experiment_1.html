@@ -59,14 +59,37 @@
 
                     </div>
                     <!--D3 bar chart visualization-->
-                    <svg id="bar_chart" width="460" height="400"> 
-                        
-                    </svg>
-                    <div class="row align-items-center">
-                        <div class="col-sm-2"><p id="value-step"></p></div>
-                        <div class="col-sm"><div id="slider-step"></div></div>
+                    <div id="bar_chart" style="text-align: center"> </div>
+
+                    <div class="slider-container">
+                        <div class="slider" >
+                            <input type="range" id=morningSlider min="0" max="3" value="0" autocomplete="off" orient="vertical"/>
+                        </div>
+                        <!--ul class="range-labels">
+                            <li class="active selected">Never</li>
+                            <li>Often</li>
+                            <li>Usually</li>
+                            <li>Always</li>
+                        </ul-->
+
+                        <div class="slider" >
+                            <input type="range" name="middaySlider" id=middaySlider min="0" max="3" value="0" autocomplete="off" orient="vertical"/>
+                        </div>
+                        <div class="slider" >
+                            <input type="range" name="afternoonSlider" id=afternoonSlider min="0" max="3" value="0" autocomplete="off" orient="vertical"/>
+                        </div>
+                        <div class="slider" >
+                            <input type="range" name="eveningSlider" id=eveningSlider min="0" max="3" value="0" autocomplete="off" orient="vertical"/>
+                        </div>
+
+                    </div>
+                    <div class="button">
+                        <button id="submit-btn">submit</button>
                     </div>
 
+
+
+                    <div style="clear:both">
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
                         Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
                         dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non 
@@ -85,7 +108,7 @@
                         proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 
                     <p><a class="link" href="/experiment2">Next experiment</a></p>
-
+                </div>
                 </div> 
             </div>
         </div>
@@ -96,6 +119,9 @@
     <!--app.js-->
 	<script src="{{ url_for('static', filename='js/app.js')}}"></script>
     <script src="{{ url_for('static', filename='js/barChart.js')}}"></script>
-    <script src="{{ url_for('static', filename='js/slider.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/slider_morning.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/slider_midday.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/slider_afternoon.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/slider_evening.js')}}"></script>
 
 </body>
