@@ -53,7 +53,7 @@ d3.csv("static/data/XYZ.csv", function(data) {
         .attr("fill", "#69b3a2")
         .attr("rx", 10)
         .attr("ry", 10)
-        .attr("class", "bar")
+        .attr("class", "baseline-bar")
 
     // A function that update the chart when slider is moved?
         function updateChart(morningValue, middayValue, afternoonValue, eveningValue) {
@@ -63,7 +63,11 @@ d3.csv("static/data/XYZ.csv", function(data) {
             data[2].Value = afternoonValue;
             data[3].Value = eveningValue;
 
-            svg.selectAll(".bar").remove();
+            svg.selectAll(".baseline-bar")
+                .attr("fill", "#D3D3D3");
+
+            svg.selectAll(".new-bar").remove();
+            
             svg.selectAll("bar")
                 .data(data)
                 .enter()
@@ -75,7 +79,7 @@ d3.csv("static/data/XYZ.csv", function(data) {
                 .attr("fill", "#69b3a2")
                 .attr("rx", 10)
                 .attr("ry", 10)
-                .attr("class", "bar")
+                .attr("class", "new-bar")
         }
 
     // Listen to the sliders
