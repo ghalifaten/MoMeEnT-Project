@@ -58,9 +58,24 @@
 
                     </div>
                     <!--D3 bar chart visualization-->
-                    <svg id="bar_chart" width="460" height="400"> 
+                    <!--svg id="bar_chart" width="460" height="400"> 
                         
-                    </svg>
+                    </svg-->
+
+                    <form class="form-plot" method="POST">
+                        <label for="nresidents">Number of residents:</label>
+                        <input type="text" id="nresidents" name="nresidents">
+                        <label for="nhouseholds">Number of households:</label>
+                        <input type="text" id="nhouseholds" name="nhouseholds">
+                        <input type="submit"> <!--bouton-->
+                    </form>
+
+                    <div style="text-align:center; font-weight:bold">
+                        The number of residents is <span style="color:blue;">{{nresidents}}</span> and 
+                        the number of households is <span style="color:blue;">{{nhouseholds}}</span>.
+                    </div>
+
+                    <img id="#img-plot" src="{{ url_for('static', filename='plots/demo_qualtrics.jpg')}}">
 
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
                         Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 

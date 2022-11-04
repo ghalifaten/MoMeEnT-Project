@@ -1,10 +1,12 @@
 from flask import Flask, request, render_template
 import os, sys
 
-module_path = os.path.abspath(os.path.join('..'))
-print(module_path)
+module_path = "/home/faten/HERUS/MoMeEnT-Project/" #TODO change this
+print("####################### ", module_path, " #####################")
 if module_path not in sys.path:
     sys.path.append(module_path)
+
+from demod_survey.examples.DEMO_QUALTRICS_FUNCTION import demo_qualtrics_function
 
 app = Flask(__name__, template_folder='templates')
 
@@ -18,7 +20,15 @@ def experiment_1():
 
 @app.route('/experiment2')
 def experiment_2():
-    return render_template("experiment_2.html")
+    demo_qualtrics_function()
+    return render_template("experiment_2.html", nresidents=1, nhouseholds=5)
+
+@app.route('/experiment2', methods=['POST'])
+def experiment_2_post():
+    nresidents = request.form['nresidents']
+    nhouseholds = request.form['nhouseholds']
+    demo_qualtrics_function(n_households=int(nhouseholds))
+    return render_template("experiment_2.html", nresidents=nresidents, nhouseholds=nhouseholds)
 
 @app.route('/experiment3')
 def experiment_3():

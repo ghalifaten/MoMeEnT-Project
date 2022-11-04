@@ -152,27 +152,6 @@
         margin: auto;
     }
     
-      
-    /*Styling of slide buttons (dots)*/
-    /*
-    #fp-nav ul li a span, .fp-slidesNav ul li a span {
-        border-radius: 50%;
-        position: absolute;
-        z-index: 1;
-        height: 4px;
-        width: 4px;
-        border: 0;
-        background: #4a9a9e;
-        left: 50%;
-        top: 50%;
-        margin: -2px 0 0 -2px;
-        -webkit-transition: all .1s ease-in-out;
-        -moz-transition: all .1s ease-in-out;
-        -o-transition: all .1s ease-in-out;
-        transition: all .1s ease-in-out;
-    }
-    */
-
     /*Remove slide buttons*/
     #fp-nav ul li a span, .fp-slidesNav ul li a span, .fp-bottom {
       display: none;
@@ -229,6 +208,21 @@
     svg {
         width:100%;
     }
+
+    .form-plot {
+        text-align: center;
+    }
+
+    img {
+        display: block;
+        margin: auto;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: auto;
+        width: 80%;
+    }
+
+    
 /**********************************************************************************************************/
     /*
     .subtitle, label {
