@@ -42,7 +42,7 @@
         font-family: 'Montserrat';
         font-weight: 300;
         font-size: 19px;
-        color: #2d7d82;;
+        color: #2d7d82;
     }
 
     .main_title {
@@ -108,23 +108,37 @@
         top: 100px;   
     }
 
-    /*Styling graphs*/
-
+    .visualization-row1 {
+        display: flex;
+        /*border: 5px solid green;*/
+        padding: 0px;
+    }
+    /*Styling graph*/
     #bar_chart{
         height: 380px;
         width: 50%;
-        margin:auto;
+        /*margin:auto;*/
     }
     .svg-style {
         width: 20%;
         display:inline-block;    
     }
 
-    /*Styling slider*/
+    /*Statistics*/
+    .statistics {
+        /*border: 5px solid green;*/
+        width: 40%;
+        height: 400px;
+        text-align: center;
+        padding-right: 0;
+    }
+        
+
+    /*Styling sliders*/
     .sliders-section {
         display: flex;
         width: 30%;
-        margin: auto;
+        /*margin: auto;*/
 
     }
     .slider-container {
@@ -167,10 +181,13 @@
     }*/
 
     button#submit-btn {
-        display: block;
-        margin: auto;
+        /*display: block;*/
+        /*margin: auto;*/
+        position: relative;  
+        left: 200px;
     }
-    
+
+
     /*Remove slide buttons*/
     #fp-nav ul li a span, .fp-slidesNav ul li a span, .fp-bottom {
       display: none;

@@ -49,13 +49,13 @@ d3.csv("static/data/XYZ.csv", function(data) {
         .attr("y", function(d) { return y(d.Value); })
         .attr("width", 20)
         .attr("height", function(d) { return height - y(d.Value); })
-        .attr("fill", "#69b3a2")
+        .attr("fill", "#D3D3D3")
         .attr("rx", 10)
         .attr("ry", 10)
         .attr("transform", "translate(48,0)")
         .attr("class", "baseline-bar")
 
-    // A function that update the chart when slider is moved?
+    // A function that updates the chart when slider is moved
         function updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue) {
             //TODO optimize this
             data[0].Value = morningValue;
@@ -64,8 +64,8 @@ d3.csv("static/data/XYZ.csv", function(data) {
             data[3].Value = eveningValue;
             data[4].Value = nightValue;
 
-            svg.selectAll(".baseline-bar")
-                .attr("fill", "#D3D3D3");
+           /* svg.selectAll(".baseline-bar")
+                .attr("fill", "#D3D3D3");*/
 
             svg.selectAll(".new-bar").remove();
             
@@ -88,30 +88,38 @@ d3.csv("static/data/XYZ.csv", function(data) {
     //morning
     d3.select("#morningSlider").on("change", function(d){
         morningValue = this.value
+        updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
         })
     //midday
     d3.select("#middaySlider").on("change", function(d){
         middayValue = this.value
+        updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
         })
     //afternoon
     d3.select("#afternoonSlider").on("change", function(d){
         afternoonValue = this.value
+        updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
         })
     //evening
     d3.select("#eveningSlider").on("change", function(d){
         eveningValue = this.value
+        updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
         })
     //night
     d3.select("#nightSlider").on("change", function(d){
         nightValue = this.value
+        updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
         })
 
-    // Listen to the submit button
+    /*
+        // Listen to the submit button
     d3.select("#submit-btn").on("click", function(d){
         updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
         })
+    */
 });
 
+//For long x-axis labels to be written on two lines
 function wrap(text, width) {
     text.each(function() {
       var text = d3.select(this),

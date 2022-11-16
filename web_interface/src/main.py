@@ -2,7 +2,6 @@ from flask import Flask, request, render_template
 import os, sys
 
 module_path = "/home/faten/HERUS/MoMeEnT-Project/" #TODO change this
-print("####################### ", module_path, " #####################")
 if module_path not in sys.path:
     sys.path.append(module_path)
 
