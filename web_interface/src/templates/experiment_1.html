@@ -60,50 +60,59 @@
                     </div>
                     <!--D3 bar chart visualization-->
                     <div class="visualization">
-                        <div class="visualization-row1">
-                            <div id="bar_chart"> </div>
+                        <div class="visualization-column1">
+                            <div class="chart_container">
+                                <div id="left-side-buffer"></div>
+                                <div id="bar_chart"> </div>
+                            </div>
+                            <div class="sliders-section">
+                                <ul class="sliders-labels">
+                                    <li>Always</li>
+                                    <li>Often</li>
+                                    <li>Sometimes</li>
+                                    <li>Rarely</li>
+                                    <li>Never</li>
+                                </ul>
+                                <div class="slider-container">
+                                    <div class="slider" >
+                                        <input type="range" id=morningSlider min="0" max="4" value="0" step="1" autocomplete="off" orient="vertical"/>
+                                        <datalist id="steplist">
+                                            <option>0</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                        </datalist>
+                                    </div>
+                                    <div class="slider" >
+                                        <input type="range" name="middaySlider" id=middaySlider min="0" max="4" value="0" autocomplete="off" orient="vertical"/>
+                                    </div>
+                                    <div class="slider" >
+                                        <input type="range" name="afternoonSlider" id=afternoonSlider min="0" max="4" value="0" autocomplete="off" orient="vertical"/>
+                                    </div>
+                                    <div class="slider" >
+                                        <input type="range" name="eveningSlider" id=eveningSlider min="0" max="4" value="0" autocomplete="off" orient="vertical"/>
+                                    </div>
+                                    <div class="slider" >
+                                        <input type="range" name="nightSlider" id=nightSlider min="0" max="4" value="0" autocomplete="off" orient="vertical"/>
+                                    </div>
 
-                            <div class="statistics">
-                                <div id="you">
-                                    TEXT
-                                    {statisticsYou}
-                                </div>
-                                <div id="average">
-                                    TEXT
-                                    {statisticsAverage}
-                                </div>
-                                <div id="comparison">
-                                    TEXT
-                                    {statisticsComparison}
                                 </div>
                             </div>
                         </div>
 
-                        <div class="sliders-section">
-                            <ul class="sliders-labels">
-                                <li>Always</li>
-                                <li>Often</li>
-                                <li>Sometimes</li>
-                                <li>Rarely</li>
-                                <li>Never</li>
-                            </ul>
-                            <div class="slider-container">
-                                <div class="slider" >
-                                    <input type="range" id=morningSlider min="0" max="4" value="0" autocomplete="off" orient="vertical"/>
-                                </div>
-                                <div class="slider" >
-                                    <input type="range" name="middaySlider" id=middaySlider min="0" max="4" value="0" autocomplete="off" orient="vertical"/>
-                                </div>
-                                <div class="slider" >
-                                    <input type="range" name="afternoonSlider" id=afternoonSlider min="0" max="4" value="0" autocomplete="off" orient="vertical"/>
-                                </div>
-                                <div class="slider" >
-                                    <input type="range" name="eveningSlider" id=eveningSlider min="0" max="4" value="0" autocomplete="off" orient="vertical"/>
-                                </div>
-                                <div class="slider" >
-                                    <input type="range" name="nightSlider" id=nightSlider min="0" max="4" value="0" autocomplete="off" orient="vertical"/>
-                                </div>
-
+                        <div class="statistics">
+                            <div id="you">
+                                TEXT
+                                {statisticsYou}
+                            </div>
+                            <div id="average">
+                                TEXT
+                                {statisticsAverage}
+                            </div>
+                            <div id="comparison">
+                                TEXT
+                                {statisticsComparison}
                             </div>
                         </div>
                         <!--div class="button">

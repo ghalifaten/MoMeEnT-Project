@@ -108,57 +108,71 @@
         top: 100px;   
     }
 
-    .visualization-row1 {
+    .visualization {
+        /*border: 5px solid gray;*/
+        height: 630px;
+        width: 100%;
         display: flex;
-        /*border: 5px solid green;*/
-        padding: 0px;
+        margin-bottom: 30px;
     }
+
+    .visualization-column1 {
+        /*border: 5px solid green;*/
+        display: grid;
+        padding: 0px;
+        width: 60%;
+        height: 630px;
+    
+    }
+
     /*Styling graph*/
+    .chart_container {
+        display: flex;
+    }
+
+    #left-side-buffer {
+        /*border: 5px solid white;*/
+        width: 150px;
+        height: 400px;
+    }
+
     #bar_chart{
-        height: 380px;
-        width: 50%;
-        /*margin:auto;*/
+        /*border: 5px solid red;*/
+        height: 400px;
+        width: 85%;
+        float: left;
+        padding-top: 20px;
     }
     .svg-style {
         width: 20%;
         display:inline-block;    
     }
 
-    /*Statistics*/
-    .statistics {
-        /*border: 5px solid green;*/
-        width: 40%;
-        height: 400px;
-        text-align: center;
-        padding-right: 0;
-    }
-        
-
     /*Styling sliders*/
     .sliders-section {
+        /*border: 5px solid yellow;*/
         display: flex;
-        width: 30%;
-        /*margin: auto;*/
-
-    }
-    .slider-container {
-        display: block;
-        margin-top: 20px;
         height: 230px;
-        text-align:center;
-        margin: auto;
+        z-index: 2;
     }
 
     .sliders-labels {
-        text-align: right; 
-        list-style-type:none; 
-        font-weight: bold;
-        font-size: 18px; 
-        line-height: 2.2; 
-        margin-top:20px; 
-        height: 230px; 
-        vertical-align: middle;
-        margin: auto;
+        /* border: 2px solid blue;*/
+         text-align: right; 
+         list-style-type:none; 
+         font-weight: bold;
+         font-size: 18px; 
+         line-height: 2.2; 
+        margin-top: 0px;
+         height: 230px; 
+     }
+
+    .slider-container {
+        /*border: 2px solid black;*/
+        padding-left: 90px;
+        display: block;
+        height: 230px;
+        width: 85% ;
     }
 
     input[type=range][orient=vertical] {
@@ -169,12 +183,35 @@
         padding: 0 5px;
     }
 
+
     .slider {
-        padding: 10px;
-        margin-right: 10px;
-        display:inline-block
+        /*border: 2px solid pink;*/
+        padding-right: 110px;
+        margin-top: 10px;
+        display:inline-block;
+        text-align: center;
     }
 
+
+
+
+
+
+
+
+
+
+    /*Statistics*/
+    .statistics {
+        border: 5px solid paleturquoise;
+        width: 40%;
+        height: 630px;
+        text-align: center;
+        padding-right: 0;
+        position: relative;
+        float: right;
+    }
+        
     /*
     .button { 
         padding-bottom: 15px;
@@ -239,10 +276,6 @@
     @keyframes fadeIn {
         from {opacity: 0;}
         to {opacity:1 ;}
-    }
-
-    svg {
-        width:100%;
     }
 
     .form-plot {
