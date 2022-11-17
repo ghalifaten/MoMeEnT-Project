@@ -117,7 +117,7 @@
     }
 
     .visualization-column1 {
-        /*border: 5px solid green;*/
+       /* border: 5px solid green;*/
         display: grid;
         padding: 0px;
         width: 60%;
@@ -193,8 +193,12 @@
     }
 
     /*Statistics*/
+    .stats-btn {
+        margin-left: 0;
+    }
+
     .statistics {
-        /*border: 5px solid paleturquoise;*/
+        border: 5px solid paleturquoise;
         width: 40%;
         height: 630px;
         text-align: center;
@@ -265,6 +269,7 @@
         color: #555;
         padding: 15px;
     }
+
         
     /*
     .button { 

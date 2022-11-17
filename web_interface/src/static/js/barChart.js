@@ -12,6 +12,8 @@ var svg = d3.select("#bar_chart")
 
 // initialize variables of sliders
 var morningValue = 0, middayValue = 0, afternoonValue = 0, eveningValue = 0, nightValue = 0;
+var current_data = [];
+var baseline_data = [];
 
 // Parse the Data
 d3.csv("static/data/XYZ.csv", function(data) {
@@ -46,7 +48,7 @@ d3.csv("static/data/XYZ.csv", function(data) {
         .enter()
         .append("rect")
         .attr("x", function(d) { return x(d.Period); })
-        .attr("y", function(d) { return y(d.Value); })
+        .attr("y", function(d) {baseline_data.push(d.Value); return y(d.Value); })
         .attr("width", 20)
         .attr("height", function(d) { return height - y(d.Value); })
         .attr("fill", "#D3D3D3")
@@ -56,67 +58,85 @@ d3.csv("static/data/XYZ.csv", function(data) {
         .attr("class", "baseline-bar")
 
     // A function that updates the chart when slider is moved
-        function updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue) {
-            //TODO optimize this
-            data[0].Value = morningValue;
-            data[1].Value = middayValue;
-            data[2].Value = afternoonValue;
-            data[3].Value = eveningValue;
-            data[4].Value = nightValue;
+    function updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue) {
+        //TODO optimize this
+        data[0].Value = morningValue;
+        data[1].Value = middayValue;
+        data[2].Value = afternoonValue;
+        data[3].Value = eveningValue;
+        data[4].Value = nightValue;
 
-           /* svg.selectAll(".baseline-bar")
-                .attr("fill", "#D3D3D3");*/
+        /* svg.selectAll(".baseline-bar")
+            .attr("fill", "#D3D3D3");*/
 
-            svg.selectAll(".new-bar").remove();
-            
-            svg.selectAll("bar")
-                .data(data)
-                .enter()
-                .append("rect")
-                .attr("x", function(d) { return x(d.Period); })
-                .attr("y", function(d) { return y(d.Value); })
-                .attr("width", 20)
-                .attr("height", function(d) { return height - y(d.Value); })
-                .attr("fill", "#69b3a2")
-                .attr("rx", 10)
-                .attr("ry", 10)
-                .attr("transform", "translate(60,0)")
-                .attr("class", "new-bar")
-        }
+        svg.selectAll(".new-bar").remove();
+        
+        svg.selectAll("bar")
+            .data(data)
+            .enter()
+            .append("rect")
+            .attr("x", function(d) { return x(d.Period); })
+            .attr("y", function(d) { return y(d.Value); })
+            .attr("width", 20)
+            .attr("height", function(d) { return height - y(d.Value); })
+            .attr("fill", "#69b3a2")
+            .attr("rx", 10)
+            .attr("ry", 10)
+            .attr("transform", "translate(60,0)")
+            .attr("class", "new-bar")
+        
+        return data;
+    }
 
     // Listen to the sliders
     //morning
     d3.select("#morningSlider").on("change", function(d){
         morningValue = this.value
-        updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
-        })
+        current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
+    })
     //midday
     d3.select("#middaySlider").on("change", function(d){
         middayValue = this.value
-        updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
-        })
+        current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
+    })
     //afternoon
     d3.select("#afternoonSlider").on("change", function(d){
         afternoonValue = this.value
-        updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
-        })
+        current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
+    })
     //evening
     d3.select("#eveningSlider").on("change", function(d){
         eveningValue = this.value
-        updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
-        })
+        current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
+    })
     //night
     d3.select("#nightSlider").on("change", function(d){
         nightValue = this.value
-        updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
-        })
+        current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
+    })
 
-    /*
+
         // Listen to the submit button
+    function difference(baseline_data, current_data) {
+        var baseline_sum = baseline_data.reduce((partialSum, a) => partialSum + parseInt(a), 0)
+        var current_sum = current_data.reduce((partialSum, a) => partialSum + parseInt(a.Value), 0)
+        return baseline_sum - current_sum;
+    }
+
     d3.select("#submit-btn").on("click", function(d){
-        updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
+        //Animation for statistics numbers
+        const end = difference(baseline_data, current_data);
+        d3.select('#stats-nbr').transition()
+        .tween("text", () => {
+            const interpolator = d3.interpolateNumber(0, end);
+            return function(t) {
+            d3.select(this).text(Math.round(interpolator(t))) 
+            }
         })
-    */
+        .duration(1000);
+    })
+    
+
 });
 
 //For long x-axis labels to be written on two lines
@@ -141,4 +161,8 @@ function wrap(text, width) {
           tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", `${++lineNumber * lineHeight + dy}em`).text(word)
         }
       }
-    })}
+    })
+}
+
+
+

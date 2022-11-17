@@ -101,6 +101,7 @@
                             </div>
                         </div>
 
+
                         <div class="statistics">
                             <div class="sub-stats" id="stats-title">
                                 You
@@ -110,13 +111,13 @@
                                     <img src="{{ url_for('static', filename='data/') }}{{arrow_image}}">
                                 </div>
                                 <div class="sub-stats-item" id="stats-nbr">
-                                    65%
+                                    
                                 </div>
                                 <div class="sub-stats-item" id="stats-txt">
                                     {{direction}} in cost for running the dishwasher.
                                 </div>
                                  
-                            </div>
+                            </div>                            
 
                             <div class="sub-stats" id="stats-title">
                                 Average
@@ -127,21 +128,19 @@
                                     <img src="{{ url_for('static', filename='data/') }}{{arrow_image}}">
                                 </div>
                                 <div class="sub-stats-item" id="stats-nbr">
-                                    65%
+                                    
                                 </div>
                                 <div class="sub-stats-item" id="stats-txt">
                                     {{direction}} in cost for running the dishwasher.
                                 </div>
                                  
                             </div>
+
                             <!--div id="stats-comparison">
                                 TEXT
                                 {statisticsComparison}
                             </div-->
                         </div>
-                        <!--div class="button">
-                            <button id="submit-btn">submit</button>
-                        </div-->
                     </div>
 
 
@@ -175,9 +174,5 @@
     <!--app.js-->
 	<script src="{{ url_for('static', filename='js/app.js')}}"></script>
     <script src="{{ url_for('static', filename='js/barChart.js')}}"></script>
-    <script src="{{ url_for('static', filename='js/slider_morning.js')}}"></script>
-    <script src="{{ url_for('static', filename='js/slider_midday.js')}}"></script>
-    <script src="{{ url_for('static', filename='js/slider_afternoon.js')}}"></script>
-    <script src="{{ url_for('static', filename='js/slider_evening.js')}}"></script>
 
 </body>

@@ -1,4 +1,3 @@
-console.log('I am in app.js')//TODO remove this
 function popupFunctionExp1() {
     var popup = document.getElementById("popupExp1");
     popup.classList.toggle("show");
