@@ -15,7 +15,15 @@ def index():
 
 @app.route('/experiment1')
 def experiment_1():
-    return render_template("experiment_1.html")
+    a = -3
+    if (a < 0):
+        arrow_image="arrow-decrease.png"
+        direction="Decrease"
+    else:
+        arrow_image="arrow-increase.png"
+        direction="Increase"
+
+    return render_template("experiment_1.html", arrow_image=arrow_image, direction=direction)
 
 @app.route('/experiment2')
 def experiment_2():

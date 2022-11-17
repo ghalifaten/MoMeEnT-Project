@@ -192,24 +192,78 @@
         text-align: center;
     }
 
-
-
-
-
-
-
-
-
-
     /*Statistics*/
     .statistics {
-        border: 5px solid paleturquoise;
+        /*border: 5px solid paleturquoise;*/
         width: 40%;
         height: 630px;
         text-align: center;
         padding-right: 0;
         position: relative;
         float: right;
+    }
+
+    .sub-stats-container {
+        display: grid;
+        grid-template-columns: [vline1] 30% [vline2] auto [vline-end];
+        grid-template-rows: [hline1] 60% [hline2] auto [hline-end];
+
+        border: 2px solid lightgray;
+        border-radius: 6px;
+        height: 40%;
+        width: 50%;
+        margin: auto;
+    }
+    
+    .sub-stats-item {
+        align-self: center; /*Might want to center only the arrow and the number but not the text */
+    }
+
+    .sub-stats-item#stats-icon {
+        grid-column-start: vline1;
+        grid-column-end: vline2;
+        grid-row-start: hline1;
+        grid-row-end: hline2;
+    }
+
+    .sub-stats-item#stats-nbr {
+        grid-column-start: vline2;
+        grid-column-end: vline-end;
+        grid-row-start: hline1;
+        grid-row-end: hline2;
+    }
+
+    .sub-stats-item#stats-txt {
+        grid-column-start: vline1;
+        grid-column-end: vline-end;
+        grid-row-start: hline2;
+        grid-row-end: hline-end;
+    }
+
+    .sub-stats#stats-title {
+        height: 5%;
+        width: 50%;
+        border-radius: 6px;
+        margin: auto;
+        margin-bottom: 5px;
+        margin-top: 20px;
+        font-weight: bold;
+        font-size: larger;
+        color: 339fa6;
+        background-color: lightgrey;
+    }
+
+
+    #stats-nbr {
+        font-weight: bold;
+        font-size: 80px;
+        color: #555;
+    }
+
+    #stats-txt {
+        font-size: 20px;
+        color: #555;
+        padding: 15px;
     }
         
     /*

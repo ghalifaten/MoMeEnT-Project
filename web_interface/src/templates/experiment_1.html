@@ -102,18 +102,42 @@
                         </div>
 
                         <div class="statistics">
-                            <div id="you">
-                                TEXT
-                                {statisticsYou}
+                            <div class="sub-stats" id="stats-title">
+                                You
                             </div>
-                            <div id="average">
-                                TEXT
-                                {statisticsAverage}
+                            <div class="sub-stats-container" id="stats-average">
+                                <div class="sub-stats-item" id="stats-icon">
+                                    <img src="{{ url_for('static', filename='data/') }}{{arrow_image}}">
+                                </div>
+                                <div class="sub-stats-item" id="stats-nbr">
+                                    65%
+                                </div>
+                                <div class="sub-stats-item" id="stats-txt">
+                                    {{direction}} in cost for running the dishwasher.
+                                </div>
+                                 
                             </div>
-                            <div id="comparison">
+
+                            <div class="sub-stats" id="stats-title">
+                                Average
+                            </div>
+
+                            <div class="sub-stats-container" id="stats-average">
+                                <div class="sub-stats-item" id="stats-icon">
+                                    <img src="{{ url_for('static', filename='data/') }}{{arrow_image}}">
+                                </div>
+                                <div class="sub-stats-item" id="stats-nbr">
+                                    65%
+                                </div>
+                                <div class="sub-stats-item" id="stats-txt">
+                                    {{direction}} in cost for running the dishwasher.
+                                </div>
+                                 
+                            </div>
+                            <!--div id="stats-comparison">
                                 TEXT
                                 {statisticsComparison}
-                            </div>
+                            </div-->
                         </div>
                         <!--div class="button">
                             <button id="submit-btn">submit</button>
