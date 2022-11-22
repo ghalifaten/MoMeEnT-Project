@@ -1,3 +1,12 @@
+//Get data file from parameters of Script tag
+function getSyncScriptParams() {
+    var scripts = document.getElementsByTagName('script');
+    var lastScript = scripts[scripts.length-1];
+    var scriptName = lastScript;
+
+    return scriptName.getAttribute('exp_nbr');
+}
+
 // set the dimensions and margins of the graph
 var margin = {top: 0, right: 30, bottom: 90, left: 60},
     width = 800 - margin.left - margin.right,
@@ -12,11 +21,23 @@ var svg = d3.select("#bar_chart")
 
 // initialize variables of sliders
 var morningValue = 0, middayValue = 0, afternoonValue = 0, eveningValue = 0, nightValue = 0;
-var current_data = [];
-var baseline_data = [];
+var baseline_data = [{ Period: "morning (06:00-09:59)", Value: "0" },
+                     { Period: "midday (10:00-13:59)", Value: "0" },
+                     { Period: "afternoon (14:00-17:59)", Value: "0" },
+                     { Period: "evening (18:00-21:59)", Value: "0" },
+                     { Period: "night (22:00-05:59)", Value: "0" }];
+
+var current_data = []
 
 // Parse the Data
-d3.csv("static/data/XYZ.csv", function(data) {
+exp_nbr = getSyncScriptParams()
+if (exp_nbr == "0") {
+    var data = baseline_data;
+} else if (exp_nbr == "1") {
+    var data = current_data;
+}
+
+//d3.csv(datafile, function(data) {
 
     // Add X axis
     var x = d3.scaleBand()
@@ -32,17 +53,16 @@ d3.csv("static/data/XYZ.csv", function(data) {
         .selectAll(".tick text")
         .call(wrap, x.bandwidth())
         .attr("transform", "translate(50,0)")
+        .attr("font-size", "12px")
+        .attr("font-weight", "bold")
         .style("text-anchor", "end");
 
         
     // Add Y axis
     var y = d3.scaleLinear()
     .domain([0, 4])
-    .range([ height, 0]);
-
-    svg.append("g")
-    .call(d3.axisLeft(y));
-
+    .range([height, 0]);
+    
 
     // Bars
     svg.selectAll("bar")
@@ -73,20 +93,36 @@ d3.csv("static/data/XYZ.csv", function(data) {
 
         svg.selectAll(".new-bar").remove();
         
-        svg.selectAll("bar")
-            .data(data)
-            .enter()
-            .append("rect")
-            .attr("x", function(d) { return x(d.Period); })
-            .attr("y", function(d) { return y(d.Value); })
-            .attr("width", 20)
-            .attr("height", function(d) { return height - y(d.Value); })
-            .attr("fill", "#69b3a2")
-            .attr("rx", 10)
-            .attr("ry", 10)
-            .attr("transform", "translate(60,0)")
-            .attr("class", "new-bar")
-        
+        if (exp_nbr == "0") {
+            svg.selectAll("bar")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("x", function(d) { return x(d.Period); })
+                .attr("y", function(d) { return y(d.Value); })
+                .attr("width", 20)
+                .attr("height", function(d) { return height - y(d.Value); })
+                .attr("fill", "#69b3a2")
+                .attr("rx", 10)
+                .attr("ry", 10)
+                .attr("transform", "translate(48,0)")
+                .attr("class", "new-bar")
+
+        } else if (exp_nbr == "1") {
+            svg.selectAll("bar")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("x", function(d) { return x(d.Period); })
+                .attr("y", function(d) { return y(d.Value); })
+                .attr("width", 20)
+                .attr("height", function(d) { return height - y(d.Value); })
+                .attr("fill", "#69b3a2")
+                .attr("rx", 10)
+                .attr("ry", 10)
+                .attr("transform", "translate(60,0)")
+                .attr("class", "new-bar")
+        }
         return data;
     }
 
@@ -137,9 +173,35 @@ d3.csv("static/data/XYZ.csv", function(data) {
         })
         .duration(1000);
     })
-    
 
-});
+    /* **Not a good idea because this will download a file on the client-side
+    d3.select("#link-to-exp1").on("click", function(d){
+        const titleKeys = Object.keys(current_data[0]) //get keys from first the first object in the array (since they are the same for all objects)
+        const refinedData = [] //refinedData contains data in the format that is suitable for export to csv
+        refinedData.push(titleKeys) //add in the keys for the first row then loop over all the objects to get the values
+        current_data.forEach(item => {
+            refinedData.push(Object.values(item))  
+        })
+        //create the csv file content
+        let csvContent = ''
+        refinedData.forEach(row => {
+            csvContent += row.join(',') + '\n'
+        })
+        //create the URI and use a hidden <a> to download the file
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8,' })
+        const objUrl = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.setAttribute('href', objUrl)
+        link.setAttribute('download', 'exp1_baseline.csv')
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    })
+    */
+
+//});
 
 //For long x-axis labels to be written on two lines
 function wrap(text, width) {

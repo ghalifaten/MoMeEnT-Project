@@ -13,6 +13,10 @@ app = Flask(__name__, template_folder='templates')
 def index():
     return render_template("index.html")
 
+@app.route('/experiment0')
+def experiment0():
+    return render_template("experiment_0.html")
+
 @app.route('/experiment1')
 def experiment_1():
     a = -3

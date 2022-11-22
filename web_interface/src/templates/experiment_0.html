@@ -53,9 +53,8 @@
                     <h2>1st Scenario</h2>
                     <hr>
                     <p style="margin-bottom: 50px;">
-                        Suppose you signed up for variable-price energy contract, so there are times of the day when electricity is more expensive and 
-                        others when it is cheaper. You can do something to achieve some savings on your energy bill (for example, by anticipating or 
-                        waiting for the low price hours to use electricity). However, you may face some discomfort. In this situation, what time of day would you run the dishwasher?</p>
+                        Referring to the time of the day, when is the dish washer run during week days?
+                    </p>
 
                     </div>
                     <!--D3 bar chart visualization-->
@@ -76,13 +75,6 @@
                                 <div class="slider-container">
                                     <div class="slider" >
                                         <input type="range" id=morningSlider min="0" max="4" value="0" step="1" autocomplete="off" orient="vertical"/>
-                                        <datalist id="steplist">
-                                            <option>0</option>
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                        </datalist>
                                     </div>
                                     <div class="slider" >
                                         <input type="range" name="middaySlider" id=middaySlider min="0" max="4" value="0" autocomplete="off" orient="vertical"/>
@@ -100,53 +92,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <button id="stats-btn">See statistics</button> 
-                        </div>
-                        <div class="statistics">
-                            <div class="sub-stats" id="stats-title">
-                                You
-                            </div>
-                            <div class="sub-stats-container" id="stats-average">
-                                <div class="sub-stats-item" id="stats-icon">
-                                    <img src="{{ url_for('static', filename='data/') }}{{arrow_image}}">
-                                </div>
-                                <div class="sub-stats-item" id="stats-nbr">
-                                    32%
-                                </div>
-                                <div class="sub-stats-item" id="stats-txt">
-                                    {{direction}} in cost for running the dishwasher.
-                                </div>
-                                 
-                            </div>                            
 
-                            <div class="sub-stats" id="stats-title">
-                                Average
-                            </div>
-
-                            <div class="sub-stats-container" id="stats-average">
-                                <div class="sub-stats-item" id="stats-icon">
-                                    <img src="{{ url_for('static', filename='data/') }}{{arrow_image}}">
-                                </div>
-                                <div class="sub-stats-item" id="stats-nbr">
-                                    10%
-                                </div>
-                                <div class="sub-stats-item" id="stats-txt">
-                                    {{direction}} in cost for running the dishwasher.
-                                </div>
-                                 
-                            </div>
-
-                            <!--div id="stats-comparison">
-                                TEXT
-                                {statisticsComparison}
-                            </div-->
-                        </div>
                     </div>
-
-
                     <div style="clear:both">
-                        <p style="margin-top: 100px;"><a class="link" href="/experiment2">Next experiment</a></p>
+                        <p style="margin-top: 100px;"><a class="link" id="link-to-exp1" href="/experiment1">Next experiment</a></p>
                     </div>
                 </div> 
             </div>
@@ -157,6 +106,7 @@
     <!--JS scripts-->
     <!--app.js-->
 	<script src="{{ url_for('static', filename='js/app.js')}}"></script>
-    <script src="{{ url_for('static', filename='js/barChart.js')}}" exp_nbr="1"></script>
+    <script src="{{ url_for('static', filename='js/barChart.js')}}" exp_nbr="0"></script>
+    
 
 </body>
