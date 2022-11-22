@@ -34,13 +34,15 @@ d3.csv("static/data/XYZ.csv", function(data) {
         .attr("transform", "translate(50,0)")
         .style("text-anchor", "end");
 
+        
     // Add Y axis
     var y = d3.scaleLinear()
-                .domain([0, 4])
-                .range([ height, 0]);
+    .domain([0, 4])
+    .range([ height, 0]);
 
     svg.append("g")
-        .call(d3.axisLeft(y));
+    .call(d3.axisLeft(y));
+
 
     // Bars
     svg.selectAll("bar")
@@ -123,7 +125,7 @@ d3.csv("static/data/XYZ.csv", function(data) {
         return baseline_sum - current_sum;
     }
 
-    d3.select("#submit-btn").on("click", function(d){
+    d3.select("#stats-btn").on("click", function(d){
         //Animation for statistics numbers
         const end = difference(baseline_data, current_data);
         d3.select('#stats-nbr').transition()

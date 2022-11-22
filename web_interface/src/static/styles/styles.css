@@ -64,11 +64,12 @@
     }
 
     p {
-        font-size: 18px; 
+        font-size: 20px; 
         letter-spacing: 0.1em;
         text-align: justify;
         text-justify: inter-word;
         font-weight:lighter;
+        /*color: black;*/
     }
 
     /*Reposition text on Demo page*/
@@ -108,6 +109,27 @@
         top: 100px;   
     }
 
+    /*Styling buttons*/
+    button {
+        border-radius: 6px;
+        border: 2px solid #52a9af;
+        width: 130px;
+        height: 50px;
+        background-color: #52a9af;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+
+    }
+
+    button:hover {
+        color: #339fa6;
+        background-color: transparent;
+    }
+
+    /*Styling bar_chart*/
+    
     .visualization {
         /*border: 5px solid gray;*/
         height: 630px;
@@ -120,7 +142,7 @@
        /* border: 5px solid green;*/
         display: grid;
         padding: 0px;
-        width: 60%;
+        width: 55%;
         height: 630px;
     
     }
@@ -193,13 +215,9 @@
     }
 
     /*Statistics*/
-    .stats-btn {
-        margin-left: 0;
-    }
-
     .statistics {
-        border: 5px solid paleturquoise;
-        width: 40%;
+        /*border: 5px solid paleturquoise;*/
+        width: 35%;
         height: 630px;
         text-align: center;
         padding-right: 0;
@@ -215,7 +233,7 @@
         border: 2px solid lightgray;
         border-radius: 6px;
         height: 40%;
-        width: 50%;
+        width: 70%;
         margin: auto;
     }
     
@@ -246,7 +264,7 @@
 
     .sub-stats#stats-title {
         height: 5%;
-        width: 50%;
+        width: 70%;
         border-radius: 6px;
         margin: auto;
         margin-bottom: 5px;
@@ -256,7 +274,6 @@
         color: 339fa6;
         background-color: lightgrey;
     }
-
 
     #stats-nbr {
         font-weight: bold;
@@ -270,19 +287,11 @@
         padding: 15px;
     }
 
-        
-    /*
-    .button { 
-        padding-bottom: 15px;
-    }*/
-
-    button#submit-btn {
-        /*display: block;*/
-        /*margin: auto;*/
-        position: relative;  
-        left: 200px;
+    #stats-btn {
+        margin-top: 300px;
+        margin-left: 50px;
+        padding: auto;
     }
-
 
     /*Remove slide buttons*/
     #fp-nav ul li a span, .fp-slidesNav ul li a span, .fp-bottom {
