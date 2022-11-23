@@ -148,7 +148,6 @@ d3.select("#stats-btn").on("click", function(d){
         document.getElementById("stats-txt-you").innerText = "Decrease in cost for running the dishwasher."
         document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-decrease.png\"></img>"
     }
-
     let counts=setInterval(updated);
     let upto=0;
     function updated(){
@@ -156,6 +155,8 @@ d3.select("#stats-btn").on("click", function(d){
         count.innerHTML=++upto;
         if(upto===Math.abs(diffValue)){ clearInterval(counts); }
     }
+
+    //TODO update stats-avg here
 })
 
 

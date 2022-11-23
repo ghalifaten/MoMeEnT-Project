@@ -21,6 +21,10 @@ def experiment0():
 def experiment_1():
     return render_template("experiment_1.html")
 
+@app.route('/questions')
+def questions():
+    return render_template("questions.html")
+
 @app.route('/experiment2')
 def experiment_2():
     demo_qualtrics_function()
