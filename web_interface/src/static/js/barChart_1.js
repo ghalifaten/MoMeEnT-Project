@@ -140,7 +140,7 @@ d3.select("#stats-btn").on("click", function(d){
     var baseline_data = JSON.parse(window.localStorage.getItem("baseline_data"));
     var current_data = JSON.parse(window.localStorage.getItem("current_data"));
     const diffValue = difference(baseline_data, current_data);
-    console.log(diffValue)
+    
     if (diffValue >= 0) {
         document.getElementById("stats-txt-you").innerText = "Increase in cost for running the dishwasher."
         document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-increase.png\"></img>"
@@ -148,14 +148,16 @@ d3.select("#stats-btn").on("click", function(d){
         document.getElementById("stats-txt-you").innerText = "Decrease in cost for running the dishwasher."
         document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-decrease.png\"></img>"
     }
-    let counts=setInterval(updated);
-    let upto=0;
-    function updated(){
-        var count= document.getElementById("stats-nbr-you");
-        count.innerHTML=++upto;
-        if(upto===Math.abs(diffValue)){ clearInterval(counts); }
-    }
 
+    if (diffValue != 0) {
+        let counts=setInterval(updated);
+        let upto=0;
+        function updated(){
+            var count= document.getElementById("stats-nbr-you");
+            count.innerHTML=++upto;
+            if(upto===Math.abs(diffValue)){ clearInterval(counts); }
+        }
+    }
     //TODO update stats-avg here
 })
 

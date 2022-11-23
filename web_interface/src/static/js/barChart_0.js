@@ -100,26 +100,31 @@ function updateChart(morningValue, middayValue, afternoonValue, eveningValue, ni
 //morning
 d3.select("#morningSlider").on("change", function(d){
     morningValue = this.value
+    document.getElementById("link-to-quests").disabled = false;
     current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
 })
 //midday
 d3.select("#middaySlider").on("change", function(d){
     middayValue = this.value
+    document.getElementById("link-to-quests").disabled = false;
     current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
 })
 //afternoon
 d3.select("#afternoonSlider").on("change", function(d){
     afternoonValue = this.value
+    document.getElementById("link-to-quests").disabled = false;
     current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
 })
 //evening
 d3.select("#eveningSlider").on("change", function(d){
     eveningValue = this.value
+    document.getElementById("link-to-quests").disabled = false;
     current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
 })
 //night
 d3.select("#nightSlider").on("change", function(d){
     nightValue = this.value
+    document.getElementById("link-to-quests").disabled = false;
     current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
 })
 
