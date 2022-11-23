@@ -62,7 +62,7 @@
         margin: auto;
         padding-bottom: 15px;
     }
-    
+
     p {
         font-size: 20px; 
         letter-spacing: 0.1em;
@@ -83,25 +83,6 @@
     }
 
     /*Styling of scroll buttons "Scroll down" / "scroll right"*/
-    .link {
-        text-decoration: none;
-        border-radius: 1rem;
-        padding: 1px 5px 1px;
-        color: white;
-        background: linear-gradient(to right, #b3d37e, #4a9a9e);
-        transition: all 0.5s cubic-bezier(0.47, 1.59, 0.33, 1.53);
-        text-align: center;  
-        width: fit-content;
-        display: block;
-        margin: auto;
-        position: relative;  
-        top: -10px;   
-    }
-
-    .link:hover {
-        padding: 1px 10px 1px;
-    }
-
     #scroll-down {
         display: block;
         margin: auto;
@@ -110,17 +91,22 @@
     }
 
     /*Styling buttons*/
+    .link-btn {
+        display: block;
+        margin: auto;
+        position: relative;  
+    }
+
     button {
         border-radius: 6px;
-        border: 2px solid #52a9af;
+        border: 2px solid #339fa6;
         width: 130px;
         height: 50px;
-        background-color: #52a9af;
+        background-color: #339fa6;
         color: white;
         font-size: 16px;
         font-weight: bold;
         cursor: pointer;
-
     }
 
     button:hover {
