@@ -241,21 +241,21 @@
         align-self: center; /*Might want to center only the arrow and the number but not the text */
     }
 
-    .sub-stats-item#stats-icon {
+    .sub-stats-item .stats-icon {
         grid-column-start: vline1;
         grid-column-end: vline2;
         grid-row-start: hline1;
         grid-row-end: hline2;
     }
 
-    .sub-stats-item#stats-nbr {
+    .sub-stats-item .stats-nbr {
         grid-column-start: vline2;
         grid-column-end: vline-end;
         grid-row-start: hline1;
         grid-row-end: hline2;
     }
 
-    .sub-stats-item#stats-txt {
+    .sub-stats-item.stats-txt {
         grid-column-start: vline1;
         grid-column-end: vline-end;
         grid-row-start: hline2;
@@ -275,13 +275,13 @@
         background-color: lightgrey;
     }
 
-    #stats-nbr {
+    .stats-nbr {
         font-weight: bold;
         font-size: 80px;
         color: #555;
     }
 
-    #stats-txt {
+    .stats-txt {
         font-size: 20px;
         color: #555;
         padding: 15px;

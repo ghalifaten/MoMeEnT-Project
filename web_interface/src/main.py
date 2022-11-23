@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template
-import os, sys
+import os, sys, json
 
 module_path = "/home/faten/HERUS/MoMeEnT-Project/" #TODO change this
 if module_path not in sys.path:
@@ -19,16 +19,7 @@ def experiment0():
 
 @app.route('/experiment1')
 def experiment_1():
-    #TODO change this
-    a = -3
-    if (a < 0):
-        arrow_image="arrow-decrease.png"
-        direction="Decrease"
-    else:
-        arrow_image="arrow-increase.png"
-        direction="Increase"
-
-    return render_template("experiment_1.html", arrow_image=arrow_image, direction=direction)
+    return render_template("experiment_1.html")
 
 @app.route('/experiment2')
 def experiment_2():

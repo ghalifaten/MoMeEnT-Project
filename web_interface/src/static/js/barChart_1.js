@@ -21,6 +21,14 @@ var svg = d3.select("#bar_chart")
 
 // initialize variables of sliders
 var morningValue = 0, middayValue = 0, afternoonValue = 0, eveningValue = 0, nightValue = 0;
+var current_data = [{ Period: "morning (06:00-09:59)", Value: "0" },
+                    { Period: "midday (10:00-13:59)", Value: "0" },
+                    { Period: "afternoon (14:00-17:59)", Value: "0" },
+                    { Period: "evening (18:00-21:59)", Value: "0" },
+                    { Period: "night (22:00-05:59)", Value: "0" }];
+
+window.localStorage.setItem("current_data", JSON.stringify(current_data));
+
 var data = JSON.parse(window.localStorage.getItem("baseline_data"));
 
 // Add X axis
@@ -89,7 +97,6 @@ function updateChart(morningValue, middayValue, afternoonValue, eveningValue, ni
         .attr("class", "new-bar")
     
     window.localStorage.setItem("current_data", JSON.stringify(data));
-
     return data;
 }
 
@@ -97,7 +104,6 @@ function updateChart(morningValue, middayValue, afternoonValue, eveningValue, ni
 //morning
 d3.select("#morningSlider").on("change", function(d){
     morningValue = this.value
-    console.log(current_data)
     current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
 })
 //midday
@@ -124,24 +130,32 @@ d3.select("#nightSlider").on("change", function(d){
 
 // Listen to the submit button
 function difference(baseline_data, current_data) {
-    var baseline_sum = baseline_data.reduce((partialSum, a) => partialSum + parseInt(a), 0)
+    var baseline_sum = baseline_data.reduce((partialSum, a) => partialSum + parseInt(a.Value), 0)
     var current_sum = current_data.reduce((partialSum, a) => partialSum + parseInt(a.Value), 0)
-    return baseline_sum - current_sum;
+    return current_sum - baseline_sum;
 }
 
 d3.select("#stats-btn").on("click", function(d){
     //Animation for statistics numbers
-    //var baseline_data = JSON.parse(window.localStorage.getItem("baseline_data"));
-    //var current_data = JSON.parse(window.localStorage.getItem("current_data"));
-    const end = difference(baseline_data, current_data);
-    d3.select('#stats-nbr').transition()
-    .tween("text", () => {
-        const interpolator = d3.interpolateNumber(0, end);
-        return function(t) {
-        d3.select(this).text(Math.round(interpolator(t))) 
-        }
-    })
-    .duration(1000);
+    var baseline_data = JSON.parse(window.localStorage.getItem("baseline_data"));
+    var current_data = JSON.parse(window.localStorage.getItem("current_data"));
+    const diffValue = difference(baseline_data, current_data);
+    console.log(diffValue)
+    if (diffValue >= 0) {
+        document.getElementById("stats-txt-you").innerText = "Increase in cost for running the dishwasher."
+        document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-increase.png\"></img>"
+    } else {
+        document.getElementById("stats-txt-you").innerText = "Decrease in cost for running the dishwasher."
+        document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-decrease.png\"></img>"
+    }
+
+    let counts=setInterval(updated);
+    let upto=0;
+    function updated(){
+        var count= document.getElementById("stats-nbr-you");
+        count.innerHTML=++upto;
+        if(upto===Math.abs(diffValue)){ clearInterval(counts); }
+    }
 })
 
 
