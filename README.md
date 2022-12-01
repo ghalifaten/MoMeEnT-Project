@@ -20,5 +20,5 @@ You should see this message on the terminal:
 > \* Debugger is active! \
 > \* Debugger PIN: 971-457-079 
 
-You can either CTRL+Click on http://127.0.0.1:5000 or run it on your browser. \
+You can either CTRL+Click on http://127.0.0.1:5000 or copy-paste it in your browser. \
 I recommend using **Firefox**, some features could be not functional on other browsers.
