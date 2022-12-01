@@ -43,45 +43,43 @@
     <h2>Questions</h2>
     <hr>
     
-    <div class="question">
-        <h3>Question1</h3>
-        <p>erit in voluptate velit esse cillum dolore eu fugiat</p>
-    
-        <div class="answer-textarea">
-            <textarea placeholder="Please type your answer here">
+    <div class="questions-form"> 
+        <form  action="/experiment1" method="get">
+            <h3>Question1</h3>
+            <p>erit in voluptate velit esse cillum dolore eu fugiat</p>
+            
+            <textarea id="response" name="response1" placeholder="Please type your answer here"></textarea>
+            
+            <h3>Question2</h3>
+            <p>erit in voluptate velit esse cillum dolore eu fugiat</p>
 
-            </textarea>
-        </div>
+            <textarea id="response" name="response2" placeholder="Please type your answer here"></textarea>
+
+            <h3>Question3</h3>
+            <p>erit in voluptate velit esse cillum dolore eu fugiat</p>
+        
+            <textarea id="response" name="response3" placeholder="Please type your answer here"></textarea>
+
+            <p style="margin-top: 100px;">
+                <!--input type="submit" class="link-btn" id="submit-btn" value="Next page"/-->
+                <input onclick="window.location.href = '/experiment1';" type="submit" value="Submit request" />
+       
+            </p>
+        </form>
     </div>
-
-    <div class="question">
-        <h3>Question2</h3>
-        <p>erit in voluptate velit esse cillum dolore eu fugiat</p>
-    
-        <div class="answer-textarea">
-            <textarea placeholder="Please type your answer here">
-
-            </textarea>
-        </div>
-    </div>
-
-    <div class="question">
-        <h3>Question3</h3>
-        <p>erit in voluptate velit esse cillum dolore eu fugiat</p>
-    
-        <div class="answer-textarea">
-            <textarea placeholder="Please type your answer here">
-
-            </textarea>
-        </div>
-    </div>
-
-    <div style="clear:both">
+    <!--div style="clear:both">
         <p style="margin-top: 100px;"><button class="link-btn" id="link-to-exp1" onclick="location.href='/experiment1'">Next page</button></p>
-    </div>
+    </div-->
 
 
     <!--JS scripts-->
     <!--app.js-->
 	<script src="{{ url_for('static', filename='js/app.js')}}"></script>
+    <script>
+        document.getElementById("submit-btn").addEventListener("click", myFunction);
+        function myFunction() {
+            console.log("clicked")
+            window.location.href="/experiment1";
+        }
+    </script>
 </body>

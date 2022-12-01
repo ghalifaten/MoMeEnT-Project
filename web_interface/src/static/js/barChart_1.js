@@ -13,7 +13,7 @@ var margin = {top: 0, right: 30, bottom: 90, left: 60},
     height = 400 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
-var svg = d3.select("#bar_chart")
+var svg = d3.select("#bar-chart")
             .append("svg")
             .attr("class", "svg-style")
             .append("g");
@@ -29,7 +29,71 @@ var current_data = [{ Period: "morning (06:00-09:59)", Value: "0" },
 
 window.localStorage.setItem("current_data", JSON.stringify(current_data));
 
+// Add legend (Manually)
+var legendItemSize = 12;
+var legendSpacing = 5;
+var xOffset = 0;
+var yOffset = 10;
+
+var legend_data = [ { Text: "Habitual behavior", Color: "#D3D3D3" },
+                    { Text: "New behavior", Color: "#69b3a2" },
+                    { Text: "Price line", Color: "red"} ];
+
+var legend = d3.select('#bar-chart-legend')
+                .append('svg')
+                .append('g')
+                .selectAll(".legendItem")
+                .data(legend_data);
+
+legend.enter().append('rect')
+        .attr('class', 'legendItem')
+        .attr('width', legendItemSize)
+        .attr('height', legendItemSize)
+        .style('fill', d => d.Color)
+        .attr('transform',
+                    (d, i) => {
+                        console.log("i = ", i);
+                        console.log("d = ", d)
+                        var x = xOffset;
+                        var y = yOffset + (legendItemSize + legendSpacing) * i;
+                        return `translate(${x}, ${y})`;
+                    });
+                    
+legend.enter().append('text')
+        .attr('x', xOffset + legendItemSize + 5)
+        .attr('y', (d, i) => yOffset + (legendItemSize + legendSpacing) * i + 12)
+        .text(d => d.Text); 
+
+//svg.append("circle").attr("cx",200).attr("cy",130).attr("r", 6).style("fill", "#D3D3D3")
+//svg.append("text").attr("x", 220).attr("y", 130).text("Habitual behavior").style("font-size", "15px").attr("alignment-baseline","middle")
+//svg.append("circle").attr("cx",200).attr("cy",160).attr("r", 6).style("fill", "#69b3a2")
+//svg.append("text").attr("x", 220).attr("y", 160).text("New behavior").style("font-size", "15px").attr("alignment-baseline","middle")
+
+// Load data
 var data = JSON.parse(window.localStorage.getItem("baseline_data"));
+var price_data;
+
+// Load price data and add line to the chart
+d3.csv('static/data/price_data.csv',function (d) {
+    price_data = d;
+    add_line(price_data);
+});
+
+function add_line(price_data) { 
+    // Define the line
+    var valueline = d3.line()
+                        .x(function(d) { return x(d.Period); })
+                        .y(function(d) { return y(d.Value); });
+                    
+    // Add the line path
+    svg.append("path")
+        .attr("class", "line")
+        .style("stroke", "red")
+        .style("stroke-width", 3)
+        .attr("fill", "none")
+        .attr("d", valueline(price_data))
+        .attr("transform", "translate(58,0)");
+}
 
 // Add X axis
 var x = d3.scaleBand()
@@ -54,7 +118,6 @@ svg.append("g")
 var y = d3.scaleLinear()
 .domain([0, 4])
 .range([height, 0]);
-
 
 // Bars
 svg.selectAll("bar")
@@ -130,25 +193,21 @@ d3.select("#nightSlider").on("change", function(d){
 
 // Listen to the submit button
 function difference(baseline_data, current_data) {
-    var baseline_sum = baseline_data.reduce((partialSum, a) => partialSum + parseInt(a.Value), 0)
-    var current_sum = current_data.reduce((partialSum, a) => partialSum + parseInt(a.Value), 0)
-    return current_sum - baseline_sum;
+    var baseline_sum = baseline_data.reduce((partialSum, a) => partialSum + parseInt(a.Value), 0);
+    var baseline_avg = baseline_sum/5 * 100;
+    var current_sum = current_data.reduce((partialSum, a) => partialSum + parseInt(a.Value), 0);
+    var current_avg = current_sum/5 * 100;
+    return [current_sum - baseline_sum, current_avg - baseline_avg];
 }
 
 d3.select("#stats-btn").on("click", function(d){
     //Animation for statistics numbers
     var baseline_data = JSON.parse(window.localStorage.getItem("baseline_data"));
     var current_data = JSON.parse(window.localStorage.getItem("current_data"));
-    const diffValue = difference(baseline_data, current_data);
+    const differences = difference(baseline_data, current_data);
+    const diffValue = differences[0];
+    const diffAvg = differences[1];
     
-    if (diffValue >= 0) {
-        document.getElementById("stats-txt-you").innerText = "Increase in cost for running the dishwasher."
-        document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-increase.png\"></img>"
-    } else {
-        document.getElementById("stats-txt-you").innerText = "Decrease in cost for running the dishwasher."
-        document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-decrease.png\"></img>"
-    }
-
     if (diffValue != 0) {
         let counts=setInterval(updated);
         let upto=0;
@@ -158,7 +217,34 @@ d3.select("#stats-btn").on("click", function(d){
             if(upto===Math.abs(diffValue)){ clearInterval(counts); }
         }
     }
-    //TODO update stats-avg here
+
+    //update stats-you 
+    if (diffValue >= 0) {
+        document.getElementById("stats-txt-you").innerText = "Increase in cost for running the dishwasher."
+        document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-increase.png\"></img>"
+    } else {
+        document.getElementById("stats-txt-you").innerText = "Decrease in cost for running the dishwasher."
+        document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-decrease.png\"></img>"
+    }
+
+    //update stats-avg
+    if (diffAvg >= 0) {
+        document.getElementById("stats-txt-avg").innerText = "Increase in cost for running the dishwasher."
+        document.getElementById("stats-icon-avg").innerHTML = "<img src=\"static/data/arrow-increase.png\"></img>"
+    } else {
+        document.getElementById("stats-txt-avg").innerText = "Decrease in cost for running the dishwasher."
+        document.getElementById("stats-icon-avg").innerHTML = "<img src=\"static/data/arrow-decrease.png\"></img>"
+    }
+
+    if (diffAvg != 0) {
+        let counts=setInterval(updated);
+        let upto=0;
+        function updated(){
+            var count= document.getElementById("stats-nbr-avg");
+            count.innerHTML=++upto;
+            if(upto===Math.abs(diffAvg)){ clearInterval(counts); }
+        }
+    }
 })
 
 

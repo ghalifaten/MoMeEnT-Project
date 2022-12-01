@@ -138,8 +138,8 @@
         display: flex;
     }
 
-    #left-side-buffer {
-        /*border: 5px solid white;*/
+    #bar-chart-legend {
+        /*border: 3px solid black;*/
         width: 150px;
         height: 400px;
     }
@@ -346,11 +346,12 @@
     }
 
     /* Styling questions */
-    .question {
+    .questions-form {
         margin-left: 50px;
         margin-right: 50px;
     }
-    .question textarea{
+    
+    textarea#response{
         width: 100%;
         height: 100px;
         font-size: 20px;
