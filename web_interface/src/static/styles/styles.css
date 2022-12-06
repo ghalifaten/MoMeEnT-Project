@@ -145,10 +145,10 @@
     }
 
     .visualization-column1 {
-        /*border: 5px solid green;*/
+        border: 2px solid green;
         display: grid;
         padding: 0px;
-        width: 1000px;
+        width: 900px;
         height: 630px;
     }
 
@@ -163,10 +163,10 @@
         height: 400px;
     }
 
-    #bar_chart{
-        /*border: 2px solid red;*/
+    #bar-chart{
+        border: 2px solid red;
         height: 400px;
-        width: 1000px;
+        width: 900px;
         float: left;
         padding-top: 20px;
     }
@@ -184,7 +184,7 @@
 
     /*Styling sliders*/
     .sliders-section {
-        /*border: 2px solid black;*/
+        border: 2px solid black;
         display: flex;
         height: 230px;
         z-index: 2;
@@ -202,7 +202,7 @@
     }
 
     .slider-container {
-        /*border: 2px solid black;*/
+        border: 2px solid red;
         padding-left: 90px;
         display: block;
         height: 230px;
@@ -228,8 +228,8 @@
 
     /*Statistics*/
     .statistics {
-        /*border: 5px solid paleturquoise;*/
-        width: 35%;
+        border: 2px solid paleturquoise;
+        width: 375px;
         height: 630px;
         text-align: center;
         padding-right: 0;

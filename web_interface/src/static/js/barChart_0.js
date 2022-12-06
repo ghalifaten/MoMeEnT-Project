@@ -14,7 +14,7 @@ var margin = {top: 0, right: 30, bottom: 90, left: 60},
     height = 400 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
-var svg = d3.select("#bar_chart")
+var svg = d3.select("#bar-chart")
             .append("svg")
             .attr("class", "svg-style")
             .append("g");
