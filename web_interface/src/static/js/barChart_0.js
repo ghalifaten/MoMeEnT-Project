@@ -36,11 +36,11 @@ var x = d3.scaleBand()
             .paddingOuter(.3)
 
 svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
+    .attr("transform", "translate(145," + height + ")")
     .call(d3.axisBottom(x))
     .selectAll(".tick text")
     .call(wrap, x.bandwidth())
-    .attr("transform", "translate(50,0)")
+    .attr("transform", "translate(30,0)")
     .attr("font-size", "12px")
     .attr("font-weight", "bold")
     .style("text-anchor", "end");
@@ -53,20 +53,6 @@ var y = d3.scaleLinear()
 
 
 // Bars
-svg.selectAll("bar")
-    .data(data)
-    .enter()
-    .append("rect")
-    .attr("x", function(d) { return x(d.Period); })
-    .attr("y", function(d) {return y(d.Value); })
-    .attr("width", 20)
-    .attr("height", function(d) { return height - y(d.Value); })
-    .attr("fill", "#D3D3D3")
-    .attr("rx", 10)
-    .attr("ry", 10)
-    .attr("transform", "translate(48,0)")
-    .attr("class", "baseline-bar")
-
 // A function that updates the chart when slider is moved
 function updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue) {
     //TODO optimize this
@@ -89,7 +75,7 @@ function updateChart(morningValue, middayValue, afternoonValue, eveningValue, ni
         .attr("fill", "#69b3a2")
         .attr("rx", 10)
         .attr("ry", 10)
-        .attr("transform", "translate(48,0)")
+        .attr("transform", "translate(193,0)")
         .attr("class", "new-bar")
 
     window.localStorage.setItem("baseline_data", JSON.stringify(data));
