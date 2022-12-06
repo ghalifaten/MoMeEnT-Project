@@ -145,7 +145,7 @@
     }
 
     .visualization-column1 {
-        border: 2px solid green;
+        /*border: 2px solid green;*/
         display: grid;
         padding: 0px;
         width: 900px;
@@ -164,7 +164,7 @@
     }
 
     #bar-chart{
-        border: 2px solid red;
+        /*border: 2px solid red;*/
         height: 400px;
         width: 900px;
         float: left;
@@ -184,7 +184,7 @@
 
     /*Styling sliders*/
     .sliders-section {
-        border: 2px solid black;
+        /*border: 2px solid black;*/
         display: flex;
         height: 230px;
         z-index: 2;
@@ -202,7 +202,7 @@
     }
 
     .slider-container {
-        border: 2px solid red;
+        /*border: 2px solid red;*/
         padding-left: 90px;
         display: block;
         height: 230px;
@@ -228,11 +228,12 @@
 
     /*Statistics*/
     .statistics {
-        border: 2px solid paleturquoise;
+        /*border: 2px solid paleturquoise;*/
         width: 375px;
         height: 630px;
         text-align: center;
         padding-right: 0;
+        margin-left: 100px;
         position: relative;
         float: right;
     }
@@ -301,7 +302,8 @@
 
     #stats-btn {
         margin-top: 300px;
-        margin-left: 50px;
+        margin-left: 30px;
+        
         padding: auto;
     }
 
