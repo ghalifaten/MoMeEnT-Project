@@ -115,11 +115,31 @@
     }
 
     /*Styling bar_chart*/
-    
+@media screen and (max-width: 480px) {
+    .visualization {
+        border: 2px solid pink;
+        flex-direction: column;
+    }
+
+    .visualization-column1 {
+        border: 2px solid orange;
+        order: 1;
+    }
+
+    .visualization-column2 {
+        border: 2px solid purple;
+        order: 2;
+    }
+
+    .visualization-column3 {
+        border: 2px solid red;
+        order: 3;
+    }
+}
     .visualization {
         /*border: 5px solid gray;*/
         height: 630px;
-        width: 1700px;
+        width: 100%;
         display: flex;
         margin-bottom: 30px;
     }
@@ -128,9 +148,8 @@
         /*border: 5px solid green;*/
         display: grid;
         padding: 0px;
-        width: 100%;
+        width: 1000px;
         height: 630px;
-    
     }
 
     /*Styling graph*/
@@ -226,7 +245,7 @@
         border: 2px solid lightgray;
         border-radius: 6px;
         height: 40%;
-        width: 70%;
+        width: 375px;
         margin: auto;
     }
     
@@ -257,7 +276,7 @@
 
     .sub-stats#stats-title {
         height: 5%;
-        width: 70%;
+        width: 375px;
         border-radius: 6px;
         margin: auto;
         margin-bottom: 5px;
