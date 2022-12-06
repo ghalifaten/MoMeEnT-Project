@@ -145,9 +145,8 @@
     }
 
     #bar_chart{
-        border: 2px solid red;
+        /*border: 2px solid red;*/
         height: 400px;
-        /*width: 85%;*/
         width: 1000px;
         float: left;
         padding-top: 20px;
@@ -169,7 +168,7 @@
 
     /*Styling sliders*/
     .sliders-section {
-        border: 2px solid black;
+        /*border: 2px solid black;*/
         display: flex;
         height: 230px;
         z-index: 2;
