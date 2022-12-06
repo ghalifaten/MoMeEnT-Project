@@ -52,8 +52,6 @@ legend.enter().append('rect')
         .style('fill', d => d.Color)
         .attr('transform',
                     (d, i) => {
-                        console.log("i = ", i);
-                        console.log("d = ", d)
                         var x = xOffset;
                         var y = yOffset + (legendItemSize + legendSpacing) * i;
                         return `translate(${x}, ${y})`;
@@ -63,11 +61,6 @@ legend.enter().append('text')
         .attr('x', xOffset + legendItemSize + 5)
         .attr('y', (d, i) => yOffset + (legendItemSize + legendSpacing) * i + 12)
         .text(d => d.Text); 
-
-//svg.append("circle").attr("cx",200).attr("cy",130).attr("r", 6).style("fill", "#D3D3D3")
-//svg.append("text").attr("x", 220).attr("y", 130).text("Habitual behavior").style("font-size", "15px").attr("alignment-baseline","middle")
-//svg.append("circle").attr("cx",200).attr("cy",160).attr("r", 6).style("fill", "#69b3a2")
-//svg.append("text").attr("x", 220).attr("y", 160).text("New behavior").style("font-size", "15px").attr("alignment-baseline","middle")
 
 // Load data
 var data = JSON.parse(window.localStorage.getItem("baseline_data"));
@@ -200,21 +193,21 @@ function difference(baseline_data, current_data) {
     return [current_sum - baseline_sum, current_avg - baseline_avg];
 }
 
-d3.select("#stats-btn").on("click", function(d){
+d3.select("#stats-btn").on("click", function(d){    
     //Animation for statistics numbers
     var baseline_data = JSON.parse(window.localStorage.getItem("baseline_data"));
     var current_data = JSON.parse(window.localStorage.getItem("current_data"));
     const differences = difference(baseline_data, current_data);
     const diffValue = differences[0];
     const diffAvg = differences[1];
-    
+
     if (diffValue != 0) {
         let counts=setInterval(updated);
         let upto=0;
         function updated(){
             var count= document.getElementById("stats-nbr-you");
             count.innerHTML=++upto;
-            if(upto===Math.abs(diffValue)){ clearInterval(counts); }
+            if(upto===Math.abs(Math.ceil(diffValue))){ clearInterval(counts); }
         }
     }
 
@@ -227,6 +220,17 @@ d3.select("#stats-btn").on("click", function(d){
         document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-decrease.png\"></img>"
     }
 
+    if (diffAvg != 0) {
+        let counts=setInterval(updated);
+        
+        let upto=0;
+        function updated(){
+            var count= document.getElementById("stats-nbr-avg");
+            count.innerHTML=++upto;
+            if(upto===Math.abs(Math.ceil(diffAvg))){ clearInterval(counts); }
+        }
+    }
+
     //update stats-avg
     if (diffAvg >= 0) {
         document.getElementById("stats-txt-avg").innerText = "Increase in cost for running the dishwasher."
@@ -236,15 +240,6 @@ d3.select("#stats-btn").on("click", function(d){
         document.getElementById("stats-icon-avg").innerHTML = "<img src=\"static/data/arrow-decrease.png\"></img>"
     }
 
-    if (diffAvg != 0) {
-        let counts=setInterval(updated);
-        let upto=0;
-        function updated(){
-            var count= document.getElementById("stats-nbr-avg");
-            count.innerHTML=++upto;
-            if(upto===Math.abs(diffAvg)){ clearInterval(counts); }
-        }
-    }
 })
 
 
