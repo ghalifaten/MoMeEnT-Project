@@ -1,14 +1,16 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 import os, sys, json
+import datetime
+import numpy as np
 
 #TODO clean URLs from args
 
 #module_path = "/home/faten/HERUS/MoMeEnT-Project/web_interface/src/" #TODO change this
-module_path = os.path.abspath(os.path.join('..'))
+module_path = os.path.abspath(os.path.join('..'))+'/MoMeEnT-Project'
 if module_path not in sys.path:
     sys.path.append(module_path)
 
-#from demod_survey.examples.DEMO_QUALTRICS_FUNCTION import demo_qualtrics_function
+from demod_survey.examples.DEMO_SIMULATOR import demo_qualtrics_price
 
 app = Flask(__name__, template_folder='templates')
 
@@ -26,13 +28,55 @@ def questions():
 
 @app.route('/experiment1', methods=['GET', 'POST'])
 def experiment_1():
-    response1 = request.args.get('response1')
-    response2 = request.args.get('response2')
-    response3 = request.args.get('response3')
-    f = open(module_path+"/MoMeEnT-Project/web_interface/src/static/data/responses.txt", "w") #in overwrite mode
-    f.write(response1 + "\n" + response2 + "\n" + response3)
-    f.close()
-    return render_template("experiment_1.html")
+    if request.method == 'GET':
+        n_residents = request.args.get('n_residents')
+        household_type = request.args.get('household_type')
+        #response3 = request.args.get('response3')
+        #f = open(module_path+"/MoMeEnT-Project/web_interface/src/static/data/responses.txt", "w") #in overwrite mode
+        #f.write(response1 + "\n" + response2 + "\n" + response3)
+        #f.close()
+        data = {
+            'n_residents':n_residents,
+            'household_type':household_type
+        }
+        return render_template("experiment_1.html", data=data)
+
+n_households = 1000
+
+usage_patterns = {'target_cycles':{'DISH_WASHER':np.ones(n_households)*251,
+                                    'WASHING_MACHINE':np.ones(n_households)*100},
+                  'day_prob_profiles':{'DISH_WASHER':np.ones((n_households,24)),
+                                       'WASHING_MACHINE':np.ones((n_households,24))
+                                       }
+                }
+
+@app.route('/get-cost', methods=['POST'])
+def get_cost():
+    n_residents = request.get_json()['n_residents']
+    household_type = request.get_json()['household_type']
+
+    try:
+        n_residents = int(n_residents)
+        household_type = int(household_type)
+    except:
+        return 'error'
+    
+    subgroups = [{'n_residents': n_residents, 'household_type': household_type, 'weekday':[1,2,3,4,5]}]
+    """
+    cost = demo_qualtrics_price(
+        hh_subgroups = subgroups,
+        n_hh_list = [n_households],
+        start_datetime = datetime.datetime(2014, 4, 1, 0, 0, 0),
+        usage_patterns = usage_patterns,
+        )
+    """
+    cost = n_residents * household_type * 100
+
+    response = {
+        'cost': cost,
+    }
+    return jsonify(response)
+
 
 @app.route('/experiment2')
 def experiment_2():

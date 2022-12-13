@@ -194,13 +194,56 @@ function difference(baseline_data, current_data) {
 }
 
 d3.select("#stats-btn").on("click", function(d){    
+    /* RUN DEMOD */
+    function getCost() {
+        const n_residents = document.getElementById('n_residents').innerText
+        console.log("n_residents = ", n_residents)
+        const household_type = document.getElementById('household_type').innerText
+        console.log("household_type = ", household_type)
+        $.ajax({
+            url: location.origin + "/get-cost",
+            type: 'POST',
+            data: JSON.stringify({
+                "n_residents": n_residents,
+                "household_type": household_type
+            }),
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                const cost = response.cost;
+                if (cost != 0) {
+                    let counts=setInterval(updated);
+                    let upto=0;
+                    function updated(){
+                        var count= document.getElementById("stats-nbr-you");
+                        count.innerHTML=++upto;
+                        if(upto===Math.abs(Math.ceil(cost))){ clearInterval(counts); }
+                    }
+                }
+            
+                //update stats-you 
+                if (cost >= 0) {
+                    document.getElementById("stats-txt-you").innerText = "Increase in cost for running the dishwasher."
+                    document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-increase.png\"></img>"
+                } else {
+                    document.getElementById("stats-txt-you").innerText = "Decrease in cost for running the dishwasher."
+                    document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-decrease.png\"></img>"
+                }
+            },
+            error: function (response) {
+            alert("Error!")
+            }
+        });
+    }
+    getCost()
+    
     //Animation for statistics numbers
     var baseline_data = JSON.parse(window.localStorage.getItem("baseline_data"));
     var current_data = JSON.parse(window.localStorage.getItem("current_data"));
     const differences = difference(baseline_data, current_data);
     const diffValue = differences[0];
     const diffAvg = differences[1];
-
+    /*
     if (diffValue != 0) {
         let counts=setInterval(updated);
         let upto=0;
@@ -210,7 +253,6 @@ d3.select("#stats-btn").on("click", function(d){
             if(upto===Math.abs(Math.ceil(diffValue))){ clearInterval(counts); }
         }
     }
-
     //update stats-you 
     if (diffValue >= 0) {
         document.getElementById("stats-txt-you").innerText = "Increase in cost for running the dishwasher."
@@ -219,7 +261,9 @@ d3.select("#stats-btn").on("click", function(d){
         document.getElementById("stats-txt-you").innerText = "Decrease in cost for running the dishwasher."
         document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-decrease.png\"></img>"
     }
+    */
 
+   
     if (diffAvg != 0) {
         let counts=setInterval(updated);
         
@@ -267,6 +311,4 @@ function wrap(text, width) {
       }
     })
 }
-
-
 

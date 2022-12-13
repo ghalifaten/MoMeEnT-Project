@@ -33,6 +33,9 @@
         <script src="https://d3js.org/d3.v4.js"></script>
         <script src="https://unpkg.com/d3-simple-slider"></script>
 
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 </head>
 
 <body>
@@ -145,11 +148,11 @@
                             
                         </div>
                     </div>
-
-
+                    <div hidden id="n_residents">{{ data.n_residents }}</div>
+                    <div hidden id="household_type">{{ data.household_type }}</div>
                     <div style="clear:both">
                         <p style="margin-top: 100px;">
-                            <button class="link-btn" id="link-to-exp2" onclick="location.href='/experiment2'">Next page</button>
+                            <button class="link-btn" id="link-to-exp2" onclick="getCost()">Next page</button> <!--onclick="location.href='/experiment2'"-->
                         </p>
                     </div>
                 </div> 
