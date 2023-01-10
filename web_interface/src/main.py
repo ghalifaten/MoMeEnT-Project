@@ -29,9 +29,11 @@ def questions():
 @app.route('/experiment1', methods=['GET', 'POST'])
 def experiment_1():
     if request.method == 'GET':
-        n_residents = request.args.get('n_residents')
+        #variables coming from the form on page questions.html
         household_type = request.args.get('household_type')
-        #response3 = request.args.get('response3')
+        n_residents = request.args.get('n_residents')
+        machines = request.args.get('machine')
+        print(household_type, n_residents, machines)
         #f = open(module_path+"/MoMeEnT-Project/web_interface/src/static/data/responses.txt", "w") #in overwrite mode
         #f.write(response1 + "\n" + response2 + "\n" + response3)
         #f.close()
@@ -43,15 +45,17 @@ def experiment_1():
 
 n_households = 1000
 
+#251, 100, values given from qualtrics
 usage_patterns = {'target_cycles':{'DISH_WASHER':np.ones(n_households)*251,
                                     'WASHING_MACHINE':np.ones(n_households)*100},
-                  'day_prob_profiles':{'DISH_WASHER':np.ones((n_households,24)),
+                  'day_prob_profiles':{'DISH_WASHER':np.ones((n_households,24)),  #from the barchart, change vector of frq over 24 hours
                                        'WASHING_MACHINE':np.ones((n_households,24))
                                        }
                 }
 
 @app.route('/get-cost', methods=['POST'])
 def get_cost():
+    #variables coming from ajax request (see barchart_1.js)
     n_residents = request.get_json()['n_residents']
     household_type = request.get_json()['household_type']
 
@@ -62,15 +66,15 @@ def get_cost():
         return 'error'
     
     subgroups = [{'n_residents': n_residents, 'household_type': household_type, 'weekday':[1,2,3,4,5]}]
-    """
+    
     cost = demo_qualtrics_price(
         hh_subgroups = subgroups,
         n_hh_list = [n_households],
         start_datetime = datetime.datetime(2014, 4, 1, 0, 0, 0),
         usage_patterns = usage_patterns,
         )
-    """
-    cost = n_residents * household_type * 100
+    
+    #cost = n_residents * household_type * 100
 
     response = {
         'cost': cost,

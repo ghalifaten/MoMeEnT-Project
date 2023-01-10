@@ -35,57 +35,7 @@
 </head>
 
 <body>
-    <div class="section s3">
-        <div class="slide">
-            <div class="page-content">
-
-                <div class="popup" onclick="popupFunctionExp1()">
-                    <i class="fa fa-question-circle-o" style="font-size:36px;"></i>
-                    <span class="popuptext" id="popupExp1">Popup text... Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
-                        dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non 
-                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>
-                </div> 
-
-                <div id="exp2">
-                    <div id="text">
-                    <h2>2nd Experiment</h2>
-                    <hr>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
-                        dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non 
-                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-                    </div>
-                    <!--D3 bar chart visualization-->
-                    <!--svg id="bar_chart" width="460" height="400"> 
-                        
-                    </svg-->
-
-                    <form class="form-plot" method="POST">
-                        <label for="nresidents">Number of residents:</label>
-                        <input type="text" id="nresidents" name="nresidents">
-                        <label for="nhouseholds">Number of households:</label>
-                        <input type="text" id="nhouseholds" name="nhouseholds">
-                        <input type="submit"> <!--bouton-->
-                    </form>
-
-                    <div style="text-align:center; font-weight:bold">
-                        The number of residents is <span style="color:blue;">{{nresidents}}</span> and 
-                        the number of households is <span style="color:blue;">{{nhouseholds}}</span>.
-                    </div>
-
-                    <!--img id="#img-plot" src="{{ url_for('static', filename='plots/demo_qualtrics.jpg')}}"-->
-
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
-                        dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non 
-                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
-                        dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non 
-                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
+   
                     <p style="margin-top: 100px;">
                         <button class="link-btn" id="link-to-exp3" onclick="location.href='/experiment3'">Next page</button>
                     </p>
