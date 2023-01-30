@@ -163,7 +163,7 @@ d3.select("#morningSlider").on("change", function(d){
     current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
 })
 //midday
-d3.select("creas#middaySlider").on("change", function(d){
+d3.select("#middaySlider").on("change", function(d){
     middayValue = this.value
     current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
 })

@@ -9,10 +9,20 @@ import numpy as np
 module_path = os.path.abspath(os.path.join('..'))+'/MoMeEnT-Project'
 if module_path not in sys.path:
     sys.path.append(module_path)
+print("\n"+module_path+"\n")
+#from demod_survey.examples.DEMO_SIMULATOR import demo_qualtrics_price
 
-from demod_survey.examples.DEMO_SIMULATOR import demo_qualtrics_price
+###########
+import boto3
+import conf.credentials as conf
+
+client = boto3.client('lambda',
+                        region_name= conf.region,
+                        aws_access_key_id=conf.aws_access_key_id,
+                        aws_secret_access_key=conf.aws_secret_access_key)
 
 app = Flask(__name__, template_folder='templates')
+############
 
 @app.route('/')
 def index():
@@ -33,7 +43,7 @@ def experiment_1():
         household_type = request.args.get('household_type')
         n_residents = request.args.get('n_residents')
         machines = request.args.get('machine')
-        print(household_type, n_residents, machines)
+        
         #f = open(module_path+"/MoMeEnT-Project/web_interface/src/static/data/responses.txt", "w") #in overwrite mode
         #f.write(response1 + "\n" + response2 + "\n" + response3)
         #f.close()
@@ -64,22 +74,19 @@ def get_cost():
         household_type = int(household_type)
     except:
         return 'error'
-    
-    subgroups = [{'n_residents': n_residents, 'household_type': household_type, 'weekday':[1,2,3,4,5]}]
-    
-    cost = demo_qualtrics_price(
-        hh_subgroups = subgroups,
-        n_hh_list = [n_households],
-        start_datetime = datetime.datetime(2014, 4, 1, 0, 0, 0),
-        usage_patterns = usage_patterns,
-        )
-    
-    #cost = n_residents * household_type * 100
+        
+    payload = {"n_residents": n_residents, "household_type": household_type}
 
-    response = {
-        'cost': cost,
-    }
-    return jsonify(response)
+    print("\n Payload = ", payload, "\n")
+    #Invoke a lambda function which calculates the cost from a demod simulation           
+    result = client.invoke(FunctionName=conf.lambda_function_name,
+                InvocationType='RequestResponse',                                      
+                Payload=json.dumps(payload))
+    range = result['Payload'].read()  
+    print("\n range = ", range, "\n")    
+    api_response = json.loads(range) 
+   
+    return jsonify(api_response)
 
 
 @app.route('/experiment2')
