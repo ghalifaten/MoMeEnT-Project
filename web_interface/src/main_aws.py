@@ -34,8 +34,12 @@ def index(qualtrics_data):
         hh_type = int(request.args.get('hh_type'))
         frequency = request.args.get('frequency')
     except:
-        print("Error reading arguments in the URL. Either missing or not translatable to int.")
-    
+        return 'error'
+
+    #TODO ADD MAPPING HERE
+    #hh_size = ...
+
+    #return value
     qualtrics_data = json.dumps({
         "m": m,
         "ID": ID,
@@ -54,22 +58,9 @@ def experiment0():
 def questions():
     return render_template("questions.html")
 
-@app.route('/experiment1', methods=['GET', 'POST'])
+@app.route('/experiment1')
 def experiment_1():
-    if request.method == 'GET':
-        #variables coming from the form on page questions.html
-        household_type = request.args.get('household_type')
-        n_residents = request.args.get('n_residents')
-        machines = request.args.get('machine')
-        
-        #f = open(module_path+"/MoMeEnT-Project/web_interface/src/static/data/responses.txt", "w") #in overwrite mode
-        #f.write(response1 + "\n" + response2 + "\n" + response3)
-        #f.close()
-        data = {
-            'n_residents':n_residents,
-            'household_type':household_type
-        }
-        return render_template("experiment_1.html", data=data)
+    return render_template("experiment_1.html")
 
 n_households = 1000
 
@@ -95,7 +86,6 @@ def get_cost():
         
     payload = {"n_residents": n_residents, "household_type": household_type}
 
-    print("\n Payload = ", payload, "\n")
     #Invoke a lambda function which calculates the cost from a demod simulation           
     result = client.invoke(FunctionName=conf.lambda_function_name,
                 InvocationType='RequestResponse',                                      
