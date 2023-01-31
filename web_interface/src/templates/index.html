@@ -52,10 +52,14 @@
 					</div>
 			</div>
 		</div>
+
+		<!--These hidden divs are used to pass the data from flask to JS to be able to store it in the localStorage for later usage.-->
+		<div hidden id="qualtrics_data">{{ qualtrics_data }}</div>
 		
 	</div>
 
 	<script src="{{ url_for('static', filename='js/app.js')}}"></script>
+	<script src="{{ url_for('static', filename='js/index.js')}}"></script>
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.0/fullpage.min.js"></script>

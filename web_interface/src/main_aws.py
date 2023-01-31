@@ -24,9 +24,27 @@ client = boto3.client('lambda',
 app = Flask(__name__, template_folder='templates')
 ############
 
-@app.route('/')
-def index():
-    return render_template("index.html")
+@app.route('/<qualtrics_data>')
+def index(qualtrics_data):
+    try:
+        #All args are of type str, change type here if needed.
+        m = request.args.get('m')
+        ID = request.args.get('ID')
+        hh_size = int(request.args.get('hh_size'))
+        hh_type = int(request.args.get('hh_type'))
+        frequency = request.args.get('frequency')
+    except:
+        print("Error reading arguments in the URL. Either missing or not translatable to int.")
+    
+    qualtrics_data = json.dumps({
+        "m": m,
+        "ID": ID,
+        "hh_size": hh_size,
+        "hh_type": hh_type,
+        "frequency": frequency
+    })
+
+    return render_template("index.html", qualtrics_data=qualtrics_data)
 
 @app.route('/experiment0')
 def experiment0():
@@ -83,7 +101,6 @@ def get_cost():
                 InvocationType='RequestResponse',                                      
                 Payload=json.dumps(payload))
     range = result['Payload'].read()  
-    print("\n range = ", range, "\n")    
     api_response = json.loads(range) 
    
     return jsonify(api_response)
