@@ -21,6 +21,13 @@ client = boto3.client('lambda',
                         aws_access_key_id=conf.aws_access_key_id,
                         aws_secret_access_key=conf.aws_secret_access_key)
 
+dynamodb = boto3.resource('dynamodb', 
+                        region_name= conf.region,
+                        aws_access_key_id=conf.aws_access_key_id,
+                        aws_secret_access_key=conf.aws_secret_access_key)
+
+table = dynamodb.Table('MockMomeentProjectData')
+
 app = Flask(__name__, template_folder='templates')
 ############
 
@@ -39,14 +46,19 @@ def index(qualtrics_data):
     #TODO ADD MAPPING HERE
     #hh_size = ...
 
-    #return value
-    qualtrics_data = json.dumps({
+    #create an item (DB record)
+    item = {
         "m": m,
-        "ID": ID,
+        "ResponseID": ID,
         "hh_size": hh_size,
         "hh_type": hh_type,
         "frequency": frequency
-    })
+    }
+    #add item to DB
+    table.put_item(Item=item)
+
+    #also send item to the web_interface as a JSON object for localStorage
+    qualtrics_data = json.dumps(item)
 
     return render_template("index.html", qualtrics_data=qualtrics_data)
 
