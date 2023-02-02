@@ -47,10 +47,7 @@ def index(qualtrics_data):
         ID = request.args.get('ID')
         hh_size = int(request.args.get('hh_size'))
         hh_type = int(request.args.get('hh_type'))
-        frequency = request.args.get('frequency')
-
-        #TODO add weekly_freq argument to the Qualtrics link 
-        weekly_freq = request.args.get('weekly_freq')
+        weekly_freq = request.args.get('frequency')
         
     except:
         return 'Error in extracting arguments from URL. Either missing or data type not correct.'
