@@ -1,21 +1,19 @@
-from flask import Flask, request, render_template, jsonify
+#http://127.0.0.1:5000//data?m=1&ID=QR001&hh_size=1&hh_type=1&frequency=2&weekly_freq=3
+from flask import Flask, request, render_template, jsonify, session
 import os, sys, json
 import datetime
 import numpy as np
+import boto3
+import conf.credentials as conf
+import secrets
 
-#TODO clean URLs from args
+secret = secrets.token_urlsafe(32) #generate secret key for the current session
 
-#module_path = "/home/faten/HERUS/MoMeEnT-Project/web_interface/src/" #TODO change this
 module_path = os.path.abspath(os.path.join('..'))+'/MoMeEnT-Project'
 if module_path not in sys.path:
     sys.path.append(module_path)
-print("\n"+module_path+"\n")
-#from demod_survey.examples.DEMO_SIMULATOR import demo_qualtrics_price
 
 ###########
-import boto3
-import conf.credentials as conf
-
 client = boto3.client('lambda',
                         region_name= conf.region,
                         aws_access_key_id=conf.aws_access_key_id,
@@ -29,8 +27,18 @@ dynamodb = boto3.resource('dynamodb',
 table = dynamodb.Table('MockMomeentProjectData')
 
 app = Flask(__name__, template_folder='templates')
-############
+app.secret_key = secret
 
+############
+n_households = 1000
+usage_patterns = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251).tolist(),#/!\.tolist() is necessary to make ndarrays JSON serializable
+                                    'WASHING_MACHINE':(np.ones(n_households)*100).tolist()},
+                  'day_prob_profiles':{'DISH_WASHER':(np.ones((n_households,24))).tolist(),  
+                                       'WASHING_MACHINE':(np.ones((n_households,24))).tolist()
+                                       }
+                }
+
+############
 @app.route('/<qualtrics_data>')
 def index(qualtrics_data):
     try:
@@ -40,11 +48,27 @@ def index(qualtrics_data):
         hh_size = int(request.args.get('hh_size'))
         hh_type = int(request.args.get('hh_type'))
         frequency = request.args.get('frequency')
-    except:
-        return 'error'
 
-    #TODO ADD MAPPING HERE
-    #hh_size = ...
+        #TODO add weekly_freq argument to the Qualtrics link 
+        weekly_freq = request.args.get('weekly_freq')
+        
+    except:
+        return 'Error in extracting arguments from URL. Either missing or data type not correct.'
+
+    #TODO ADD MAPPING OF weekly_freq HERE 
+    #AND USE IT TO UPDATE target_cycles OF usage_patterns
+    #/!\ make sure the data is JSON serializable, use .tolist() on ndarrays (see initialization example above)
+    # ...
+
+    #save usage_patterns to session
+    session["usage_patterns"] = json.dumps(usage_patterns) #objects in session have to be JSON serialized (i.e converted to a string)
+    
+    #TODO ADD MAPPING OF hh_size and/or hh_type HERE IF NEEDED
+    #....
+
+    #save hh_size and hh_type to session for later use in the cost computation
+    session["hh_size"] = hh_size
+    session["hh_type"] = hh_type
 
     #create an item (DB record)
     item = {
@@ -74,29 +98,43 @@ def questions():
 def experiment_1():
     return render_template("experiment_1.html")
 
-n_households = 1000
-
-#251, 100, values given from qualtrics
-usage_patterns = {'target_cycles':{'DISH_WASHER':np.ones(n_households)*251,
-                                    'WASHING_MACHINE':np.ones(n_households)*100},
-                  'day_prob_profiles':{'DISH_WASHER':np.ones((n_households,24)),  #from the barchart, change vector of frq over 24 hours
-                                       'WASHING_MACHINE':np.ones((n_households,24))
-                                       }
-                }
-
 @app.route('/get-cost', methods=['POST'])
 def get_cost():
+    """
+        We used to go through localStorage on the browser to move variables around different routes (using ajax)
+    """
+    """
     #variables coming from ajax request (see barchart_1.js)
     n_residents = request.get_json()['n_residents']
     household_type = request.get_json()['household_type']
-
     try:
         n_residents = int(n_residents)
         household_type = int(household_type)
     except:
         return 'error'
-        
-    payload = {"n_residents": n_residents, "household_type": household_type}
+    """
+    """
+        Now we use Flask session
+    """
+    n_residents = session["hh_size"]
+    household_type = session["hh_type"]
+
+    #the data of the bar_charts: (coming from barChart_1.js)
+    #baseline: 1st bar chart (Experience0)
+    #current: 2nd bar chart (Experience1)
+    baseline = request.get_json()['baseline_data']
+    current = request.get_json()['current_data']
+
+    #to be able to get the data from session in the correct data type, we have to deserialize it
+    #using json.loads:
+    usage_patterns = json.loads(session["usage_patterns"])
+
+    #TODO interpolation of above data to create the day_prob_profiles field in usage_patterns
+    #...
+    
+
+    #payload is the input data to the lambda function
+    payload = {"n_residents": n_residents, "household_type": household_type, "usage_patterns":usage_patterns}
 
     #Invoke a lambda function which calculates the cost from a demod simulation           
     result = client.invoke(FunctionName=conf.lambda_function_name,
@@ -111,7 +149,7 @@ def get_cost():
 @app.route('/experiment2')
 def experiment_2():
     #demo_qualtrics_function()
-    return render_template("experiment_2.html", nresidents=1, nhouseholds=5)
+    return render_template("experiment_2.html")
 
 @app.route('/experiment2', methods=['POST'])
 def experiment_2_post():

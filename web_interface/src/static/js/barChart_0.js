@@ -1,4 +1,3 @@
-//window.localStorage.clear()
 //Get data file from parameters of Script tag
 function getSyncScriptParams() {
     var scripts = document.getElementsByTagName('script');

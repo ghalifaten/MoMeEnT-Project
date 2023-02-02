@@ -196,17 +196,17 @@ function difference(baseline_data, current_data) {
 d3.select("#stats-btn").on("click", function(d){    
     /* RUN DEMOD */
     function getCost() {
-        //Get qualtrics arguments stored in the browser ...
-        const qualtrics_data = JSON.parse(window.localStorage.getItem("qualtrics_data"));
-        const n_residents = qualtrics_data["hh_size"]
-        const household_type = qualtrics_data["hh_type"]
+        //TODO CHECK IF THIS IS THE DATA WE WANT TO SEND USE FOR THE COST COMPUTATION
+        const baseline_data = JSON.parse(window.localStorage.getItem("baseline_data"))
+        const current_data = JSON.parse(window.localStorage.getItem("current_data"))
+
         //... and send them to Flask to use them in computing the cost.
         $.ajax({
             url: location.origin + "/get-cost",
             type: 'POST',
             data: JSON.stringify({
-                "n_residents": n_residents,
-                "household_type": household_type
+                "baseline_data": baseline_data,
+                "current_data": current_data
             }),
             contentType: "application/json",
             dataType: "json",
