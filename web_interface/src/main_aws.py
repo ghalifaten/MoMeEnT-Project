@@ -68,7 +68,7 @@ def index(qualtrics_data):
     session["hh_type"] = hh_type
 
     #save responseID for further DB updates
-    sassion["ID"] = ID
+    session["ID"] = ID
 
     #create an item (DB record)
     item = {
