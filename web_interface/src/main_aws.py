@@ -89,6 +89,27 @@ def index(qualtrics_data):
 def experiment_0():
     return render_template("experiment_0.html")
 
+@app.route('/get-baseline-values', methods=['POST'])
+def get_baseline_values():
+    values_dict = {}
+    baseline = request.get_json()['baseline_data']
+    for d in baseline:
+        key = d["Period"].split()[0] #remove the additional information of time between ()
+        value = d["Value"]
+        values_dict[key] = int(value)
+    """
+        values_dict has the format: {'morning': 0, 'midday': 1, 'afternoon': 2, 'evening': 3, 'night': 4}
+    """
+
+    profile = generate_profile()
+
+    return 0
+
+def generate_profile():
+    #TODO make the calcluations to generate the profile
+    return profile
+
+
 @app.route('/questions_0', methods=['GET','POST'])
 def questions_0():
     return render_template("questions_0.html")
