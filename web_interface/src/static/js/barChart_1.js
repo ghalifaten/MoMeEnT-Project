@@ -76,7 +76,8 @@ function add_line(price_data) {
     // Define the line
     var valueline = d3.line()
                         .x(function(d) { return x(d.Period); })
-                        .y(function(d) { return y(d.Value); });
+                        .y(function(d) { return y(d.Value); })
+                        .curve(d3.curveStep);
                     
     // Add the line path
     svg.append("path")

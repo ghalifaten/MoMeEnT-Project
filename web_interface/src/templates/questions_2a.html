@@ -53,11 +53,32 @@
             <input type="radio" name="q2a_r1" value="2">Type2<br>
             <input type="radio" name="q2a_r1" value="3">Type3 <br>
 
+            <h3>Question2</h3>
+
+            <table style="width:100%">
+                <tr>
+                  <th>Question</th>
+                  <th>No</th>
+                  <th>Yes</th>
+                </tr>
+                <tr>
+                  <td>Here is the first statement</td>
+                  <!--value 10 corresponds to No to the first statement of r2 (question 2 on the page), value 11 corresponds to Yes-->
+                  <td><input type="radio" name="q2a_r2" value="10"></td> 
+                  <td><input type="radio" name="q2a_r2" value="11"></td>
+                </tr>
+                <tr>
+                  <td>Here is the second statement</td>
+                  <td><input type="radio" name="q2a_r2" value="20"></td>
+                  <td><input type="radio" name="q2a_r2" value="21"></td>
+                </tr>
+            </table>
 
             <p style="margin-top: 100px;">
                 <input class="link-btn button" onclick="window.location.href = '/questions_2b';" type="submit" value="Next page" />
        
             </p>
+
         </form>
     </div>
 

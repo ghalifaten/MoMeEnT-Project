@@ -37,7 +37,7 @@ var yOffset = 10;
 
 var legend_data = [ { Text: "Habitual behavior", Color: "#D3D3D3" },
                     { Text: "New behavior", Color: "#69b3a2" },
-                    { Text: "Price line", Color: "red"} ];
+                    { Text: "Peak hours", Color: "#f9d4da"}];
 
 var legend = d3.select('#bar-chart-legend')
                 .append('svg')
@@ -64,29 +64,6 @@ legend.enter().append('text')
 
 // Load data
 var data = JSON.parse(window.localStorage.getItem("baseline_data"));
-var price_data;
-
-// Load price data and add line to the chart
-d3.csv('static/data/price_data.csv',function (d) {
-    price_data = d;
-    add_line(price_data);
-});
-
-function add_line(price_data) { 
-    // Define the line
-    var valueline = d3.line()
-                        .x(function(d) { return x(d.Period); })
-                        .y(function(d) { return y(d.Value); });
-                    
-    // Add the line path
-    svg.append("path")
-        .attr("class", "line")
-        .style("stroke", "red")
-        .style("stroke-width", 3)
-        .attr("fill", "none")
-        .attr("d", valueline(price_data))
-        .attr("transform", "translate(58,0)");
-}
 
 // Add X axis
 var x = d3.scaleBand()
@@ -111,6 +88,21 @@ svg.append("g")
 var y = d3.scaleLinear()
 .domain([0, 4])
 .range([height, 0]);
+
+//Add "Peak hours" rectangle
+svg.selectAll("bar")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("x", function(d) { return x(data[2].Period); })
+    .attr("y", 0)
+    .attr("width", 250)
+    .attr("height", 310)
+    .attr("fill", "#f9d4da")
+    .attr("rx", 10)
+    .attr("ry", 10)
+    .attr("class", "peak-hours-rect")
+    
 
 // Bars
 svg.selectAll("bar")
@@ -244,26 +236,6 @@ d3.select("#stats-btn").on("click", function(d){
     const differences = difference(baseline_data, current_data);
     const diffValue = differences[0];
     const diffAvg = differences[1];
-    /*
-    if (diffValue != 0) {
-        let counts=setInterval(updated);
-        let upto=0;
-        function updated(){
-            var count= document.getElementById("stats-nbr-you");
-            count.innerHTML=++upto;
-            if(upto===Math.abs(Math.ceil(diffValue))){ clearInterval(counts); }
-        }
-    }
-    //update stats-you 
-    if (diffValue >= 0) {
-        document.getElementById("stats-txt-you").innerText = "Increase in cost for running the dishwasher."
-        document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-increase.png\"></img>"
-    } else {
-        document.getElementById("stats-txt-you").innerText = "Decrease in cost for running the dishwasher."
-        document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-decrease.png\"></img>"
-    }
-    */
-
    
     if (diffAvg != 0) {
         let counts=setInterval(updated);
