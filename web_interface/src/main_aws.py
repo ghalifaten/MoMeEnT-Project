@@ -89,6 +89,8 @@ def index(qualtrics_data):
 def experiment_0():
     return render_template("experiment_0.html")
 
+
+
 @app.route('/get-baseline-values', methods=['POST'])
 def get_baseline_values():
     values_dict = {}
@@ -105,8 +107,21 @@ def get_baseline_values():
 
     return 0
 
-def generate_profile():
-    #TODO make the calcluations to generate the profile
+def movingaverage(interval, window_size):
+    window = np.ones(int(window_size))/float(window_size)
+    return np.convolve(interval, window, 'same')
+
+
+def generate_profile(values_dict):
+    raw_profile = np.asarray([values_dict['night']] * 2 + \
+                             [values_dict['morning']] * 4 + \
+                             [values_dict['midday']] * 4 + \
+                             [values_dict['afternoon']] * 4 + \
+                             [values_dict['evening']] * 4 + \
+                             [values_dict['night']] * 6
+                            )
+    profile = movingaverage(raw_profile, 3)
+    # profiles = np.asarray([profile for _ in range(1000)])
     return profile
 
 
