@@ -31,6 +31,13 @@
 
 </head>
 
+<style>
+    .highlight-cell{
+        background-color: rgba(95, 158, 160, 0.603);
+        color: white;
+    }
+</style>
+
 <body>
     <!--TODO: change text of the popup help here-->
     <div class="popup" onclick="popupFunctionExp1()">
@@ -55,22 +62,22 @@
 
             <h3>Question2</h3>
 
-            <table style="width:100%">
-                <tr>
-                  <th>Question</th>
-                  <th>No</th>
-                  <th>Yes</th>
+            <table cellspacing="0" style="width: 60%;"> <!--60% of the width of the window-->
+                <tr >
+                  <th style="width: 50%;" class="highlight-cell">Question</th> <!--50% of the table's width-->
+                  <th style="width: 25%;" class="highlight-cell">No</th>
+                  <th style="width: 25%;" class="highlight-cell">Yes</th>
                 </tr>
                 <tr>
-                  <td>Here is the first statement</td>
-                  <!--value 10 corresponds to No to the first statement of r2 (question 2 on the page), value 11 corresponds to Yes-->
-                  <td><input type="radio" name="q2a_r2" value="10"></td> 
-                  <td><input type="radio" name="q2a_r2" value="11"></td>
+                  <td >Here is the first statement</td>
+                  <!--q2a_r2_1 correpsonds to the 1st statement from the 2nd question (r2) of list of questions q2a-->
+                  <td><input type="radio" name="q2a_r2_1" value="No"></td> 
+                  <td><input type="radio" name="q2a_r2_1" value="Yes"></td>
                 </tr>
                 <tr>
-                  <td>Here is the second statement</td>
-                  <td><input type="radio" name="q2a_r2" value="20"></td>
-                  <td><input type="radio" name="q2a_r2" value="21"></td>
+                  <td >Here is the second statement</td>
+                  <td><input type="radio" name="q2a_r2_2" value="No"></td>
+                  <td><input type="radio" name="q2a_r2_2" value="Yes"></td>
                 </tr>
             </table>
 
