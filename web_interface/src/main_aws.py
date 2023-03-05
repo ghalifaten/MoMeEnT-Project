@@ -1,4 +1,7 @@
 #http://127.0.0.1:5000//data?m=1&ID=QR001&hh_size=1&hh_type=1&frequency=2
+#Public IP: 35.180.87.158
+#launc: http://35.180.87.158:8080/
+
 from flask import Flask, request, render_template, jsonify, session
 import os, sys, json
 import datetime
@@ -39,6 +42,40 @@ usage_patterns = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251).tol
                 }
 
 #---- FLASK ROUTES ----#
+#---- TEMPORARY MAIN
+@app.route('/') #without args, define default args: data?m=1&ID=QR001&hh_size=1&hh_type=1&frequency=2
+def _index():
+    #Default args
+    m = "1"
+    ID = "test"
+    hh_size = 1
+    hh_type = 1
+    weekly_freq = 2
+        
+    #save usage_patterns to session
+    session["usage_patterns"] = json.dumps(usage_patterns) #objects in session have to be JSON serialized (i.e converted to a string)
+    
+    #save hh_size and hh_type to session for later use in the cost computation
+    session["hh_size"] = hh_size
+    session["hh_type"] = hh_type
+
+    #save responseID for further DB updates
+    session["ID"] = ID
+
+    #create an item (DB record)
+    item = {
+        "m": m,
+        "ResponseID": ID,
+        "hh_size": hh_size,
+        "hh_type": hh_type,
+        "frequency": weekly_freq,
+    }
+    #add item to DB
+    table.put_item(Item=item)
+
+    return render_template("index.html")
+#------------------------------------------
+# ORIGINAL MAIN
 @app.route('/<qualtrics_data>')
 def index(qualtrics_data):
     try:
@@ -76,7 +113,7 @@ def index(qualtrics_data):
         "ResponseID": ID,
         "hh_size": hh_size,
         "hh_type": hh_type,
-        "frequency": weekly_freq
+        "frequency": weekly_freq,
     }
     #add item to DB
     table.put_item(Item=item)
@@ -102,10 +139,21 @@ def get_baseline_values():
     """
         values_dict has the format: {'morning': 0, 'midday': 1, 'afternoon': 2, 'evening': 3, 'night': 4}
     """
+    #save values of baseline in the DB
+    table.update_item(
+        Key={
+            'ResponseID': session["ID"]
+        },
+        UpdateExpression='SET baseline_values = :val1',
+        ExpressionAttributeValues={
+            ':val1': values_dict
+        }
+    )
 
-    profile = generate_profile()
-
-    return 0
+    #generate profile from baseline values
+    profile = generate_profile(values_dict)
+   
+    return {}
 
 def movingaverage(interval, window_size):
     window = np.ones(int(window_size))/float(window_size)
@@ -135,11 +183,17 @@ def questions_0():
 def experiment_1():
     #retrieve answers to questions_0 here
     q0_answers = request.args
-    #/!\ args for now look like this: 
-    #ImmutableMultiDict([('q0_r1', '1'), ('q0_r2', 'hello'), ('q0_r3', 'washmachine'), ('q0_r3', 'dryer'), ('q0_r3', 'fridge')])
-    #TODO manipulate answers here to get the desired type
+
     #save answers to DB
-    #table.set_item() #need the responseID to set the corresponding record
+    table.update_item(
+        Key={
+            'ResponseID': session["ID"]
+        },
+        UpdateExpression='SET q0_answers = :val1',
+        ExpressionAttributeValues={
+            ':val1': q0_answers.to_dict()
+        }
+    )
 
     return render_template("experiment_1.html")
 
@@ -150,10 +204,17 @@ def questions_1a():
 @app.route('/questions_1b', methods=['GET','POST'])
 def questions_1b():
     q1a_answers = request.args
-    #TODO manipulate answers here to get the desired type
-    #save answers to DB with the corresponding ID from the session
-    #ResponseID = session["ID"]
-    #table.set_item(ResponseID ...) 
+    
+    #save answers to DB
+    table.update_item(
+        Key={
+            'ResponseID': session["ID"]
+        },
+        UpdateExpression='SET q1a_answers = :val1',
+        ExpressionAttributeValues={
+            ':val1': q1a_answers.to_dict()
+        }
+    )
 
     return render_template("questions_1b.html")
 
@@ -162,10 +223,18 @@ def questions_1b():
 @app.route('/experiment_2')
 def experiment_2():
     q1b_answers = request.args
-    #TODO manipulate answers here to get the desired type
+
     #save answers to DB
-    #table.set_item() #need the responseID to set the corresponding record
-    
+    table.update_item(
+        Key={
+            'ResponseID': session["ID"]
+        },
+        UpdateExpression='SET q1b_answers = :val1',
+        ExpressionAttributeValues={
+            ':val1': q1b_answers.to_dict()
+        }
+    )
+   
     return render_template("experiment_2.html")
 
 @app.route('/questions_2a', methods=['GET','POST'])
@@ -175,9 +244,17 @@ def questions_2a():
 @app.route('/questions_2b', methods=['GET','POST'])
 def questions_2b():
     q2a_answers = request.args
-    #TODO manipulate answers here to get the desired type
+    
     #save answers to DB
-    #table.set_item() #need the responseID to set the corresponding record
+    table.update_item(
+        Key={
+            'ResponseID': session["ID"]
+        },
+        UpdateExpression='SET q2a_answers = :val1',
+        ExpressionAttributeValues={
+            ':val1': q2a_answers.to_dict()
+        }
+    )
 
     return render_template("questions_2b.html")
 
@@ -186,9 +263,17 @@ def questions_2b():
 @app.route('/experiment_3')
 def experiment_3():
     q2b_answers = request.args
-    #TODO manipulate answers here to get the desired type
+    
     #save answers to DB
-    #table.set_item() #need the responseID to set the corresponding record
+    table.update_item(
+        Key={
+            'ResponseID': session["ID"]
+        },
+        UpdateExpression='SET q2b_answers = :val1',
+        ExpressionAttributeValues={
+            ':val1': q2b_answers.to_dict()
+        }
+    )
     
     return render_template("experiment_3.html")
 
@@ -199,9 +284,17 @@ def questions_3a():
 @app.route('/questions_3b', methods=['GET','POST'])
 def questions_3b():
     q3a_answers = request.args
-    #TODO manipulate answers here to get the desired type
+    
     #save answers to DB
-    #table.set_item() #need the responseID to set the corresponding record
+    table.update_item(
+        Key={
+            'ResponseID': session["ID"]
+        },
+        UpdateExpression='SET q3a_answers = :val1',
+        ExpressionAttributeValues={
+            ':val1': q3a_answers.to_dict()
+        }
+    )
     
     return render_template("questions_3b.html")
 
@@ -210,9 +303,17 @@ def questions_3b():
 @app.route('/experiment_4')
 def experiment_4():    
     q3b_answers = request.args
-    #TODO manipulate answers here to get the desired type
+    
     #save answers to DB
-    #table.set_item() #need the responseID to set the corresponding record
+    table.update_item(
+        Key={
+            'ResponseID': session["ID"]
+        },
+        UpdateExpression='SET q3b_answers = :val1',
+        ExpressionAttributeValues={
+            ':val1': q3b_answers.to_dict()
+        }
+    )
     
     return render_template("experiment_4.html")
 
@@ -223,9 +324,17 @@ def questions_4a():
 @app.route('/questions_4b', methods=['GET','POST'])
 def questions_4b():    
     q4a_answers = request.args
-    #TODO manipulate answers here to get the desired type
+    
     #save answers to DB
-    #table.set_item() #need the responseID to set the corresponding record
+    table.update_item(
+        Key={
+            'ResponseID': session["ID"]
+        },
+        UpdateExpression='SET q4a_answers = :val1',
+        ExpressionAttributeValues={
+            ':val1': q4a_answers.to_dict()
+        }
+    )
     
     return render_template("questions_4b.html")
 
@@ -234,10 +343,18 @@ def questions_4b():
 @app.route('/conclusion')
 def conclusion():
     q4b_answers = request.args
-    #TODO manipulate answers here to get the desired type
+   
     #save answers to DB
-    #table.set_item() #need the responseID to set the corresponding record
-    
+    table.update_item(
+        Key={
+            'ResponseID': session["ID"]
+        },
+        UpdateExpression='SET q4b_answers = :val1',
+        ExpressionAttributeValues={
+            ':val1': q4b_answers.to_dict()
+        }
+    )
+
     return render_template("conclusion.html")
 
 
@@ -277,4 +394,4 @@ def get_cost():
 
 #---- MAIN CALL ----# 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=8080, debug=True)
