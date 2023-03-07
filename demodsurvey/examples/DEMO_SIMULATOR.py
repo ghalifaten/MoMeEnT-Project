@@ -48,9 +48,13 @@ def demo_qualtrics_price(
         n_hh_list : list = [1000],
         start_datetime : datetime.datetime = datetime.datetime(2014, 4, 1, 0, 0, 0),
         data = GermanDataHerus(version='v1.1'),
+        appliance : str = None,
         usage_patterns : dict = None,
         ) -> float:
-    
+    """
+    Simulator of the average daily load profile for wet appliances
+    washing machine and dishwasher.
+    """
     
     # initialization activitity simulatore
     sim_act = SubgroupsIndividualsActivitySimulator(
@@ -63,8 +67,16 @@ def demo_qualtrics_price(
     )
     
     # initialization appliance simulator
-    wet_appliances = np.zeros((n_hh_list[0],32), dtype=bool)
-    wet_appliances[:,(-7,-6,-5)] = True
+    if appliance == 'WASHING_MACHINE':
+        wet_appliances = np.zeros((n_hh_list[0],32), dtype=bool)
+        wet_appliances[:,(-5)] = True
+    elif appliance == 'DISH_WASHER':
+        wet_appliances = np.zeros((n_hh_list[0],32), dtype=bool)
+        wet_appliances[:,(-7)] = True
+    else:
+        raise ValueError('Appliance type not recognized: please pass'
+                         'either washing_mahcine or dishwasher')
+        
     sim_app = AvailableOccupancyApplianceSimulator(
         subgroups_list=hh_subgroups,  
         initial_active_occupancy=sim_act.get_activity_states()['other'],
@@ -76,6 +88,7 @@ def demo_qualtrics_price(
         usage_patterns=usage_patterns,
         logger=SimLogger('get_current_power_consumptions', aggregated=False)
     )
+    
     
     # run the simulation for 1 day
     for i in range(144):
@@ -93,20 +106,19 @@ def demo_qualtrics_price(
     # DIM0: min of the day, DIM1: households, DIM2: appliances
     loads = sim_app.logger.get('get_current_power_consumptions')
     
-    avg_load = {}
-    avg_load['DISH_WASHER'] = np.mean(loads[:,:,-7], axis=1)
-    avg_load['DRYER'] = np.mean(loads[:,:,-6], axis=1)
-    avg_load['WASHING_MACHINE'] = np.mean(loads[:,:,-5], axis=1)
+    # mean profile over the 1000 households simulated
+    mean_load = np.mean(loads, axis=1).sum(axis=1)
+
     
-    # price profile in €/kWh per each min of the day
-    price = np.ones(10*6*24) * 0.4
+    # weight the load based on number of cycles
+    if usage_patterns:
+        if 'target_cycles' in usage_patterns.keys():
+            if appliance:
+                weight = usage_patterns['target_cycles'][appliance][0] * usage_patterns['energy_cycle'][appliance] * 60 * 1000 / mean_load.sum()  / 365.25
+                final_load = mean_load * weight
     
-    # conversion factor from Wmin/day to kWh/y
-    unit_conv = 1 / 60 / 1000 * 365.25 
-    
-    cost = np.sum(avg_load['DISH_WASHER'] * price * unit_conv)
-    
-    return cost
+    return final_load
+
 
 if __name__ == "__main__":
     event = {
@@ -114,3 +126,5 @@ if __name__ == "__main__":
         "household_type": 1
     }
     lambda_handler(event)
+    
+    
