@@ -388,7 +388,10 @@ def get_cost():
                 InvocationType='RequestResponse',                                      
                 Payload=json.dumps(payload))
     range = result['Payload'].read()  
+    print(range)
     api_response = json.loads(range) 
+    print()
+    print(api_response)
    
     return jsonify(api_response)
 
