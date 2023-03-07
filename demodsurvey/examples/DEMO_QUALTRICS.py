@@ -22,9 +22,8 @@ from demod.datasets.Germany.loader import GermanDataHerus
 
 from demod.simulators.appliance_simulators import (ActivityApplianceSimulator, 
                                                    ProbabilisticActivityAppliancesSimulator, 
-                                                   OccupancyApplianceSimulator,
                                                    )
-from demod.simulators.base_simulators import SimLogger
+# from demod.simulators.base_simulators import SimLogger
 from demod.simulators.activity_simulators import SubgroupsIndividualsActivitySimulator, SemiMarkovSimulator
 
 from DEMO_SIMULATOR import demo_qualtrics_price
