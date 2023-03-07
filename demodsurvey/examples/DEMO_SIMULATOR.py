@@ -27,13 +27,8 @@ def lambda_handler(event, context=None):
     
     subgroups = [{'n_residents': n_residents, 'household_type': household_type, 'weekday':[1,2,3,4,5]}]
     
-    usage_patterns = {'target_cycles':{'DISH_WASHER':np.ones(n_households)*251,
-    					'WASHING_MACHINE':np.ones(n_households)*100},
-    			'day_prob_profiles':{'DISH_WASHER':np.ones((n_households,24)),
-    						'WASHING_MACHINE':np.ones((n_households,24))
-    			}
-    		}
-
+    usage_patterns = event["usage_patterns"]
+    
     cost = demo_qualtrics_price(hh_subgroups=subgroups, usage_patterns=usage_patterns)
 
     print(time.time() - st, " seconds.")
