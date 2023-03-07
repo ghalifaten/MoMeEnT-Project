@@ -139,6 +139,7 @@ function wrap(text, width) {
 }
 
 //Send the baseline values to Flask
+
 d3.select(".link-btn").on("click", function(d){  
     $.ajax({
         url: location.origin + "/get-baseline-values",

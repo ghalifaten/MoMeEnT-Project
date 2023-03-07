@@ -382,7 +382,8 @@ def get_cost():
     #payload is the input data to the lambda function
     payload = {"n_residents": n_residents, "household_type": household_type, "usage_patterns":usage_patterns}
 
-    #Invoke a lambda function which calculates the cost from a demod simulation           
+    #Invoke a lambda function which calculates the cost from a demod simulation    
+    #TODO make checks of hh_type and hh_size to see if they match       
     result = client.invoke(FunctionName=conf.lambda_function_name,
                 InvocationType='RequestResponse',                                      
                 Payload=json.dumps(payload))
