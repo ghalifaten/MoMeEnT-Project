@@ -1,4 +1,4 @@
-#http://127.0.0.1:5000//data?m=1&ID=QR001&hh_size=1&hh_type=1&frequency=2
+#http://127.0.0.1:8080//data?appliance=WASHING_MACHINE&m=${e://Field/m}&ID=${e://Field/ResponseID}&hh_size=${e://Field/household_size}&hh_type=${e://Field/household_type}&frequency=${q://QID193/SelectedChoicesRecode}&program30=${q://QID194/SelectedAnswerRecode/1}&program40=${q://QID194/SelectedAnswerRecode/2}&program60=${q://QID194/SelectedAnswerRecode/3}&program90=${q://QID194/SelectedAnswerRecode/4}
 #Public IP: 35.180.87.158
 #launc: http://35.180.87.158:8080/
 
@@ -26,7 +26,7 @@ dynamodb = boto3.resource('dynamodb',
                         aws_access_key_id=conf.aws_access_key_id,
                         aws_secret_access_key=conf.aws_secret_access_key)
 
-table = dynamodb.Table('MockMomeentProjectData')
+table = dynamodb.Table('MockMomeentProjectData') #2 tables, change depending on type of appliance
 
 secret = secrets.token_urlsafe(32) #generate secret key for the current session
 app = Flask(__name__, template_folder='templates')
@@ -41,7 +41,14 @@ usage_patterns = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251).tol
                                        'WASHING_MACHINE':(np.ones((n_households,24))).tolist()
                                        },
                     'energy_cycle': {'DISH_WASHER': 1, 'WASHING_MACHINE':1}
+
                 }
+price_dict = {'morning':0.200439918,
+              'midday':0.264827651, 
+              'afternoon':0.21111789, 
+              'evening':0.220015123,
+              'night':0.242899301
+              }
 
 
 #---- FLASK ROUTES ----#
@@ -81,14 +88,25 @@ def _index():
 # ORIGINAL MAIN
 @app.route('/<qualtrics_data>')
 def index(qualtrics_data):
+    """
+        appliance:WM = 4 args
+        appliance:DW = 6 or args 
+        ==> read appliance and decide based upon
+        ==> change table DB
+    """
+
     try:
         #All args are of type str, change type here if needed.
+        appliance = request.args.get('appliance')
         m = request.args.get('m')
         ID = request.args.get('ID')
         hh_size = int(request.args.get('hh_size'))
         hh_type = int(request.args.get('hh_type'))
-        weekly_freq = request.args.get('frequency')
-        
+        weekly_freq = int(request.args.get('frequency'))   
+        program30 = int(request.args.get('program30'))
+        program40 = int(request.args.get('program40'))
+        program60 = int(request.args.get('program60'))
+        program90 = int(request.args.get('program90'))
     except:
         return 'Error in extracting arguments from URL. Either missing or data type not correct.'
 
@@ -99,16 +117,23 @@ def index(qualtrics_data):
 
     #save usage_patterns to session
     #session["usage_patterns"] = usage_patterns #objects in session have to be JSON serialized (i.e converted to a string)
-    
-    #TODO ADD MAPPING OF hh_size and/or hh_type HERE IF NEEDED
-    #....
 
-    #save hh_size and hh_type to session for later use in the cost computation
+    #year_freq = weekly_freq * 52 
+    #usage_patterns['target_cycles'][appliance] = (np.ones(n_households)*year_freq).tolist()
+    #usage_patterns['energy_cycle'][appliance] = some_function(program30, program40, program60, program90)
+    
+    #save args to session
+    session["appliance"] = appliance
+    session["ID"] = ID
     session["hh_size"] = hh_size
     session["hh_type"] = hh_type
+    session["usage_patterns"] = json.dumps(usage_patterns) #objects in session have to be JSON serialized (i.e converted to a string)
 
-    #save responseID for further DB updates
-    session["ID"] = ID
+    #choose which table to save data
+    #if appliance == "DISH_WASHER":
+        #table = dynamodb.Table('MockMomeentProjectData') 
+    #else if appliance == "WASHING_MASHINE":
+        #table = dynamodb.Table('MockMomeentProjectData')
 
     #create an item (DB record)
     item = {
@@ -124,7 +149,6 @@ def index(qualtrics_data):
     return render_template("index.html")
 
 
-
 @app.route('/experiment_0')
 def experiment_0():
     return render_template("experiment_0.html")
@@ -138,18 +162,32 @@ def get_baseline_values():
     for d in baseline:
         key = d["Period"].split()[0] #remove the additional information of time between ()
         value = d["Value"]
-        values_dict[key] = int(value)
-    """
-        values_dict has the format: {'morning': 0, 'midday': 1, 'afternoon': 2, 'evening': 3, 'night': 4}
-    """
+        values_dict[key] = int(value) #values_dict has the format: {'morning': 0, 'midday': 1, 'afternoon': 2, 'evening': 3, 'night': 4}
+    
+    #generate profiles from baseline values to update day_prob_profiles in usage patterns
+    profiles = generate_profile(values_dict)
+    appliance = session["appliance"]
+    usage_patterns = json.loads(session["usage_patterns"])
+    usage_patterns['day_prob_profiles'][appliance] = profiles.tolist()
+    session["usage_patterns"] = usage_patterns
+
+    load = get_cost() #TODO rename function
+
+    #claculate (baseline) cost
+    price = min_profile_from_val_period(price_dict)
+    unit_conv = 1 / 60 / 1000 * 365.25 
+    cost = np.sum(load * price * unit_conv)
+
     #save values of baseline in the DB
+    #TODO add peak and ..
     table.update_item(
         Key={
             'ResponseID': session["ID"]
         },
-        UpdateExpression='SET baseline_values = :val1',
+        UpdateExpression='SET baseline_values = :val1, cost = :val2',
         ExpressionAttributeValues={
-            ':val1': values_dict
+            ':val1': values_dict,
+            ':val2': cost
         }
     )
 
@@ -181,6 +219,18 @@ def generate_profile(values_dict):
     profile = movingaverage(raw_profile, 3)
     profiles = np.asarray([profile for _ in range(n_households)])
     return profiles
+
+
+def min_profile_from_val_period(period_dict):
+    profile = np.asarray([period_dict['night']] * 2 * 60 + \
+                        [period_dict['morning']] * 4 * 60 + \
+                        [period_dict['midday']] * 4 * 60+ \
+                        [period_dict['afternoon']] * 4 * 60+ \
+                        [period_dict['evening']] * 4 * 60+ \
+                        [period_dict['night']] * 6 * 60
+                        )
+    return profile
+    
 
 
 @app.route('/questions_0', methods=['GET','POST'])
@@ -361,6 +411,7 @@ def conclusion():
 #---- COST FUNCTION ----# (TO BE CALLED LOAD FUNCITON LATER)
 @app.route('/get-cost', methods=['POST'])
 def get_cost():
+"""
     print("\nthis is get_cost\n")
     #retrieve hh_size and hh_type from session
     n_residents = session["hh_size"]
@@ -385,17 +436,38 @@ def get_cost():
 
     #payload is the input data to the lambda function
     payload = {"n_residents": n_residents, "household_type": household_type, "usage_patterns":usage_patterns, "appliance":"WASHING_MACHINE"}
+    """
+    #retrieve necessary inputs from session
+    n_residents = session["hh_size"]
+    household_type = session["hh_type"]
+    usage_patterns = session["usage_patterns"]
+    appliance = session["appliance"]
 
-    #Invoke a lambda function which calculates the cost from a demod simulation    
+    #payload is the input data to the lambda function
+    payload = {
+        "n_residents": n_residents, 
+        "household_type": household_type, 
+        "usage_patterns":usage_patterns, 
+        "appliance":appliance }
+
+    #Invoke a lambda function which calculates the load from a demod simulation    
     #TODO make checks of hh_type and hh_size to see if they match       
-    result = client.invoke(FunctionName=conf.lambda_function_name,
+    result = client.invoke(
+                FunctionName=conf.lambda_function_name,
                 InvocationType='RequestResponse',                                      
-                #Payload=json.dumps(payload))
-                Payload=payload)
+                #Payload=json.dumps(payload)
+                Payload = payload
+                )
     range = result['Payload'].read()  
     print("LAMBDA ENDED")
+    print()
+    print("range = \n", range)
+    print()
+
     api_response = json.loads(range) 
-    
+    """
+        lamda fct returns (1440,1) -> calc vals, and then compare, and then print out difference on "show statistics"
+    """
     return jsonify(api_response)
 
 
