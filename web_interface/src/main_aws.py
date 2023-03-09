@@ -33,14 +33,16 @@ app = Flask(__name__, template_folder='templates')
 app.secret_key = secret
 
 #---- INITIALIZE VARIABLES ----#
-n_households = 1000
+n_households = 2
+
 usage_patterns = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251).tolist(),#/!\.tolist() is necessary to make ndarrays JSON serializable
                                     'WASHING_MACHINE':(np.ones(n_households)*100).tolist()},
                   'day_prob_profiles':{'DISH_WASHER':(np.ones((n_households,24))).tolist(),  
                                        'WASHING_MACHINE':(np.ones((n_households,24))).tolist()
                                        },
-                    'energy_cycle': {'DISH_WASHER': 1}
+                    'energy_cycle': {'DISH_WASHER': 1, 'WASHING_MACHINE':1}
                 }
+
 
 #---- FLASK ROUTES ----#
 #---- TEMPORARY MAIN
@@ -54,8 +56,8 @@ def _index():
     weekly_freq = 2
         
     #save usage_patterns to session
-    session["usage_patterns"] = json.dumps(usage_patterns) #objects in session have to be JSON serialized (i.e converted to a string)
-    
+    #session["usage_patterns"] = json.dumps(usage_patterns) #objects in session have to be JSON serialized (i.e converted to a string)
+    session["usage_patterns"] = usage_patterns
     #save hh_size and hh_type to session for later use in the cost computation
     session["hh_size"] = hh_size
     session["hh_type"] = hh_type
@@ -96,7 +98,7 @@ def index(qualtrics_data):
     # ...
 
     #save usage_patterns to session
-    session["usage_patterns"] = json.dumps(usage_patterns) #objects in session have to be JSON serialized (i.e converted to a string)
+    #session["usage_patterns"] = usage_patterns #objects in session have to be JSON serialized (i.e converted to a string)
     
     #TODO ADD MAPPING OF hh_size and/or hh_type HERE IF NEEDED
     #....
@@ -152,14 +154,21 @@ def get_baseline_values():
     )
 
     #generate profile from baseline values
-    profile = generate_profile(values_dict)
-   
+    profile = generate_profile(values_dict) #ndarray(1000,24)
+    usage_patterns = session["usage_patterns"]
+    print("L167: ", type(usage_patterns))
+    usage_patterns["day_prob_profiles"]["WASHING_MACHINE"] = profile
+    print(type(usage_patterns["day_prob_profiles"]["WASHING_MACHINE"])) # ndarray
+    print(usage_patterns["day_prob_profiles"]["WASHING_MACHINE"].shape) # (1000,24)
+    session["usage_patterns"] = usage_patterns
+    load = get_cost()
+    print()
+    print(type(load))
     return {}
 
 def movingaverage(interval, window_size):
     window = np.ones(int(window_size))/float(window_size)
     return np.convolve(interval, window, 'same')
-
 
 def generate_profile(values_dict):
     raw_profile = np.asarray([values_dict['night']] * 2 + \
@@ -170,15 +179,13 @@ def generate_profile(values_dict):
                              [values_dict['night']] * 6
                             )
     profile = movingaverage(raw_profile, 3)
-    # profiles = np.asarray([profile for _ in range(1000)])
-    return profile
+    profiles = np.asarray([profile for _ in range(n_households)])
+    return profiles
 
 
 @app.route('/questions_0', methods=['GET','POST'])
 def questions_0():
     return render_template("questions_0.html")
-
-
 
 @app.route('/experiment_1')
 def experiment_1():
@@ -219,8 +226,6 @@ def questions_1b():
 
     return render_template("questions_1b.html")
 
-
-
 @app.route('/experiment_2')
 def experiment_2():
     q1b_answers = request.args
@@ -258,8 +263,6 @@ def questions_2b():
     )
 
     return render_template("questions_2b.html")
-
-
 
 @app.route('/experiment_3')
 def experiment_3():
@@ -299,8 +302,6 @@ def questions_3b():
     
     return render_template("questions_3b.html")
 
-
-
 @app.route('/experiment_4')
 def experiment_4():    
     q3b_answers = request.args
@@ -339,8 +340,6 @@ def questions_4b():
     
     return render_template("questions_4b.html")
 
-
-
 @app.route('/conclusion')
 def conclusion():
     q4b_answers = request.args
@@ -362,26 +361,30 @@ def conclusion():
 #---- COST FUNCTION ----# (TO BE CALLED LOAD FUNCITON LATER)
 @app.route('/get-cost', methods=['POST'])
 def get_cost():
+    print("\nthis is get_cost\n")
     #retrieve hh_size and hh_type from session
     n_residents = session["hh_size"]
     household_type = session["hh_type"]
-
+    """
     #the data of the bar_charts: (coming from barChart_1.js)
     #baseline: 1st bar chart (Experience0)
     #current: 2nd bar chart (Experience1)
     baseline = request.get_json()['baseline_data']
     current = request.get_json()['current_data']
-
+    """
     #to be able to get the data from session in the correct data type, we have to deserialize it
     #using json.loads:
-    usage_patterns = json.loads(session["usage_patterns"])
-
+    usage_patterns = session["usage_patterns"]
+    print()
+    print(type(usage_patterns["day_prob_profiles"]["WASHING_MACHINE"]))
+    print(usage_patterns)
+    print()
     #TODO interpolation of above data to create the day_prob_profiles field in usage_patterns
     #...
     
 
     #payload is the input data to the lambda function
-    payload = {"n_residents": n_residents, "household_type": household_type, "usage_patterns":usage_patterns, "appliance":"DISH_WASHER"}
+    payload = {"n_residents": n_residents, "household_type": household_type, "usage_patterns":usage_patterns, "appliance":"WASHING_MACHINE"}
 
     #Invoke a lambda function which calculates the cost from a demod simulation    
     #TODO make checks of hh_type and hh_size to see if they match       
@@ -390,7 +393,7 @@ def get_cost():
                 #Payload=json.dumps(payload))
                 Payload=payload)
     range = result['Payload'].read()  
-    print(result)
+    print("LAMBDA ENDED")
     api_response = json.loads(range) 
     
     return jsonify(api_response)
