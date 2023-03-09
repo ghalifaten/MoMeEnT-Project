@@ -42,9 +42,15 @@ usage_patterns = {
                     'DISH_WASHER':[],
                     'WASHING_MACHINE': []},
                 'energy_cycle': {
-                    'DISH_WASHER': 0, 
-                    'WASHING_MACHINE': 0}
+                    'DISH_WASHER': 1, 
+                    'WASHING_MACHINE': 1}
                 }
+price_dict = {'morning':0.200439918,
+              'midday':0.264827651, 
+              'afternoon':0.21111789, 
+              'evening':0.220015123,
+              'night':0.242899301
+              }
 
 #---- FLASK ROUTES ----#
 #---- TEMPORARY MAIN
@@ -97,15 +103,15 @@ def index(qualtrics_data):
         ID = request.args.get('ID')
         hh_size = int(request.args.get('hh_size'))
         hh_type = int(request.args.get('hh_type'))
-        weekly_freq = request.args.get('frequency')   
-        program30 = request.args.get('program30')
-        program40 = request.args.get('program40')
-        program60 = request.args.get('program60')
-        program90 = request.args.get('program90')
+        weekly_freq = int(request.args.get('frequency'))   
+        program30 = int(request.args.get('program30'))
+        program40 = int(request.args.get('program40'))
+        program60 = int(request.args.get('program60'))
+        program90 = int(request.args.get('program90'))
     except:
         return 'Error in extracting arguments from URL. Either missing or data type not correct.'
 
-    year_freq = weekly_freq * 52 #TODO check with matteo
+    year_freq = weekly_freq * 52 
     usage_patterns['target_cycles'][appliance] = (np.ones(n_households)*year_freq).tolist()
     #usage_patterns['energy_cycle'][appliance] = some_function(program30, program40, program60, program90)
     
@@ -149,33 +155,42 @@ def get_baseline_values():
     for d in baseline:
         key = d["Period"].split()[0] #remove the additional information of time between ()
         value = d["Value"]
-        values_dict[key] = int(value)
-    """
-        values_dict has the format: {'morning': 0, 'midday': 1, 'afternoon': 2, 'evening': 3, 'night': 4}
-    """
+        values_dict[key] = int(value) #values_dict has the format: {'morning': 0, 'midday': 1, 'afternoon': 2, 'evening': 3, 'night': 4}
+    
+    #generate profiles from baseline values to update day_prob_profiles in usage patterns
+    profiles = generate_profile(values_dict)
+    appliance = session["appliance"]
+    usage_patterns = json.loads(session["usage_patterns"])
+    usage_patterns['day_prob_profiles'][appliance] = profiles.tolist()
+    session["usage_patterns"] = usage_patterns
+
+    load = get_cost() #TODO rename function
+
+    #claculate (baseline) cost
+    price = min_profile_from_val_period(price_dict)
+    unit_conv = 1 / 60 / 1000 * 365.25 
+    cost = np.sum(load * price * unit_conv)
+
     #save values of baseline in the DB
+    #TODO add peak and ..
     table.update_item(
         Key={
             'ResponseID': session["ID"]
         },
-        UpdateExpression='SET baseline_values = :val1',
+        UpdateExpression='SET baseline_values = :val1, cost = :val2',
         ExpressionAttributeValues={
-            ':val1': values_dict
+            ':val1': values_dict,
+            ':val2': cost
         }
     )
-    """
-     we get baseline values => calculate the load with the lambda fct, and claculate the 3 vals (price ..) and save them for comparison later
-     save them both on DB and on session 
-     TODO: add the functions to calc these vals
-    """
 
-    #generate profiles from baseline values to update usage patterns
-    profiles = generate_profile(values_dict)
-    appliance = session["appliance"]
-    usage_patterns = session["usage_patterns"]
-    usage_patterns['day_prob_profiles'][appliance] = profiles
-    session["usage_patterns"] = usage_patterns
+    #save values to session
+    session["cost"] = cost
 
+    print()
+    print("usage_patterns = ", usage_patterns)
+    print("\n cost = ", cost)
+    print()
     return {}
 
 def movingaverage(interval, window_size):
@@ -192,14 +207,24 @@ def generate_profile(values_dict):
                              [values_dict['night']] * 6
                             )
     profile = movingaverage(raw_profile, 3) 
-    return np.asarray([profile for _ in range(1000)])
+    #return np.asarray([profile for _ in range(1000)])
+    return profile
+
+def min_profile_from_val_period(period_dict):
+    profile = np.asarray([period_dict['night']] * 2 * 60 + \
+                        [period_dict['morning']] * 4 * 60 + \
+                        [period_dict['midday']] * 4 * 60+ \
+                        [period_dict['afternoon']] * 4 * 60+ \
+                        [period_dict['evening']] * 4 * 60+ \
+                        [period_dict['night']] * 6 * 60
+                        )
+    return profile
+    
 
 
 @app.route('/questions_0', methods=['GET','POST'])
 def questions_0():
     return render_template("questions_0.html")
-
-
 
 @app.route('/experiment_1')
 def experiment_1():
@@ -240,8 +265,6 @@ def questions_1b():
 
     return render_template("questions_1b.html")
 
-
-
 @app.route('/experiment_2')
 def experiment_2():
     q1b_answers = request.args
@@ -280,8 +303,6 @@ def questions_2b():
 
     return render_template("questions_2b.html")
 
-
-
 @app.route('/experiment_3')
 def experiment_3():
     q2b_answers = request.args
@@ -319,8 +340,6 @@ def questions_3b():
     )
     
     return render_template("questions_3b.html")
-
-
 
 @app.route('/experiment_4')
 def experiment_4():    
@@ -383,20 +402,11 @@ def conclusion():
 #---- COST FUNCTION ----# (TO BE CALLED LOAD FUNCITON LATER)
 @app.route('/get-cost', methods=['POST'])
 def get_cost():
-    #retrieve hh_size and hh_type from session
+    #retrieve necessary inputs from session
     n_residents = session["hh_size"]
     household_type = session["hh_type"]
-
-    #the data of the bar_charts: (coming from barChart_1.js)
-    #baseline: 1st bar chart (Experience0)
-    #current: 2nd bar chart (Experience1)
-    baseline = request.get_json()['baseline_data']
-    current = request.get_json()['current_data']
-
-    #to be able to get the data from session in the correct data type, we have to deserialize it
-    #using json.loads:
-    usage_patterns = json.loads(session["usage_patterns"])
-
+    usage_patterns = session["usage_patterns"]
+    appliance = session["appliance"]
 
     #payload is the input data to the lambda function
     payload = {
@@ -405,14 +415,20 @@ def get_cost():
         "usage_patterns":usage_patterns, 
         "appliance":appliance }
 
-    #Invoke a lambda function which calculates the cost from a demod simulation    
+    #Invoke a lambda function which calculates the load from a demod simulation    
     #TODO make checks of hh_type and hh_size to see if they match       
-    result = client.invoke(FunctionName=conf.lambda_function_name,
+    result = client.invoke(
+                FunctionName=conf.lambda_function_name,
                 InvocationType='RequestResponse',                                      
-                #Payload=json.dumps(payload))
-                Payload=payload)
+                Payload=json.dumps(payload).encode('utf-8')
+                )
+    print()
+    print("LAMBDA END RUNNING")
+    print()
     range = result['Payload'].read()  
-    print(result)
+    print()
+    print("range = \n", range)
+    print()
     api_response = json.loads(range) 
     """
         lamda fct returns (1440,1) -> calc vals, and then compare, and then print out difference on "show statistics"
