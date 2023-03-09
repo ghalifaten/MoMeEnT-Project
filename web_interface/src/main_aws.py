@@ -38,7 +38,8 @@ usage_patterns = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251).tol
                                     'WASHING_MACHINE':(np.ones(n_households)*100).tolist()},
                   'day_prob_profiles':{'DISH_WASHER':(np.ones((n_households,24))).tolist(),  
                                        'WASHING_MACHINE':(np.ones((n_households,24))).tolist()
-                                       }
+                                       },
+                    'energy_cycle': {'DISH_WASHER': 1}
                 }
 
 #---- FLASK ROUTES ----#
@@ -380,19 +381,18 @@ def get_cost():
     
 
     #payload is the input data to the lambda function
-    payload = {"n_residents": n_residents, "household_type": household_type, "usage_patterns":usage_patterns}
+    payload = {"n_residents": n_residents, "household_type": household_type, "usage_patterns":usage_patterns, "appliance":"DISH_WASHER"}
 
     #Invoke a lambda function which calculates the cost from a demod simulation    
     #TODO make checks of hh_type and hh_size to see if they match       
     result = client.invoke(FunctionName=conf.lambda_function_name,
                 InvocationType='RequestResponse',                                      
-                Payload=json.dumps(payload))
+                #Payload=json.dumps(payload))
+                Payload=payload)
     range = result['Payload'].read()  
-    print(range)
+    print(result)
     api_response = json.loads(range) 
-    print()
-    print(api_response)
-   
+    
     return jsonify(api_response)
 
 
