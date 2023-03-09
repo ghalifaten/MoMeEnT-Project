@@ -1,4 +1,4 @@
-#http://127.0.0.1:5000//data?m=1&ID=QR001&hh_size=1&hh_type=1&frequency=2
+#http://127.0.0.1:8080//data?appliance=WASHING_MACHINE&m=${e://Field/m}&ID=${e://Field/ResponseID}&hh_size=${e://Field/household_size}&hh_type=${e://Field/household_type}&frequency=${q://QID193/SelectedChoicesRecode}&program30=${q://QID194/SelectedAnswerRecode/1}&program40=${q://QID194/SelectedAnswerRecode/2}&program60=${q://QID194/SelectedAnswerRecode/3}&program90=${q://QID194/SelectedAnswerRecode/4}
 #Public IP: 35.180.87.158
 #launc: http://35.180.87.158:8080/
 
@@ -26,7 +26,7 @@ dynamodb = boto3.resource('dynamodb',
                         aws_access_key_id=conf.aws_access_key_id,
                         aws_secret_access_key=conf.aws_secret_access_key)
 
-table = dynamodb.Table('MockMomeentProjectData')
+table = dynamodb.Table('MockMomeentProjectData') #2 tables, change depending on type of appliance
 
 secret = secrets.token_urlsafe(32) #generate secret key for the current session
 app = Flask(__name__, template_folder='templates')
@@ -34,12 +34,16 @@ app.secret_key = secret
 
 #---- INITIALIZE VARIABLES ----#
 n_households = 1000
-usage_patterns = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251).tolist(),#/!\.tolist() is necessary to make ndarrays JSON serializable
-                                    'WASHING_MACHINE':(np.ones(n_households)*100).tolist()},
-                  'day_prob_profiles':{'DISH_WASHER':(np.ones((n_households,24))).tolist(),  
-                                       'WASHING_MACHINE':(np.ones((n_households,24))).tolist()
-                                       },
-                    'energy_cycle': {'DISH_WASHER': 1}
+usage_patterns = {
+                'target_cycles': {
+                    'DISH_WASHER': [], 
+                    'WASHING_MACHINE': []},
+                'day_prob_profiles':{
+                    'DISH_WASHER':[],
+                    'WASHING_MACHINE': []},
+                'energy_cycle': {
+                    'DISH_WASHER': 0, 
+                    'WASHING_MACHINE': 0}
                 }
 
 #---- FLASK ROUTES ----#
@@ -79,34 +83,44 @@ def _index():
 # ORIGINAL MAIN
 @app.route('/<qualtrics_data>')
 def index(qualtrics_data):
+    """
+        appliance:WM = 4 args
+        appliance:DW = 6 or args 
+        ==> read appliance and decide based upon
+        ==> change table DB
+    """
+
     try:
         #All args are of type str, change type here if needed.
+        appliance = request.args.get('appliance')
         m = request.args.get('m')
         ID = request.args.get('ID')
         hh_size = int(request.args.get('hh_size'))
         hh_type = int(request.args.get('hh_type'))
-        weekly_freq = request.args.get('frequency')
-        
+        weekly_freq = request.args.get('frequency')   
+        program30 = request.args.get('program30')
+        program40 = request.args.get('program40')
+        program60 = request.args.get('program60')
+        program90 = request.args.get('program90')
     except:
         return 'Error in extracting arguments from URL. Either missing or data type not correct.'
 
-    #TODO ADD MAPPING OF weekly_freq HERE 
-    #AND USE IT TO UPDATE target_cycles OF usage_patterns
-    #/!\ make sure the data is JSON serializable, use .tolist() on ndarrays (see initialization example above)
-    # ...
-
-    #save usage_patterns to session
-    session["usage_patterns"] = json.dumps(usage_patterns) #objects in session have to be JSON serialized (i.e converted to a string)
+    year_freq = weekly_freq * 52 #TODO check with matteo
+    usage_patterns['target_cycles'][appliance] = (np.ones(n_households)*year_freq).tolist()
+    #usage_patterns['energy_cycle'][appliance] = some_function(program30, program40, program60, program90)
     
-    #TODO ADD MAPPING OF hh_size and/or hh_type HERE IF NEEDED
-    #....
-
-    #save hh_size and hh_type to session for later use in the cost computation
+    #save args to session
+    session["appliance"] = appliance
+    session["ID"] = ID
     session["hh_size"] = hh_size
     session["hh_type"] = hh_type
+    session["usage_patterns"] = json.dumps(usage_patterns) #objects in session have to be JSON serialized (i.e converted to a string)
 
-    #save responseID for further DB updates
-    session["ID"] = ID
+    #choose which table to save data
+    #if appliance == "DISH_WASHER":
+        #table = dynamodb.Table('MockMomeentProjectData') 
+    #else if appliance == "WASHING_MASHINE":
+        #table = dynamodb.Table('MockMomeentProjectData')
 
     #create an item (DB record)
     item = {
@@ -120,7 +134,6 @@ def index(qualtrics_data):
     table.put_item(Item=item)
 
     return render_template("index.html")
-
 
 
 @app.route('/experiment_0')
@@ -150,10 +163,19 @@ def get_baseline_values():
             ':val1': values_dict
         }
     )
+    """
+     we get baseline values => calculate the load with the lambda fct, and claculate the 3 vals (price ..) and save them for comparison later
+     save them both on DB and on session 
+     TODO: add the functions to calc these vals
+    """
 
-    #generate profile from baseline values
-    profile = generate_profile(values_dict)
-   
+    #generate profiles from baseline values to update usage patterns
+    profiles = generate_profile(values_dict)
+    appliance = session["appliance"]
+    usage_patterns = session["usage_patterns"]
+    usage_patterns['day_prob_profiles'][appliance] = profiles
+    session["usage_patterns"] = usage_patterns
+
     return {}
 
 def movingaverage(interval, window_size):
@@ -169,9 +191,8 @@ def generate_profile(values_dict):
                              [values_dict['evening']] * 4 + \
                              [values_dict['night']] * 6
                             )
-    profile = movingaverage(raw_profile, 3)
-    # profiles = np.asarray([profile for _ in range(1000)])
-    return profile
+    profile = movingaverage(raw_profile, 3) 
+    return np.asarray([profile for _ in range(1000)])
 
 
 @app.route('/questions_0', methods=['GET','POST'])
@@ -376,12 +397,13 @@ def get_cost():
     #using json.loads:
     usage_patterns = json.loads(session["usage_patterns"])
 
-    #TODO interpolation of above data to create the day_prob_profiles field in usage_patterns
-    #...
-    
 
     #payload is the input data to the lambda function
-    payload = {"n_residents": n_residents, "household_type": household_type, "usage_patterns":usage_patterns, "appliance":"DISH_WASHER"}
+    payload = {
+        "n_residents": n_residents, 
+        "household_type": household_type, 
+        "usage_patterns":usage_patterns, 
+        "appliance":appliance }
 
     #Invoke a lambda function which calculates the cost from a demod simulation    
     #TODO make checks of hh_type and hh_size to see if they match       
@@ -392,7 +414,9 @@ def get_cost():
     range = result['Payload'].read()  
     print(result)
     api_response = json.loads(range) 
-    
+    """
+        lamda fct returns (1440,1) -> calc vals, and then compare, and then print out difference on "show statistics"
+    """
     return jsonify(api_response)
 
 
