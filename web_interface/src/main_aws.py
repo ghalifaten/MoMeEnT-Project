@@ -33,12 +33,12 @@ app = Flask(__name__, template_folder='templates')
 app.secret_key = secret
 
 #---- INITIALIZE VARIABLES ----#
-n_households = 2
+n_households = 1000
 
-usage_patterns = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251).tolist(),#/!\.tolist() is necessary to make ndarrays JSON serializable
-                                    'WASHING_MACHINE':(np.ones(n_households)*100).tolist()},
-                  'day_prob_profiles':{'DISH_WASHER':(np.ones((n_households,24))).tolist(),  
-                                       'WASHING_MACHINE':(np.ones((n_households,24))).tolist()
+usage_patterns = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251),
+                                    'WASHING_MACHINE':(np.ones(n_households)*100)},
+                  'day_prob_profiles':{'DISH_WASHER':(np.ones((n_households,24))),  
+                                       'WASHING_MACHINE':(np.ones((n_households,24)))
                                        },
                     'energy_cycle': {'DISH_WASHER': 1, 'WASHING_MACHINE':1}
 
@@ -64,10 +64,11 @@ def _index():
         
     #save usage_patterns to session
     #session["usage_patterns"] = json.dumps(usage_patterns) #objects in session have to be JSON serialized (i.e converted to a string)
-    session["usage_patterns"] = usage_patterns
+    #session["usage_patterns"] = usage_patterns
     #save hh_size and hh_type to session for later use in the cost computation
     session["hh_size"] = hh_size
     session["hh_type"] = hh_type
+    session["appliance"] = "WASHING_MACHINE"
 
     #save responseID for further DB updates
     session["ID"] = ID
@@ -116,7 +117,7 @@ def index(qualtrics_data):
     # ...
 
     #save usage_patterns to session
-    #session["usage_patterns"] = usage_patterns #objects in session have to be JSON serialized (i.e converted to a string)
+    #session["usage_patterns"] = usage_patterns 
 
     #year_freq = weekly_freq * 52 
     #usage_patterns['target_cycles'][appliance] = (np.ones(n_households)*year_freq).tolist()
@@ -127,7 +128,7 @@ def index(qualtrics_data):
     session["ID"] = ID
     session["hh_size"] = hh_size
     session["hh_type"] = hh_type
-    session["usage_patterns"] = json.dumps(usage_patterns) #objects in session have to be JSON serialized (i.e converted to a string)
+    #session["usage_patterns"] = usage_patterns
 
     #choose which table to save data
     #if appliance == "DISH_WASHER":
@@ -167,11 +168,14 @@ def get_baseline_values():
     #generate profiles from baseline values to update day_prob_profiles in usage patterns
     profiles = generate_profile(values_dict)
     appliance = session["appliance"]
-    usage_patterns = json.loads(session["usage_patterns"])
-    usage_patterns['day_prob_profiles'][appliance] = profiles.tolist()
-    session["usage_patterns"] = usage_patterns
+    #usage_patterns = json.loads(session["usage_patterns"])
+    #usage_patterns['day_prob_profiles'][appliance] = profiles.tolist()
+    #session["usage_patterns"] = usage_patterns
 
     load = get_cost() #TODO rename function
+
+    print()
+    print("load = ", load)
 
     #claculate (baseline) cost
     price = min_profile_from_val_period(price_dict)
@@ -192,16 +196,14 @@ def get_baseline_values():
     )
 
     #generate profile from baseline values
-    profile = generate_profile(values_dict) #ndarray(1000,24)
-    usage_patterns = session["usage_patterns"]
-    print("L167: ", type(usage_patterns))
-    usage_patterns["day_prob_profiles"]["WASHING_MACHINE"] = profile
-    print(type(usage_patterns["day_prob_profiles"]["WASHING_MACHINE"])) # ndarray
-    print(usage_patterns["day_prob_profiles"]["WASHING_MACHINE"].shape) # (1000,24)
-    session["usage_patterns"] = usage_patterns
-    load = get_cost()
-    print()
-    print(type(load))
+    #profile = generate_profile(values_dict) #ndarray(1000,24)
+    #usage_patterns = session["usage_patterns"]
+    #print("L167: ", type(usage_patterns))
+    #usage_patterns["day_prob_profiles"]["WASHING_MACHINE"] = profile
+    #print(type(usage_patterns["day_prob_profiles"]["WASHING_MACHINE"])) # ndarray
+    #print(usage_patterns["day_prob_profiles"]["WASHING_MACHINE"].shape) # (1000,24)
+    #session["usage_patterns"] = usage_patterns
+
     return {}
 
 def movingaverage(interval, window_size):
@@ -411,7 +413,7 @@ def conclusion():
 #---- COST FUNCTION ----# (TO BE CALLED LOAD FUNCITON LATER)
 @app.route('/get-cost', methods=['POST'])
 def get_cost():
-"""
+    """
     print("\nthis is get_cost\n")
     #retrieve hh_size and hh_type from session
     n_residents = session["hh_size"]
@@ -420,8 +422,8 @@ def get_cost():
     #the data of the bar_charts: (coming from barChart_1.js)
     #baseline: 1st bar chart (Experience0)
     #current: 2nd bar chart (Experience1)
-    baseline = request.get_json()['baseline_data']
-    current = request.get_json()['current_data']
+    #baseline = request.get_json()['baseline_data']
+    #current = request.get_json()['current_data']
     """
     #to be able to get the data from session in the correct data type, we have to deserialize it
     #using json.loads:
@@ -440,7 +442,7 @@ def get_cost():
     #retrieve necessary inputs from session
     n_residents = session["hh_size"]
     household_type = session["hh_type"]
-    usage_patterns = session["usage_patterns"]
+    #usage_patterns = session["usage_patterns"]
     appliance = session["appliance"]
 
     #payload is the input data to the lambda function
@@ -449,7 +451,7 @@ def get_cost():
         "household_type": household_type, 
         "usage_patterns":usage_patterns, 
         "appliance":appliance }
-
+    print(type(payload))
     #Invoke a lambda function which calculates the load from a demod simulation    
     #TODO make checks of hh_type and hh_size to see if they match       
     result = client.invoke(
