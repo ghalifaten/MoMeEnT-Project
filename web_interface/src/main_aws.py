@@ -1,4 +1,4 @@
-#http://127.0.0.1:8080//data?appliance=WASHING_MACHINE&m=${e://Field/m}&ID=${e://Field/ResponseID}&hh_size=${e://Field/household_size}&hh_type=${e://Field/household_type}&frequency=${q://QID193/SelectedChoicesRecode}&program30=${q://QID194/SelectedAnswerRecode/1}&program40=${q://QID194/SelectedAnswerRecode/2}&program60=${q://QID194/SelectedAnswerRecode/3}&program90=${q://QID194/SelectedAnswerRecode/4}
+#http://127.0.0.1:8080//data?appliance=WASHING_MACHINE&m=mTest&ID=IDTest&hh_size=1&hh_type=1&frequency=2&program30=1&program40=1&program60=1&program90=1
 #Public IP: 35.180.87.158
 #launc: http://35.180.87.158:8080/
 
@@ -34,6 +34,13 @@ app.secret_key = secret
 
 #---- INITIALIZE VARIABLES ----#
 n_households = 1000
+usage_patterns = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251).tolist(),
+                                    'WASHING_MACHINE':(np.ones(n_households)*100).tolist()},
+                  'day_prob_profiles':{'DISH_WASHER':(np.ones((n_households,24))).tolist(),  
+                                       'WASHING_MACHINE':(np.ones((n_households,24))).tolist()
+                                       },
+                    'energy_cycle': {'DISH_WASHER': 1, 'WASHING_MACHINE':1}
+                }
 price_dict = {'morning':0.200439918,
               'midday':0.264827651, 
               'afternoon':0.21111789, 
@@ -52,25 +59,14 @@ def _index():
     hh_size = 1
     hh_type = 1
     weekly_freq = 2
-        
-    #save usage_patterns to session
-    #session["usage_patterns"] = json.dumps(usage_patterns) #objects in session have to be JSON serialized (i.e converted to a string)
-    #session["usage_patterns"] = usage_patterns
-    #save hh_size and hh_type to session for later use in the cost computation
+
+    session["ID"] = ID
     session["hh_size"] = hh_size
     session["hh_type"] = hh_type
-    session["appliance"] = "WASHING_MACHINE"
-    session["usage_patterns"] = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251).tolist(),
-                                    'WASHING_MACHINE':(np.ones(n_households)*100).tolist()},
-                  'day_prob_profiles':{'DISH_WASHER':(np.ones((n_households,24))).tolist(),  
-                                       'WASHING_MACHINE':(np.ones((n_households,24))).tolist()
-                                       },
-                    'energy_cycle': {'DISH_WASHER': 1, 'WASHING_MACHINE':1}
-                }
     session["n_households"] = n_households
-    #save responseID for further DB updates
-    session["ID"] = ID
-
+    session["appliance"] = "WASHING_MACHINE"
+    session["usage_patterns"] = usage_patterns
+    
     #create an item (DB record)
     item = {
         "m": m,
@@ -96,11 +92,11 @@ def index(qualtrics_data):
 
     try:
         #All args are of type str, change type here if needed.
-        appliance = request.args.get('appliance')
         m = request.args.get('m')
         ID = request.args.get('ID')
         hh_size = int(request.args.get('hh_size'))
         hh_type = int(request.args.get('hh_type'))
+        appliance = request.args.get('appliance')
         weekly_freq = int(request.args.get('frequency'))   
         program30 = int(request.args.get('program30'))
         program40 = int(request.args.get('program40'))
@@ -109,24 +105,17 @@ def index(qualtrics_data):
     except:
         return 'Error in extracting arguments from URL. Either missing or data type not correct.'
 
-    #TODO ADD MAPPING OF weekly_freq HERE 
-    #AND USE IT TO UPDATE target_cycles OF usage_patterns
-    #/!\ make sure the data is JSON serializable, use .tolist() on ndarrays (see initialization example above)
-    # ...
-
-    #save usage_patterns to session
-    #session["usage_patterns"] = usage_patterns 
-
-    #year_freq = weekly_freq * 52 
-    #usage_patterns['target_cycles'][appliance] = (np.ones(n_households)*year_freq).tolist()
+    year_freq = weekly_freq * 52 
+    usage_patterns['target_cycles'][appliance] = (np.ones(n_households)*year_freq).tolist()
     #usage_patterns['energy_cycle'][appliance] = some_function(program30, program40, program60, program90)
     
     #save args to session
-    session["appliance"] = appliance
     session["ID"] = ID
     session["hh_size"] = hh_size
     session["hh_type"] = hh_type
-    #session["usage_patterns"] = usage_patterns
+    session["n_households"] = n_households
+    session["appliance"] = appliance
+    session["usage_patterns"] = usage_patterns
 
     #choose which table to save data
     #if appliance == "DISH_WASHER":
@@ -135,6 +124,7 @@ def index(qualtrics_data):
         #table = dynamodb.Table('MockMomeentProjectData')
 
     #create an item (DB record)
+    """
     item = {
         "m": m,
         "ResponseID": ID,
@@ -144,7 +134,7 @@ def index(qualtrics_data):
     }
     #add item to DB
     table.put_item(Item=item)
-
+    """
     return render_template("index.html")
 
 
