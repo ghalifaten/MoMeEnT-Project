@@ -41,8 +41,8 @@ usage_patterns = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251).tol
                                        'WASHING_MACHINE':(np.ones((n_households,24))).tolist()
                                        },
                     'energy_cycle': {'DISH_WASHER': 1, 'WASHING_MACHINE':1}
-
                 }
+
 price_dict = {'morning':0.200439918,
               'midday':0.264827651, 
               'afternoon':0.21111789, 
@@ -155,7 +155,6 @@ def experiment_0():
     return render_template("experiment_0.html")
 
 
-
 @app.route('/get-baseline-values', methods=['POST'])
 def get_baseline_values():
     values_dict = {}
@@ -165,16 +164,19 @@ def get_baseline_values():
         value = d["Value"]
         values_dict[key] = int(value) #values_dict has the format: {'morning': 0, 'midday': 1, 'afternoon': 2, 'evening': 3, 'night': 4}
     
-    #generate profiles from baseline values to update day_prob_profiles in usage patterns
-    profiles = generate_profile(values_dict)
+    n_residents = session["hh_size"]
+    household_type = session["hh_type"]
     appliance = session["appliance"]
-    #usage_patterns = json.loads(session["usage_patterns"])
-    #usage_patterns['day_prob_profiles'][appliance] = profiles.tolist()
-    #session["usage_patterns"] = usage_patterns
 
-    load = get_cost() #<Response 33669 bytes [200 OK]>
-    load = json.loads(load)
-    print(type(load))
+    payload = {
+        "n_residents": n_residents, 
+        "household_type": household_type, 
+        "usage_patterns":usage_patterns, #global variable
+        "appliance":appliance,
+        "n_households":n_households}
+
+    load = get_load(payload) #<Response 33669 bytes [200 OK]>
+    print("load = ", type(load))
     #claculate (baseline) cost
     price = min_profile_from_val_period(price_dict)
     unit_conv = 1 / 60 / 1000 * 365.25 
@@ -205,6 +207,21 @@ def get_baseline_values():
     #session["usage_patterns"] = usage_patterns
     
     return load
+
+
+def get_load(payload):   
+    result = client.invoke(
+                FunctionName=conf.lambda_function_name,
+                InvocationType='RequestResponse',                                      
+                Payload=json.dumps(payload)
+                )
+    range = result['Payload'].read()  
+    response = json.loads(range) 
+    print("LAMBDA END")
+    return response['load']
+
+
+
 
 def movingaverage(interval, window_size):
     window = np.ones(int(window_size))/float(window_size)
