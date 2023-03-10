@@ -35,10 +35,10 @@ app.secret_key = secret
 #---- INITIALIZE VARIABLES ----#
 n_households = 1000
 
-usage_patterns = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251),
-                                    'WASHING_MACHINE':(np.ones(n_households)*100)},
-                  'day_prob_profiles':{'DISH_WASHER':(np.ones((n_households,24))),  
-                                       'WASHING_MACHINE':(np.ones((n_households,24)))
+usage_patterns = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251).tolist(),
+                                    'WASHING_MACHINE':(np.ones(n_households)*100).tolist()},
+                  'day_prob_profiles':{'DISH_WASHER':(np.ones((n_households,24))).tolist(),  
+                                       'WASHING_MACHINE':(np.ones((n_households,24))).tolist()
                                        },
                     'energy_cycle': {'DISH_WASHER': 1, 'WASHING_MACHINE':1}
 
@@ -172,18 +172,18 @@ def get_baseline_values():
     #usage_patterns['day_prob_profiles'][appliance] = profiles.tolist()
     #session["usage_patterns"] = usage_patterns
 
-    load = get_cost() #TODO rename function
-
-    print()
-    print("load = ", load)
-
+    load = get_cost() #<Response 33669 bytes [200 OK]>
+    load = json.loads(load)
+    print(type(load))
     #claculate (baseline) cost
     price = min_profile_from_val_period(price_dict)
     unit_conv = 1 / 60 / 1000 * 365.25 
     cost = np.sum(load * price * unit_conv)
-
+    print()
+    print("cost = ", cost)
     #save values of baseline in the DB
-    #TODO add peak and ..
+    #TODO add peak and .
+    """.
     table.update_item(
         Key={
             'ResponseID': session["ID"]
@@ -194,7 +194,7 @@ def get_baseline_values():
             ':val2': cost
         }
     )
-
+    """
     #generate profile from baseline values
     #profile = generate_profile(values_dict) #ndarray(1000,24)
     #usage_patterns = session["usage_patterns"]
@@ -203,8 +203,8 @@ def get_baseline_values():
     #print(type(usage_patterns["day_prob_profiles"]["WASHING_MACHINE"])) # ndarray
     #print(usage_patterns["day_prob_profiles"]["WASHING_MACHINE"].shape) # (1000,24)
     #session["usage_patterns"] = usage_patterns
-
-    return {}
+    
+    return load
 
 def movingaverage(interval, window_size):
     window = np.ones(int(window_size))/float(window_size)
@@ -450,23 +450,19 @@ def get_cost():
         "n_residents": n_residents, 
         "household_type": household_type, 
         "usage_patterns":usage_patterns, 
-        "appliance":appliance }
-    print(type(payload))
+        "appliance":appliance,
+        "n_households":n_households}
+
     #Invoke a lambda function which calculates the load from a demod simulation    
     #TODO make checks of hh_type and hh_size to see if they match       
     result = client.invoke(
                 FunctionName=conf.lambda_function_name,
                 InvocationType='RequestResponse',                                      
-                #Payload=json.dumps(payload)
-                Payload = payload
+                Payload=json.dumps(payload)
                 )
     range = result['Payload'].read()  
-    print("LAMBDA ENDED")
-    print()
-    print("range = \n", range)
-    print()
-
     api_response = json.loads(range) 
+    print("LAMBDA END")
     """
         lamda fct returns (1440,1) -> calc vals, and then compare, and then print out difference on "show statistics"
     """

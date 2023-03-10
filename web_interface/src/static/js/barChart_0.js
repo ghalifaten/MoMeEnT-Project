@@ -149,7 +149,10 @@ d3.select(".link-btn").on("click", function(d){
         }),
         contentType: "application/json",
         dataType: "json",
-        success: function (response) {},
+        success: function (response) {
+            console.log(response)
+            window.localStorage.setItem("load", JSON.stringify(load))
+        },
         error: function (response) {
             alert("Error!")
         }
