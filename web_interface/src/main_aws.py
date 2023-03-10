@@ -162,38 +162,28 @@ def calculate_params(load):
 
 @app.route('/get-baseline-values', methods=['POST'])
 def get_baseline_values():
-    data = request.get_json()['baseline_data']
-    values_dict = process_data(data)
-    
-    #generate profile from baseline values and update usage_patterns
-    profile = generate_profile(values_dict) #ndarray(1000,24)
-    usage_patterns["day_prob_profiles"]["WASHING_MACHINE"] = profile.tolist()
-
     n_residents = session["hh_size"]
     household_type = session["hh_type"]
-    appliance = session["appliance"]
     n_households = session["n_households"]
+    appliance = session["appliance"]
 
+    #generate profile from baseline values and update usage_patterns
+    data = request.get_json()['baseline_data']
+    values_dict = process_data(data)
+    profile = generate_profile(values_dict) #ndarray(1000,24)
+    usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
+
+    #invoke lambda function to calculate load
     payload = {
         "n_residents": n_residents, 
         "household_type": household_type, 
         "usage_patterns":usage_patterns, 
         "appliance":appliance,
         "n_households":n_households}
-
     load = get_load(payload) 
 
     #claculate (baseline) cost, share, and peak
     (cost, res_share, peak_load) = calculate_params(load)
-
-    #save baseline parameters to session for later comparison
-    session["baseline_cost"] = str(cost)
-    session["baseline_res_share"] = str(res_share)
-    session["baseline_peak_load"] = str(peak_load)
-
-    print('The yearly bill is {:0.1f}€'.format(cost))
-    print('The share of local generation is {:0.1f}%'.format(res_share)) 
-    print('The share of energy consumed during peak period is {:0.1f}%'.format(peak_load)) 
 
     #save values of baseline in DB
     #Float64 is not supported in DynamoDB. Values are stored as string
@@ -201,7 +191,7 @@ def get_baseline_values():
         Key={
             'ResponseID': session["ID"]
         },
-        UpdateExpression='SET baseline_values = :val1, cost = :val2, res_share = :val3, peak_load = :val4',
+        UpdateExpression='SET baseline_values = :val1, baseline_cost = :val2, baseline_res_share = :val3, baseline_peak_load = :val4',
         ExpressionAttributeValues={
             ':val1': values_dict,
             ':val2': str(cost),
@@ -209,11 +199,7 @@ def get_baseline_values():
             ':val4': str(peak_load)
         }
     )
-    session.modified = True
-    print()
-    print(session.keys())
-    print()
-    return load
+    return {}
 
 
 def get_load(payload):   
@@ -273,45 +259,49 @@ def experiment_1():
 
     return render_template("experiment_1.html")
 
-@app.route('/get-cost', methods=['POST'])
-def get_cost():
-    print()
-    print(session.keys())
-    print()
-    data = request.get_json()['data']
-    values_dict = process_data(data)
-    
-    #generate profile from baseline values and update usage_patterns
-    profile = generate_profile(values_dict) #ndarray(1000,24)
-    usage_patterns["day_prob_profiles"]["WASHING_MACHINE"] = profile.tolist()
-
+@app.route('/get-diff', methods=['POST'])
+def get_diff():
     n_residents = session["hh_size"]
     household_type = session["hh_type"]
-    appliance = session["appliance"]
     n_households = session["n_households"]
+    appliance = session["appliance"]
 
+    #generate profile from baseline values and update usage_patterns
+    data = request.get_json()['data']
+    values_dict = process_data(data)
+    profile = generate_profile(values_dict) #ndarray(1000,24)
+    usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
+
+    #invoke lambda function to calculate load
     payload = {
         "n_residents": n_residents, 
         "household_type": household_type, 
         "usage_patterns":usage_patterns, 
         "appliance":appliance,
         "n_households":n_households}
-
     load = get_load(payload) 
 
-    #claculate (baseline) cost, share, and peak
+    #claculate cost, share, and peak
     (cost, res_share, peak_load) = calculate_params(load)
 
+    #Get baseline values from DB
+    try:
+        id = session["ID"]
+        key = {'ResponseID': id}
+        baseline = table.get_item(Key=key)
+        baseline_cost = float(baseline['Item']['baseline_cost'])
+        baseline_res_share = float(baseline['Item']['baseline_res_share'])
+        baseline_peak_load = float(baseline['Item']['baseline_peak_load'])
+    except:
+        return "Error reading float values from DB."
+
     #Compare with baseline values
+    diff_cost = baseline_cost - cost
+    diff_res = baseline_res_share - res_share
+    diff_peak = baseline_peak_load - peak_load
 
-    diff_cost = session["baseline_cost"] - cost
-    diff_res = session["baseline_res_share"] - res_share
-    diff_peak = session["baseline_peak_load"] - peak_load
-
-    print('The yearly bill is {:0.1f}€'.format(diff_cost))
-    print('The share of local generation is {:0.1f}%'.format(diff_res)) 
-    print('The share of energy consumed during peak period is {:0.1f}%'.format(diff_peak)) 
-    return {"diff_cost": diff_cost, "diff_res": diff_res, "diff_peak": diff_peak}
+    response = {"diff_cost": diff_cost, "diff_res": diff_res, "diff_peak": diff_peak}
+    return jsonify(response)
 
 @app.route('/questions_1a', methods=['GET','POST'])
 def questions_1a():
