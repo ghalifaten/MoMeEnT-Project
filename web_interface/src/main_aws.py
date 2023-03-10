@@ -27,7 +27,7 @@ dynamodb = boto3.resource('dynamodb',
                         aws_access_key_id=conf.aws_access_key_id,
                         aws_secret_access_key=conf.aws_secret_access_key)
 
-table = dynamodb.Table('MockMomeentProjectData') #2 tables, change depending on type of appliance
+#table = dynamodb.Table('MockMomeentProjectData') #2 tables, change depending on type of appliance
 
 secret = secrets.token_urlsafe(32) #generate secret key for the current session
 app = Flask(__name__, template_folder='templates')
@@ -72,6 +72,8 @@ def _index():
     session["n_households"] = n_households
     session["appliance"] = "WASHING_MACHINE"
 
+    table = dynamodb.Table('MockMomeentProjectData') #2 tables, change depending on type of appliance
+    
     #Save inputs in DB
     item = {
         "m": m,
@@ -119,12 +121,9 @@ def index(qualtrics_data):
     session["hh_type"] = hh_type
     session["n_households"] = n_households
     session["appliance"] = appliance
-
-    #choose which table to save data
-    #if appliance == "DISH_WASHER":
-        #table = dynamodb.Table('MockMomeentProjectData') 
-    #else if appliance == "WASHING_MASHINE":
-        #table = dynamodb.Table('MockMomeentProjectData')
+    
+    #choose table depending on appliance
+    table = dynamodb.Table("MomeentData-"+appliance) 
 
     #Save inputs in DB
     item = {
@@ -188,6 +187,8 @@ def get_baseline_values():
 
     #save values of baseline in DB
     #Float64 is not supported in DynamoDB. Values are stored as string
+    appliance = session["appliance"]
+    table = dynamodb.Table("MomeentData-"+appliance) 
     table.update_item(
         Key={
             'ResponseID': session["ID"]
@@ -248,6 +249,8 @@ def experiment_1():
     q0_answers = request.args
 
     #save answers to DB
+    appliance = session["appliance"]
+    table = dynamodb.Table("MomeentData-"+appliance) 
     table.update_item(
         Key={
             'ResponseID': session["ID"]
@@ -287,6 +290,7 @@ def get_diff():
     (cost, res_share, peak_load) = calculate_params(load)
 
     #Get baseline values from DB
+    table = dynamodb.Table("MomeentData-"+appliance) 
     try:
         id = session["ID"]
         key = {'ResponseID': id}
@@ -318,6 +322,8 @@ def questions_1b():
     q1a_answers = request.args
     
     #save answers to DB
+    appliance = session["appliance"]
+    table = dynamodb.Table("MomeentData-"+appliance) 
     table.update_item(
         Key={
             'ResponseID': session["ID"]
@@ -335,6 +341,8 @@ def experiment_2():
     q1b_answers = request.args
 
     #save answers to DB
+    appliance = session["appliance"]
+    table = dynamodb.Table("MomeentData-"+appliance) 
     table.update_item(
         Key={
             'ResponseID': session["ID"]
@@ -356,6 +364,8 @@ def questions_2b():
     q2a_answers = request.args
     
     #save answers to DB
+    appliance = session["appliance"]
+    table = dynamodb.Table("MomeentData-"+appliance) 
     table.update_item(
         Key={
             'ResponseID': session["ID"]
@@ -373,6 +383,8 @@ def experiment_3():
     q2b_answers = request.args
     
     #save answers to DB
+    appliance = session["appliance"]
+    table = dynamodb.Table("MomeentData-"+appliance) 
     table.update_item(
         Key={
             'ResponseID': session["ID"]
@@ -394,6 +406,8 @@ def questions_3b():
     q3a_answers = request.args
     
     #save answers to DB
+    appliance = session["appliance"]
+    table = dynamodb.Table("MomeentData-"+appliance) 
     table.update_item(
         Key={
             'ResponseID': session["ID"]
@@ -411,6 +425,8 @@ def experiment_4():
     q3b_answers = request.args
     
     #save answers to DB
+    appliance = session["appliance"]
+    table = dynamodb.Table("MomeentData-"+appliance) 
     table.update_item(
         Key={
             'ResponseID': session["ID"]
@@ -432,6 +448,8 @@ def questions_4b():
     q4a_answers = request.args
     
     #save answers to DB
+    appliance = session["appliance"]
+    table = dynamodb.Table("MomeentData-"+appliance) 
     table.update_item(
         Key={
             'ResponseID': session["ID"]
@@ -449,6 +467,8 @@ def conclusion():
     q4b_answers = request.args
    
     #save answers to DB
+    appliance = session["appliance"]
+    table = dynamodb.Table("MomeentData-"+appliance) 
     table.update_item(
         Key={
             'ResponseID': session["ID"]
