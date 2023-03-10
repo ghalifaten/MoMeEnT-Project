@@ -70,7 +70,6 @@ def _index():
     session["hh_type"] = hh_type
     session["n_households"] = n_households
     session["appliance"] = "WASHING_MACHINE"
-    session["usage_patterns"] = usage_patterns
 
     #Save inputs in DB
     item = {
@@ -81,7 +80,7 @@ def _index():
         "frequency": weekly_freq,
     }
     table.put_item(Item=item)
-
+    session.modified = True
     return render_template("index.html")
 #------------------------------------------
 # ORIGINAL MAIN
@@ -119,7 +118,6 @@ def index(qualtrics_data):
     session["hh_type"] = hh_type
     session["n_households"] = n_households
     session["appliance"] = appliance
-    session["usage_patterns"] = usage_patterns
 
     #choose which table to save data
     #if appliance == "DISH_WASHER":
@@ -144,19 +142,31 @@ def index(qualtrics_data):
 def experiment_0():
     return render_template("experiment_0.html")
 
-
-@app.route('/get-baseline-values', methods=['POST'])
-def get_baseline_values():
+def process_data(data):
     values_dict = {}
-    baseline = request.get_json()['baseline_data']
-    for d in baseline:
+    for d in data:
         key = d["Period"].split()[0] #remove the additional information of time between ()
         value = d["Value"]
         values_dict[key] = int(value) #values_dict has the format: {'morning': 0, 'midday': 1, 'afternoon': 2, 'evening': 3, 'night': 4}
+    return values_dict
+
+#TODO maybe change name of function
+def calculate_params(load):
+    price = min_profile_from_val_period(price_dict)
+    unit_conv = 1 / 60 / 1000 * 365.25 
+    cost = np.sum(load * price * unit_conv)
+    local_generation = min_profile_from_val_period(RES_dict)
+    res_share = np.sum(load * local_generation / np.sum(load))
+    peak_load = np.sum(load[14*60:18*60])/np.sum(load)*100
+    return (cost, res_share, peak_load)
+
+@app.route('/get-baseline-values', methods=['POST'])
+def get_baseline_values():
+    data = request.get_json()['baseline_data']
+    values_dict = process_data(data)
     
     #generate profile from baseline values and update usage_patterns
     profile = generate_profile(values_dict) #ndarray(1000,24)
-    usage_patterns = session["usage_patterns"]
     usage_patterns["day_prob_profiles"]["WASHING_MACHINE"] = profile.tolist()
 
     n_residents = session["hh_size"]
@@ -174,12 +184,16 @@ def get_baseline_values():
     load = get_load(payload) 
 
     #claculate (baseline) cost, share, and peak
-    price = min_profile_from_val_period(price_dict)
-    unit_conv = 1 / 60 / 1000 * 365.25 
-    cost = np.sum(load * price * unit_conv)
-    local_generation = min_profile_from_val_period(RES_dict)
-    res_share = np.sum(load * local_generation / np.sum(load))
-    peak_load = np.sum(load[14*60:18*60])/np.sum(load)*100
+    (cost, res_share, peak_load) = calculate_params(load)
+
+    #save baseline parameters to session for later comparison
+    session["baseline_cost"] = str(cost)
+    session["baseline_res_share"] = str(res_share)
+    session["baseline_peak_load"] = str(peak_load)
+
+    print('The yearly bill is {:0.1f}€'.format(cost))
+    print('The share of local generation is {:0.1f}%'.format(res_share)) 
+    print('The share of energy consumed during peak period is {:0.1f}%'.format(peak_load)) 
 
     #save values of baseline in DB
     #Float64 is not supported in DynamoDB. Values are stored as string
@@ -195,7 +209,10 @@ def get_baseline_values():
             ':val4': str(peak_load)
         }
     )
-    
+    session.modified = True
+    print()
+    print(session.keys())
+    print()
     return load
 
 
@@ -224,7 +241,6 @@ def generate_profile(values_dict):
     profile = movingaverage(raw_profile, 3)
     return np.asarray([profile for _ in range(n_households)])
 
-
 def min_profile_from_val_period(period_dict):
     profile = np.asarray([period_dict['night']] * 2 * 60 + \
                         [period_dict['morning']] * 4 * 60 + \
@@ -234,8 +250,6 @@ def min_profile_from_val_period(period_dict):
                         [period_dict['night']] * 6 * 60
                         )
     return profile
-    
-
 
 @app.route('/questions_0', methods=['GET','POST'])
 def questions_0():
@@ -258,6 +272,46 @@ def experiment_1():
     )
 
     return render_template("experiment_1.html")
+
+@app.route('/get-cost', methods=['POST'])
+def get_cost():
+    print()
+    print(session.keys())
+    print()
+    data = request.get_json()['data']
+    values_dict = process_data(data)
+    
+    #generate profile from baseline values and update usage_patterns
+    profile = generate_profile(values_dict) #ndarray(1000,24)
+    usage_patterns["day_prob_profiles"]["WASHING_MACHINE"] = profile.tolist()
+
+    n_residents = session["hh_size"]
+    household_type = session["hh_type"]
+    appliance = session["appliance"]
+    n_households = session["n_households"]
+
+    payload = {
+        "n_residents": n_residents, 
+        "household_type": household_type, 
+        "usage_patterns":usage_patterns, 
+        "appliance":appliance,
+        "n_households":n_households}
+
+    load = get_load(payload) 
+
+    #claculate (baseline) cost, share, and peak
+    (cost, res_share, peak_load) = calculate_params(load)
+
+    #Compare with baseline values
+
+    diff_cost = session["baseline_cost"] - cost
+    diff_res = session["baseline_res_share"] - res_share
+    diff_peak = session["baseline_peak_load"] - peak_load
+
+    print('The yearly bill is {:0.1f}€'.format(diff_cost))
+    print('The share of local generation is {:0.1f}%'.format(diff_res)) 
+    print('The share of energy consumed during peak period is {:0.1f}%'.format(diff_peak)) 
+    return {"diff_cost": diff_cost, "diff_res": diff_res, "diff_peak": diff_peak}
 
 @app.route('/questions_1a', methods=['GET','POST'])
 def questions_1a():
@@ -412,63 +466,6 @@ def conclusion():
     return render_template("conclusion.html")
 
 
-#---- COST FUNCTION ----# (TO BE CALLED LOAD FUNCITON LATER)
-@app.route('/get-cost', methods=['POST'])
-def get_cost():
-    """
-    print("\nthis is get_cost\n")
-    #retrieve hh_size and hh_type from session
-    n_residents = session["hh_size"]
-    household_type = session["hh_type"]
-    """
-    #the data of the bar_charts: (coming from barChart_1.js)
-    #baseline: 1st bar chart (Experience0)
-    #current: 2nd bar chart (Experience1)
-    #baseline = request.get_json()['baseline_data']
-    #current = request.get_json()['current_data']
-    """
-    #to be able to get the data from session in the correct data type, we have to deserialize it
-    #using json.loads:
-    usage_patterns = session["usage_patterns"]
-    print()
-    print(type(usage_patterns["day_prob_profiles"]["WASHING_MACHINE"]))
-    print(usage_patterns)
-    print()
-    #TODO interpolation of above data to create the day_prob_profiles field in usage_patterns
-    #...
-    
-
-    #payload is the input data to the lambda function
-    payload = {"n_residents": n_residents, "household_type": household_type, "usage_patterns":usage_patterns, "appliance":"WASHING_MACHINE"}
-    """
-    #retrieve necessary inputs from session
-    n_residents = session["hh_size"]
-    household_type = session["hh_type"]
-    #usage_patterns = session["usage_patterns"]
-    appliance = session["appliance"]
-
-    #payload is the input data to the lambda function
-    payload = {
-        "n_residents": n_residents, 
-        "household_type": household_type, 
-        "usage_patterns":usage_patterns, 
-        "appliance":appliance,
-        "n_households":n_households}
-
-    #Invoke a lambda function which calculates the load from a demod simulation    
-    #TODO make checks of hh_type and hh_size to see if they match       
-    result = client.invoke(
-                FunctionName=conf.lambda_function_name,
-                InvocationType='RequestResponse',                                      
-                Payload=json.dumps(payload)
-                )
-    range = result['Payload'].read()  
-    api_response = json.loads(range) 
-    print("LAMBDA END")
-    """
-        lamda fct returns (1440,1) -> calc vals, and then compare, and then print out difference on "show statistics"
-    """
-    return jsonify(api_response)
 
 
 #---- MAIN CALL ----# 

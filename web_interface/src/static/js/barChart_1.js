@@ -206,13 +206,12 @@ d3.select("#stats-btn").on("click", function(d){
             url: location.origin + "/get-cost",
             type: 'POST',
             data: JSON.stringify({
-                "baseline_data": baseline_data,
-                "current_data": current_data
+                "data": current_data,
             }),
             contentType: "application/json",
             dataType: "json",
             success: function (response) {
-                const cost = response.cost;
+                const cost = response.diff_cost;
                 if (cost != 0) {
                     let counts=setInterval(updated);
                     let upto=0;
