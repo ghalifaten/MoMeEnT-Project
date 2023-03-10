@@ -185,25 +185,22 @@ function difference(baseline_data, current_data) {
     return [current_sum - baseline_sum, current_avg - baseline_avg];
 }
 
-d3.select("#stats-btn").on("click", function(d){    
-    /* RUN DEMOD */
-    function getCost() {
+d3.select("#stats-btn").on("click", function(d){  
+    function getDiff() {
         //TODO CHECK IF THIS IS THE DATA WE WANT TO SEND USE FOR THE COST COMPUTATION
-        const baseline_data = JSON.parse(window.localStorage.getItem("baseline_data"))
         const current_data = JSON.parse(window.localStorage.getItem("current_data"))
 
         //... and send them to Flask to use them in computing the cost.
         $.ajax({
-            url: location.origin + "/get-cost",
+            url: location.origin + "/get-diff",
             type: 'POST',
             data: JSON.stringify({
-                "baseline_data": baseline_data,
-                "current_data": current_data
+                "data": current_data,
             }),
             contentType: "application/json",
             dataType: "json",
             success: function (response) {
-                const cost = response.cost;
+                const cost = response.diff_cost;
                 if (cost != 0) {
                     let counts=setInterval(updated);
                     let upto=0;
@@ -228,7 +225,7 @@ d3.select("#stats-btn").on("click", function(d){
             }
         });
     }
-    getCost()
+    getDiff()
     
     //Animation for statistics numbers
     var baseline_data = JSON.parse(window.localStorage.getItem("baseline_data"));

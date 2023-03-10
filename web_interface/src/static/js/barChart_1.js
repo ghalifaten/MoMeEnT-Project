@@ -194,11 +194,9 @@ function difference(baseline_data, current_data) {
     return [current_sum - baseline_sum, current_avg - baseline_avg];
 }
 
-d3.select("#stats-btn").on("click", function(d){    
-    /* RUN DEMOD */
+d3.select("#stats-btn").on("click", function(d){   
     function getDiff() {
         //TODO CHECK IF THIS IS THE DATA WE WANT TO SEND USE FOR THE COST COMPUTATION
-        const baseline_data = JSON.parse(window.localStorage.getItem("baseline_data"))
         const current_data = JSON.parse(window.localStorage.getItem("current_data"))
 
         //... and send them to Flask to use them in computing the cost.
@@ -244,25 +242,6 @@ d3.select("#stats-btn").on("click", function(d){
     const differences = difference(baseline_data, current_data);
     const diffValue = differences[0];
     const diffAvg = differences[1];
-    /*
-    if (diffValue != 0) {
-        let counts=setInterval(updated);
-        let upto=0;
-        function updated(){
-            var count= document.getElementById("stats-nbr-you");
-            count.innerHTML=++upto;
-            if(upto===Math.abs(Math.ceil(diffValue))){ clearInterval(counts); }
-        }
-    }
-    //update stats-you 
-    if (diffValue >= 0) {
-        document.getElementById("stats-txt-you").innerText = "Increase in cost for running the dishwasher."
-        document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-increase.png\"></img>"
-    } else {
-        document.getElementById("stats-txt-you").innerText = "Decrease in cost for running the dishwasher."
-        document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-decrease.png\"></img>"
-    }
-    */
 
    
     if (diffAvg != 0) {

@@ -194,16 +194,15 @@ d3.select("#stats-btn").on("click", function(d){
 
         //... and send them to Flask to use them in computing the cost.
         $.ajax({
-            url: location.origin + "/get-cost",
+            url: location.origin + "/get-diff",
             type: 'POST',
             data: JSON.stringify({
-                "baseline_data": baseline_data,
-                "current_data": current_data
+                "data": current_data,
             }),
             contentType: "application/json",
             dataType: "json",
             success: function (response) {
-                const cost = response.cost;
+                const cost = response.diff_cost;
                 if (cost != 0) {
                     let counts=setInterval(updated);
                     let upto=0;

@@ -262,6 +262,7 @@ def experiment_1():
 
 @app.route('/get-diff', methods=['POST'])
 def get_diff():
+    print("\nget-diff\n")
     n_residents = session["hh_size"]
     household_type = session["hh_type"]
     n_households = session["n_households"]
@@ -300,9 +301,12 @@ def get_diff():
     diff_cost = baseline_cost - cost
     diff_res = baseline_res_share - res_share
     diff_peak = baseline_peak_load - peak_load
-    print(diff_cost, diff_res, diff_peak)
-    print(math.trunc(diff_cost))
-    response = {"diff_cost": math.trunc(diff_cost), "diff_res": math.trunc(diff_res), "diff_peak": math.trunc(diff_peak)}
+    response = {
+        "diff_cost": math.trunc(diff_cost), 
+        "diff_res": math.trunc(diff_res), 
+        "diff_peak": math.trunc(diff_peak)
+        }
+
     return jsonify(response)
 
 @app.route('/questions_1a', methods=['GET','POST'])
