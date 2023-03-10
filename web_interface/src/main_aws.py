@@ -71,9 +71,9 @@ def _index():
     session["hh_type"] = hh_type
     session["n_households"] = n_households
     session["appliance"] = "WASHING_MACHINE"
-
-    table = dynamodb.Table('MockMomeentProjectData') #2 tables, change depending on type of appliance
     
+    table = dynamodb.Table("MomeentData-"+session["appliance"])  
+
     #Save inputs in DB
     item = {
         "m": m,
@@ -289,8 +289,22 @@ def get_diff():
     #claculate cost, share, and peak
     (cost, res_share, peak_load) = calculate_params(load)
 
-    #Get baseline values from DB
+    #save values to DB
+    scenario = request.get_json()['scenario']
     table = dynamodb.Table("MomeentData-"+appliance) 
+    table.update_item(
+        Key={
+            'ResponseID': session["ID"]
+        },
+        UpdateExpression="SET {scenario}_cost = :val0, {scenario}_res_share = :val1, {scenario}_peak_load = :val2".format(scenario = scenario),
+        ExpressionAttributeValues={
+            ':val0': str(cost),
+            ':val1': str(res_share),
+            ':val2': str(peak_load)
+        }
+    )
+
+    #Get baseline values from DB
     try:
         id = session["ID"]
         key = {'ResponseID': id}
@@ -305,6 +319,7 @@ def get_diff():
     diff_cost = baseline_cost - cost
     diff_res = baseline_res_share - res_share
     diff_peak = baseline_peak_load - peak_load
+
     response = {
         "diff_cost": math.trunc(diff_cost), 
         "diff_res": math.trunc(diff_res), 

@@ -196,6 +196,7 @@ d3.select("#stats-btn").on("click", function(d){
             type: 'POST',
             data: JSON.stringify({
                 "data": current_data,
+                "scenario": "sc2",
             }),
             contentType: "application/json",
             dataType: "json",
