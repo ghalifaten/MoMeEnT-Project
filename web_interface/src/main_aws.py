@@ -164,6 +164,16 @@ def get_baseline_values():
         value = d["Value"]
         values_dict[key] = int(value) #values_dict has the format: {'morning': 0, 'midday': 1, 'afternoon': 2, 'evening': 3, 'night': 4}
     
+    #generate profile from baseline values
+    profile = generate_profile(values_dict) #ndarray(1000,24)
+    #usage_patterns = session["usage_patterns"]
+    #print("L167: ", type(usage_patterns))
+    usage_patterns["day_prob_profiles"]["WASHING_MACHINE"] = profile.tolist()
+    #print(type(usage_patterns["day_prob_profiles"]["WASHING_MACHINE"])) # ndarray
+    #print(usage_patterns["day_prob_profiles"]["WASHING_MACHINE"].shape) # (1000,24)
+    #session["usage_patterns"] = usage_patterns
+
+
     n_residents = session["hh_size"]
     household_type = session["hh_type"]
     appliance = session["appliance"]
@@ -175,7 +185,7 @@ def get_baseline_values():
         "appliance":appliance,
         "n_households":n_households}
 
-    load = get_load(payload) #<Response 33669 bytes [200 OK]>
+    load = get_load(payload) 
     print("load = ", type(load))
     #claculate (baseline) cost
     price = min_profile_from_val_period(price_dict)
@@ -196,16 +206,7 @@ def get_baseline_values():
             ':val2': cost
         }
     )
-    """
-    #generate profile from baseline values
-    #profile = generate_profile(values_dict) #ndarray(1000,24)
-    #usage_patterns = session["usage_patterns"]
-    #print("L167: ", type(usage_patterns))
-    #usage_patterns["day_prob_profiles"]["WASHING_MACHINE"] = profile
-    #print(type(usage_patterns["day_prob_profiles"]["WASHING_MACHINE"])) # ndarray
-    #print(usage_patterns["day_prob_profiles"]["WASHING_MACHINE"].shape) # (1000,24)
-    #session["usage_patterns"] = usage_patterns
-    
+    """  
     return load
 
 
@@ -236,8 +237,7 @@ def generate_profile(values_dict):
                              [values_dict['night']] * 6
                             )
     profile = movingaverage(raw_profile, 3)
-    profiles = np.asarray([profile for _ in range(n_households)])
-    return profiles
+    return np.asarray([profile for _ in range(n_households)])
 
 
 def min_profile_from_val_period(period_dict):
