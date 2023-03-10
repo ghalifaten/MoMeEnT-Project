@@ -70,7 +70,7 @@ def _index():
     session["hh_size"] = hh_size
     session["hh_type"] = hh_type
     session["n_households"] = n_households
-    session["appliance"] = "WASHING_MACHINE"
+    session["appliance"] = "DISH_WASHER"
     
     table = dynamodb.Table("MomeentData-"+session["appliance"])  
 
@@ -140,7 +140,12 @@ def index(qualtrics_data):
 
 @app.route('/experiment_0')
 def experiment_0():
-    return render_template("experiment_0.html")
+    appliance = session["appliance"]
+    if appliance == "WASHING_MACHINE":
+        app = "washing machine"
+    elif appliance == "DISH_WASHER":
+        app = "dish washer"
+    return render_template("experiments/experiment_0.html", appliance=app)
 
 def process_data(data):
     values_dict = {}
@@ -150,7 +155,6 @@ def process_data(data):
         values_dict[key] = int(value) #values_dict has the format: {'morning': 0, 'midday': 1, 'afternoon': 2, 'evening': 3, 'night': 4}
     return values_dict
 
-#TODO maybe change name of function
 def calculate_params(load):
     price = min_profile_from_val_period(price_dict)
     unit_conv = 1 / 60 / 1000 * 365.25 
@@ -203,7 +207,6 @@ def get_baseline_values():
     )
     return {}
 
-
 def get_load(payload):   
     result = client.invoke(
                 FunctionName=conf.lambda_function_name,
@@ -241,7 +244,9 @@ def min_profile_from_val_period(period_dict):
 
 @app.route('/questions_0', methods=['GET','POST'])
 def questions_0():
-    return render_template("questions_0.html")
+    appliance = session["appliance"]
+    file_path = "questions/{app}/questions_0.html".format(app=appliance)
+    return render_template(file_path)
 
 @app.route('/experiment_1')
 def experiment_1():
@@ -261,7 +266,12 @@ def experiment_1():
         }
     )
 
-    return render_template("experiment_1.html")
+    if appliance == "WASHING_MACHINE":
+        app = "washing machine"
+    elif appliance == "DISH_WASHER":
+        app = "dish washer"
+
+    return render_template("experiments/experiment_1.html", appliance=app)
 
 @app.route('/get-diff', methods=['POST'])
 def get_diff():
@@ -330,7 +340,9 @@ def get_diff():
 
 @app.route('/questions_1a', methods=['GET','POST'])
 def questions_1a():
-    return render_template("questions_1a.html")
+    appliance = session["appliance"]
+    file_path = "questions/{app}/questions_1a.html".format(app=appliance)
+    return render_template(file_path)
 
 @app.route('/questions_1b', methods=['GET','POST'])
 def questions_1b():
@@ -349,7 +361,8 @@ def questions_1b():
         }
     )
 
-    return render_template("questions_1b.html")
+    file_path = "questions/{app}/questions_1b.html".format(app=appliance)
+    return render_template(file_path)
 
 @app.route('/experiment_2')
 def experiment_2():
@@ -368,11 +381,18 @@ def experiment_2():
         }
     )
    
-    return render_template("experiment_2.html")
+    if appliance == "WASHING_MACHINE":
+        app = "washing machine"
+    elif appliance == "DISH_WASHER":
+        app = "dish washer"
+
+    return render_template("experiments/experiment_2.html", appliance=app)
 
 @app.route('/questions_2a', methods=['GET','POST'])
 def questions_2a():
-    return render_template("questions_2a.html")
+    appliance = session["appliance"]
+    file_path = "questions/{app}/questions_2a.html".format(app=appliance)
+    return render_template(file_path)
 
 @app.route('/questions_2b', methods=['GET','POST'])
 def questions_2b():
@@ -391,7 +411,8 @@ def questions_2b():
         }
     )
 
-    return render_template("questions_2b.html")
+    file_path = "questions/{app}/questions_2b.html".format(app=appliance)
+    return render_template(file_path)
 
 @app.route('/experiment_3')
 def experiment_3():
@@ -409,12 +430,19 @@ def experiment_3():
             ':val1': q2b_answers.to_dict()
         }
     )
+
+    if appliance == "WASHING_MACHINE":
+        app = "washing machine"
+    elif appliance == "DISH_WASHER":
+        app = "dish washer"
     
-    return render_template("experiment_3.html")
+    return render_template("experiments/experiment_3.html", appliance=app)
 
 @app.route('/questions_3a', methods=['GET','POST'])
 def questions_3a():
-    return render_template("questions_3a.html")
+    appliance = session["appliance"]
+    file_path = "questions/{app}/questions_3a.html".format(app=appliance)
+    return render_template(file_path)
 
 @app.route('/questions_3b', methods=['GET','POST'])
 def questions_3b():
@@ -433,7 +461,8 @@ def questions_3b():
         }
     )
     
-    return render_template("questions_3b.html")
+    file_path = "questions/{app}/questions_3b.html".format(app=appliance)
+    return render_template(file_path)
 
 @app.route('/experiment_4')
 def experiment_4():    
@@ -451,12 +480,19 @@ def experiment_4():
             ':val1': q3b_answers.to_dict()
         }
     )
+
+    if appliance == "WASHING_MACHINE":
+        app = "washing machine"
+    elif appliance == "DISH_WASHER":
+        app = "dish washer"
     
-    return render_template("experiment_4.html")
+    return render_template("experiments/experiment_4.html", appliance=app)
 
 @app.route('/questions_4a', methods=['GET','POST'])
 def questions_4a():
-    return render_template("questions_4a.html")
+    appliance = session["appliance"]
+    file_path = "questions/{app}/questions_4a.html".format(app=appliance)
+    return render_template(file_path)
 
 @app.route('/questions_4b', methods=['GET','POST'])
 def questions_4b():    
@@ -475,7 +511,8 @@ def questions_4b():
         }
     )
     
-    return render_template("questions_4b.html")
+    file_path = "questions/{app}/questions_4b.html".format(app=appliance)
+    return render_template(file_path)
 
 @app.route('/conclusion')
 def conclusion():
@@ -494,7 +531,12 @@ def conclusion():
         }
     )
 
-    return render_template("conclusion.html")
+    if appliance == "WASHING_MACHINE":
+        app = "washing machine"
+    elif appliance == "DISH_WASHER":
+        app = "dish washer"
+
+    return render_template("conclusion.html", appliance=app)
 
 
 

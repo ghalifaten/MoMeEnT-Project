@@ -4,7 +4,7 @@
 <head>
 		<meta charset="utf-8">
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!--meta name="viewport" content="width=device-width, initial-scale=1.0"-->
 
 		<title>MoMeEnt</title>
 
@@ -31,6 +31,7 @@
 
         <!--D3.js-->
         <script src="https://d3js.org/d3.v4.js"></script>
+        <script src="https://unpkg.com/d3-simple-slider"></script>
 
         <!--ajax-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -52,19 +53,18 @@
 
                 <div id="exp1">
                     <div id="text">
-                    <h2>2nd Scenario</h2>
+                    <h2>Baseline scenario</h2>
                     <hr>
                     <p style="margin-bottom: 50px;">
-                        Suppose you signed up for variable-price energy contract, so there are times of the day when electricity is more expensive and 
-                        others when it is cheaper. You can do something to achieve some savings on your energy bill (for example, by anticipating or 
-                        waiting for the low price hours to use electricity). However, you may face some discomfort. In this situation, what time of day would you run the dishwasher?</p>
+                        Referring to the time of the day, when is the {{appliance}} run during week days?
+                    </p>
 
                     </div>
                     <!--D3 bar chart visualization-->
                     <div class="visualization">
                         <div class="visualization-column1">
                             <div class="chart_container">
-                                <div id="bar-chart-legend"></div>
+                                <div id="left-side-buffer"></div>
                                 <div id="bar-chart"> </div>
                             </div>
                             <div class="sliders-section">
@@ -78,13 +78,6 @@
                                 <div class="slider-container">
                                     <div class="slider" >
                                         <input type="range" id=morningSlider min="0" max="4" value="0" step="1" autocomplete="off" orient="vertical"/>
-                                        <datalist id="steplist">
-                                            <option>0</option>
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                        </datalist>
                                     </div>
                                     <div class="slider" >
                                         <input type="range" name="middaySlider" id=middaySlider min="0" max="4" value="0" autocomplete="off" orient="vertical"/>
@@ -102,56 +95,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="visualization-column2">
-                            <button id="stats-btn">See statistics</button> 
-                        </div>
-                        <div class="statistics visualization-column3">
-                            <div class="sub-stats" id="stats-title">
-                                You
-                            </div>
-                            <div class="sub-stats-container" id="stats-average">
-                                <div class="sub-stats-item stats-icon" id="stats-icon-you">
-                                    <!--Default icon-->
-                                    <img src="static/data/arrow-increase.png"></img>
-                                </div>
-                                <div class="sub-stats-item stats-nbr" id="stats-nbr-you">
-                                    <!--Default value-->
-                                    0
-                                </div>
-                                <div class="sub-stats-item stats-txt" id="stats-txt-you">
-                                    <!--Default text-->
-                                    Increase in cost for running the dishwasher.
-                                </div>
-                                 
-                            </div>                            
 
-                            <div class="sub-stats" id="stats-title">
-                                Average
-                            </div>
-
-                            <div class="sub-stats-container" id="stats-average">
-                                <div class="sub-stats-item stats-icon" id="stats-icon-avg">
-                                    <!--Default icon-->
-                                    <img src="static/data/arrow-increase.png"></img>
-                                </div>
-                                <div class="sub-stats-item stats-nbr" id="stats-nbr-avg">
-                                    <!--Default number-->
-                                    0
-                                </div>
-                                <div class="sub-stats-item stats-txt" id="stats-txt-avg">
-                                    <!--Default text-->
-                                    Increase in cost for running the dishwasher.
-                                </div>
-                                 
-                            </div>
-                            
-                        </div>
                     </div>
-                    
                     <div style="clear:both">
-                        <p style="margin-top: 100px;">
-                            <button class="link-btn" id="link-to-exp2" onclick="location.href='/questions_2a'">Next page</button> 
-                        </p>
+                        <p style="margin-top: 100px;"><button class="link-btn" id="link-to-quests" onclick="location.href='/questions_0'" disabled>Next page</button></p>
                     </div>
                 </div> 
             </div>
@@ -160,7 +107,9 @@
 
 
     <!--JS scripts-->
+    <!--app.js-->
 	<script src="{{ url_for('static', filename='js/app.js')}}"></script>
-    <script src="{{ url_for('static', filename='js/barChart_2.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/barChart_0.js')}}"></script>
+    
 
 </body>

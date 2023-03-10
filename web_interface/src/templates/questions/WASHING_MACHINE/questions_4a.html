@@ -31,13 +31,6 @@
 
 </head>
 
-<style>
-    .highlight-cell{
-        background-color: rgba(95, 158, 160, 0.603);
-        color: white;
-    }
-</style>
-
 <body>
     <!--TODO: change text of the popup help here-->
     <div class="popup" onclick="popupFunctionExp1()">
@@ -48,44 +41,20 @@
             proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>
     </div> 
 
-    <h2>Questions 2-a</h2>
+    <h2>Questions 4-a washing machine</h2>
     <hr>
     
     <div class="questions-form"> 
-        <form  action="/questions_2b" method="get">
+        <form  action="/questions_4b" method="get">
             <h3>Question1</h3>
             <p>Type of the household:</p>
             <!--Single answer-->
-            <input type="radio" name="q2a_r1" value="1" checked>Type1<br>
-            <input type="radio" name="q2a_r1" value="2">Type2<br>
-            <input type="radio" name="q2a_r1" value="3">Type3 <br>
-
-            <h3>Question2</h3>
-
-            <table cellspacing="0" style="width: 60%;"> <!--60% of the width of the window-->
-                <tr >
-                  <th style="width: 50%;" class="highlight-cell">Question</th> <!--50% of the table's width-->
-                  <th style="width: 25%;" class="highlight-cell">No</th>
-                  <th style="width: 25%;" class="highlight-cell">Yes</th>
-                </tr>
-                <tr>
-                  <td >Here is the first statement</td>
-                  <!--q2a_r2_1 correpsonds to the 1st statement from the 2nd question (r2) of list of questions q2a-->
-                  <td><input type="radio" name="q2a_r2_1" value="No"></td> 
-                  <td><input type="radio" name="q2a_r2_1" value="Yes"></td>
-                </tr>
-                <tr>
-                  <td >Here is the second statement</td>
-                  <td><input type="radio" name="q2a_r2_2" value="No"></td>
-                  <td><input type="radio" name="q2a_r2_2" value="Yes"></td>
-                </tr>
-            </table>
-
+            <input type="radio" name="q4a_r1" value="1" checked>Type1<br>
+ 
             <p style="margin-top: 100px;">
-                <input class="link-btn button" onclick="window.location.href = '/questions_2b';" type="submit" value="Next page" />
+                <input class="link-btn button" onclick="window.location.href = '/questions_4b';" type="submit" value="Next page" />
        
             </p>
-
         </form>
     </div>
 
