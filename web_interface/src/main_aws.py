@@ -47,11 +47,16 @@ price_dict = {'morning':0.200439918,
               'evening':0.220015123,
               'night':0.242899301
               }
-
+RES_dict = {'morning':47.8,
+              'midday':69.9, 
+              'afternoon':33.3, 
+              'evening':0,
+              'night':0
+              }
 
 #---- FLASK ROUTES ----#
 #---- TEMPORARY MAIN
-@app.route('/') #without args, define default args: data?m=1&ID=QR001&hh_size=1&hh_type=1&frequency=2
+@app.route('/') 
 def _index():
     #Default args
     m = "1"
@@ -67,17 +72,6 @@ def _index():
     session["appliance"] = "WASHING_MACHINE"
     session["usage_patterns"] = usage_patterns
     
-    #create an item (DB record)
-    item = {
-        "m": m,
-        "ResponseID": ID,
-        "hh_size": hh_size,
-        "hh_type": hh_type,
-        "frequency": weekly_freq,
-    }
-    #add item to DB
-    table.put_item(Item=item)
-
     return render_template("index.html")
 #------------------------------------------
 # ORIGINAL MAIN
@@ -152,15 +146,10 @@ def get_baseline_values():
         value = d["Value"]
         values_dict[key] = int(value) #values_dict has the format: {'morning': 0, 'midday': 1, 'afternoon': 2, 'evening': 3, 'night': 4}
     
-    #generate profile from baseline values
+    #generate profile from baseline values and update usage_patterns
     profile = generate_profile(values_dict) #ndarray(1000,24)
     usage_patterns = session["usage_patterns"]
-    #print("L167: ", type(usage_patterns))
     usage_patterns["day_prob_profiles"]["WASHING_MACHINE"] = profile.tolist()
-    #print(type(usage_patterns["day_prob_profiles"]["WASHING_MACHINE"])) # ndarray
-    #print(usage_patterns["day_prob_profiles"]["WASHING_MACHINE"].shape) # (1000,24)
-    #session["usage_patterns"] = usage_patterns
-
 
     n_residents = session["hh_size"]
     household_type = session["hh_type"]
@@ -175,13 +164,19 @@ def get_baseline_values():
         "n_households":n_households}
 
     load = get_load(payload) 
-    print("load = ", type(load))
-    #claculate (baseline) cost
+
+    #claculate (baseline) cost, share, and peak
     price = min_profile_from_val_period(price_dict)
     unit_conv = 1 / 60 / 1000 * 365.25 
     cost = np.sum(load * price * unit_conv)
-    print()
-    print("cost = ", cost)
+    local_generation = min_profile_from_val_period(RES_dict)
+    res_share = np.sum(load * local_generation / np.sum(load))
+    peak_load = np.sum(load[14*60:18*60])/np.sum(load)*100
+
+    print('The yearly bill is {:0.1f}€'.format(cost))
+    print('The share of local generation is {:0.1f}%'.format(res_share)) 
+    print('The share of energy consumed during peak period is {:0.1f}%'.format(peak_load)) 
+
     #save values of baseline in the DB
     #TODO add peak and .
     """.
@@ -207,11 +202,7 @@ def get_load(payload):
                 )
     range = result['Payload'].read()  
     response = json.loads(range) 
-    print("LAMBDA END")
     return response['load']
-
-
-
 
 def movingaverage(interval, window_size):
     window = np.ones(int(window_size))/float(window_size)
