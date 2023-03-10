@@ -34,15 +34,6 @@ app.secret_key = secret
 
 #---- INITIALIZE VARIABLES ----#
 n_households = 1000
-
-usage_patterns = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251).tolist(),
-                                    'WASHING_MACHINE':(np.ones(n_households)*100).tolist()},
-                  'day_prob_profiles':{'DISH_WASHER':(np.ones((n_households,24))).tolist(),  
-                                       'WASHING_MACHINE':(np.ones((n_households,24))).tolist()
-                                       },
-                    'energy_cycle': {'DISH_WASHER': 1, 'WASHING_MACHINE':1}
-                }
-
 price_dict = {'morning':0.200439918,
               'midday':0.264827651, 
               'afternoon':0.21111789, 
@@ -69,7 +60,14 @@ def _index():
     session["hh_size"] = hh_size
     session["hh_type"] = hh_type
     session["appliance"] = "WASHING_MACHINE"
-
+    session["usage_patterns"] = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251).tolist(),
+                                    'WASHING_MACHINE':(np.ones(n_households)*100).tolist()},
+                  'day_prob_profiles':{'DISH_WASHER':(np.ones((n_households,24))).tolist(),  
+                                       'WASHING_MACHINE':(np.ones((n_households,24))).tolist()
+                                       },
+                    'energy_cycle': {'DISH_WASHER': 1, 'WASHING_MACHINE':1}
+                }
+    session["n_households"] = n_households
     #save responseID for further DB updates
     session["ID"] = ID
 
@@ -166,7 +164,7 @@ def get_baseline_values():
     
     #generate profile from baseline values
     profile = generate_profile(values_dict) #ndarray(1000,24)
-    #usage_patterns = session["usage_patterns"]
+    usage_patterns = session["usage_patterns"]
     #print("L167: ", type(usage_patterns))
     usage_patterns["day_prob_profiles"]["WASHING_MACHINE"] = profile.tolist()
     #print(type(usage_patterns["day_prob_profiles"]["WASHING_MACHINE"])) # ndarray
@@ -177,11 +175,12 @@ def get_baseline_values():
     n_residents = session["hh_size"]
     household_type = session["hh_type"]
     appliance = session["appliance"]
+    n_households = session["n_households"]
 
     payload = {
         "n_residents": n_residents, 
         "household_type": household_type, 
-        "usage_patterns":usage_patterns, #global variable
+        "usage_patterns":usage_patterns, 
         "appliance":appliance,
         "n_households":n_households}
 
