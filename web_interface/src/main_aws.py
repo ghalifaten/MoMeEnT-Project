@@ -71,7 +71,17 @@ def _index():
     session["n_households"] = n_households
     session["appliance"] = "WASHING_MACHINE"
     session["usage_patterns"] = usage_patterns
-    
+
+    #Save inputs in DB
+    item = {
+        "m": m,
+        "ResponseID": ID,
+        "hh_size": hh_size,
+        "hh_type": hh_type,
+        "frequency": weekly_freq,
+    }
+    table.put_item(Item=item)
+
     return render_template("index.html")
 #------------------------------------------
 # ORIGINAL MAIN
@@ -117,8 +127,7 @@ def index(qualtrics_data):
     #else if appliance == "WASHING_MASHINE":
         #table = dynamodb.Table('MockMomeentProjectData')
 
-    #create an item (DB record)
-    """
+    #Save inputs in DB
     item = {
         "m": m,
         "ResponseID": ID,
@@ -126,9 +135,8 @@ def index(qualtrics_data):
         "hh_type": hh_type,
         "frequency": weekly_freq,
     }
-    #add item to DB
     table.put_item(Item=item)
-    """
+
     return render_template("index.html")
 
 
@@ -173,24 +181,21 @@ def get_baseline_values():
     res_share = np.sum(load * local_generation / np.sum(load))
     peak_load = np.sum(load[14*60:18*60])/np.sum(load)*100
 
-    print('The yearly bill is {:0.1f}€'.format(cost))
-    print('The share of local generation is {:0.1f}%'.format(res_share)) 
-    print('The share of energy consumed during peak period is {:0.1f}%'.format(peak_load)) 
-
-    #save values of baseline in the DB
-    #TODO add peak and .
-    """.
+    #save values of baseline in DB
+    #Float64 is not supported in DynamoDB. Values are stored as string
     table.update_item(
         Key={
             'ResponseID': session["ID"]
         },
-        UpdateExpression='SET baseline_values = :val1, cost = :val2',
+        UpdateExpression='SET baseline_values = :val1, cost = :val2, res_share = :val3, peak_load = :val4',
         ExpressionAttributeValues={
             ':val1': values_dict,
-            ':val2': cost
+            ':val2': str(cost),
+            ':val3': str(res_share),
+            ':val4': str(peak_load)
         }
     )
-    """  
+    
     return load
 
 
