@@ -9,6 +9,7 @@ import numpy as np
 import boto3
 import conf.credentials as conf
 import secrets
+import math 
 
 #---- SET UP PATH ----#
 module_path = os.path.abspath(os.path.join('..'))+'/MoMeEnT-Project'
@@ -299,8 +300,9 @@ def get_diff():
     diff_cost = baseline_cost - cost
     diff_res = baseline_res_share - res_share
     diff_peak = baseline_peak_load - peak_load
-
-    response = {"diff_cost": diff_cost, "diff_res": diff_res, "diff_peak": diff_peak}
+    print(diff_cost, diff_res, diff_peak)
+    print(math.trunc(diff_cost))
+    response = {"diff_cost": math.trunc(diff_cost), "diff_res": math.trunc(diff_res), "diff_peak": math.trunc(diff_peak)}
     return jsonify(response)
 
 @app.route('/questions_1a', methods=['GET','POST'])
