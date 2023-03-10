@@ -20,22 +20,17 @@ from demod.simulators.activity_simulators import SubgroupsIndividualsActivitySim
 
 
 def lambda_handler(event, context=None):
-
     n_residents = event['n_residents']
     household_type = event['household_type']
-    n_households = 1000
-    
-    subgroups = [{'n_residents': n_residents, 'household_type': household_type, 'weekday':[1,2,3,4,5]}]
-    
-    usage_patterns = event["usage_patterns"]
-    
+    n_households = event['n_households']
     appliance = event["appliance"]
-    
+    subgroups = [{'n_residents': n_residents, 'household_type': household_type, 'weekday':[1,2,3,4,5]}]
+    usage_patterns = event["usage_patterns"]
+    print("\nusage_patterns = ", usage_patterns)
     load = load_calculator(hh_subgroups=subgroups, usage_patterns=usage_patterns, appliance=appliance)
-
-
+    print("\nLOAD CALCULATED SUCCESSFULLY\n")
     return {
-        "load": load
+        "load": load.tolist()
     }
     
 
