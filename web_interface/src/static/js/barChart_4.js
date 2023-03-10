@@ -37,6 +37,8 @@ var yOffset = 10;
 
 var legend_data = [ { Text: "Habitual behavior", Color: "#D3D3D3" },
                     { Text: "New behavior", Color: "#69b3a2" },
+                    { Text: "Price line", Color: "red"},
+                    { Text: "Peak hours", Color: "#f9d4da"},
                     { Text: "Renewable energy", Color: "#d2f8d2"}];
 
 var legend = d3.select('#bar-chart-legend')
@@ -64,6 +66,30 @@ legend.enter().append('text')
 
 // Load data
 var data = JSON.parse(window.localStorage.getItem("baseline_data"));
+var price_data;
+
+// Load price data and add line to the chart
+d3.csv('static/data/price_data.csv',function (d) {
+    price_data = d;
+    add_line(price_data);
+});
+
+function add_line(price_data) { 
+    // Define the line
+    var valueline = d3.line()
+                        .x(function(d) { return x(d.Period); })
+                        .y(function(d) { return y(d.Value); })
+                        .curve(d3.curveStep);
+                    
+    // Add the line path
+    svg.append("path")
+        .attr("class", "line")
+        .style("stroke", "red")
+        .style("stroke-width", 3)
+        .attr("fill", "none")
+        .attr("d", valueline(price_data))
+        .attr("transform", "translate(58,0)");
+}
 
 // Add X axis
 var x = d3.scaleBand()
@@ -88,6 +114,20 @@ svg.append("g")
 var y = d3.scaleLinear()
 .domain([0, 4])
 .range([height, 0]);
+
+//Add "Peak hours" rectangle
+svg.selectAll("bar")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("x", function(d) { return x(data[2].Period); })
+    .attr("y", 0)
+    .attr("width", 250)
+    .attr("height", 310)
+    .attr("fill", "#f9d4da")
+    .attr("rx", 10)
+    .attr("ry", 10)
+    .attr("class", "peak-hours-rect")
 
 //Add "Renewable energy" rectangle
 svg.selectAll("bar")
