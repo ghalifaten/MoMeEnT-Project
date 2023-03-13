@@ -46,10 +46,39 @@
     
     <div class="questions-form"> 
         <form  action="/experiment_4" method="get">
-            <h3>Question1</h3>
-            <p>Type of the household:</p>
-            <!--Single answer-->
-            <input type="radio" name="q3b_r1" value="1" checked>Type1<br>
+            
+            
+            <h3>QuestionB4a</h3>
+            <table cellspacing="0" style="width: 60%;"> <!--60% of the width of the window-->
+                <tr >
+                    <th style="width: 40%;" class="highlight-cell">To consume more energy from renewable sources, how likely are you or your household to implement the following actions?</th> <!--50% of the table's width-->
+                  <th style="width: 10%;" class="highlight-cell">Definitely not</th> 
+                  <th style="width: 10%;" class="highlight-cell">Probably not</th>
+                  <th style="width: 10%;" class="highlight-cell">Possibly not</th>
+                  <th style="width: 10%;" class="highlight-cell">Possibly</th>
+                  <th style="width: 10%;" class="highlight-cell">Probably</th>
+                  <th style="width: 10%;" class="highlight-cell">Definetaly</th>
+                </tr>
+                <tr>
+                    <td >To select washing programs with higher energy intensity (e.g., a higher washing temperature) only during periods when electricity from renewable source is highly available</td>
+                    <td><input type="radio" name="q2a_r2_1" value="0"></td> 
+                    <td><input type="radio" name="q2a_r2_1" value="1"></td>
+                    <td><input type="radio" name="q2a_r2_1" value="2"></td> 
+                    <td><input type="radio" name="q2a_r2_1" value="3"></td>
+                    <td><input type="radio" name="q2a_r2_1" value="4"></td>
+                    <td><input type="radio" name="q2a_r2_1" value="5"></td>
+                    </tr>
+                <tr>
+                    <td >To schedule washing on days when more renewable power (e.g. PV or wind) is available</td>
+                    <td><input type="radio" name="q2a_r2_1" value="0"></td> 
+                    <td><input type="radio" name="q2a_r2_1" value="1"></td>
+                    <td><input type="radio" name="q2a_r2_1" value="2"></td> 
+                    <td><input type="radio" name="q2a_r2_1" value="3"></td>
+                    <td><input type="radio" name="q2a_r2_1" value="4"></td>
+                    <td><input type="radio" name="q2a_r2_1" value="5"></td>
+                    </tr>
+                  
+            </table>
 
             <p style="margin-top: 100px;">
                 <input class="link-btn button" onclick="window.location.href = '/experiment_4';" type="submit" value="Next page" />
