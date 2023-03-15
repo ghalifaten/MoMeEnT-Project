@@ -1,4 +1,5 @@
 #http://127.0.0.1:8080//data?appliance=WASHING_MACHINE&m=mTest&ID=IDTest&hh_size=1&hh_type=1&frequency=2&program30=1&program40=1&program60=1&program90=1
+#http://www.momeent-experiment//data?appliance=WASHING_MACHINE&peer=TRUE&m=${e://Field/m}&ID=${e:/[…]rRecode/3}&program90=${q://QID194/SelectedAnswerRecode/4}
 #Public IP: 35.180.87.158
 #launc: http://35.180.87.158:8080/
 
@@ -75,7 +76,7 @@ def _index():
     session["hh_type"] = hh_type
     session["n_households"] = n_households
     session["appliance"] = "DISH_WASHER"
-    session["group"] = "B"
+    session["peer"] = "FALSE"
     
     table = dynamodb.Table("MomeentData-"+session["appliance"])  
 
@@ -103,11 +104,12 @@ def index(qualtrics_data):
 
     try:
         #All args are of type str, change type here if needed.
+        appliance = request.args.get('appliance')
+        peer = request.args.get('peer')
         m = request.args.get('m')
         ID = request.args.get('ID')
         hh_size = int(request.args.get('hh_size'))
         hh_type = int(request.args.get('hh_type'))
-        appliance = request.args.get('appliance')
         weekly_freq = int(request.args.get('frequency'))   
         program30 = int(request.args.get('program30'))
         program40 = int(request.args.get('program40'))
@@ -121,11 +123,12 @@ def index(qualtrics_data):
     #usage_patterns['energy_cycle'][appliance] = some_function(program30, program40, program60, program90)
     
     #save args to session
+    session["appliance"] = appliance
+    session["peer"] = peer
     session["ID"] = ID
     session["hh_size"] = hh_size
     session["hh_type"] = hh_type
     session["n_households"] = n_households
-    session["appliance"] = appliance
     
     #choose table depending on appliance
     table = dynamodb.Table("MomeentData-"+appliance) 
@@ -276,8 +279,8 @@ def experiment_1():
     elif appliance == "DISH_WASHER":
         app = "dish washer"
 
-    group = session["group"]
-    return render_template("experiments/experiment_1.html", appliance=app, group=group)
+    peer = session["peer"]
+    return render_template("experiments/experiment_1.html", appliance=app, group=peer)
 
 @app.route('/get-diff', methods=['POST'])
 def get_diff():
@@ -392,8 +395,8 @@ def experiment_2():
     elif appliance == "DISH_WASHER":
         app = "dish washer"
 
-    group = session["group"]
-    return render_template("experiments/experiment_2.html", appliance=app, group=group)
+    peer = session["peer"]
+    return render_template("experiments/experiment_2.html", appliance=app, group=peer)
 
 @app.route('/questions_2a', methods=['GET','POST'])
 def questions_2a():
@@ -443,8 +446,8 @@ def experiment_3():
     elif appliance == "DISH_WASHER":
         app = "dish washer"
     
-    group = session["group"]
-    return render_template("experiments/experiment_3.html", appliance=app, group=group)
+    peer = session["peer"]
+    return render_template("experiments/experiment_3.html", appliance=app, group=peer)
 
 @app.route('/questions_3a', methods=['GET','POST'])
 def questions_3a():
@@ -494,8 +497,8 @@ def experiment_4():
     elif appliance == "DISH_WASHER":
         app = "dish washer"
     
-    group = session["group"]
-    return render_template("experiments/experiment_4.html", appliance=app, group=group)
+    peer = session["peer"]
+    return render_template("experiments/experiment_4.html", appliance=app, group=peer)
 
 @app.route('/questions_4a', methods=['GET','POST'])
 def questions_4a():

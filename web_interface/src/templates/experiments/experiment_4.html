@@ -167,9 +167,9 @@
     <script>
         var element = document.getElementById('avg-stats')
         var group = {{group|tojson}}
-        if(group == "A") {
+        if(group == "TRUE") {
             element.style.display = 'block'; 
-        }else if(group == "B") {
+        }else if(group == "FALSE") {
             element.style.display = 'none'; 
         }
     </script>
