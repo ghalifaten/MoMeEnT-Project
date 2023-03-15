@@ -48,56 +48,53 @@
 	<div class="questions-form"> 
         <form  action="/conclusion" method="get">
 
-			<h3>Question2-conslusions</h3> 
+			<h3>Question 1</h3> 
 			<p>Do you think that knowing more about when and how much energy different appliance consume 
 				would help you take more informed decisions about when and how to use them?</p>
 
-			<td><input type="radio" name="q2a_r2_1" value="0">Strongly disagree</td> 
-			<td><input type="radio" name="q2a_r2_1" value="1">Disagree</td>
-			<td><input type="radio" name="q2a_r2_1" value="2">Slightly disagree</td> 
-			<td><input type="radio" name="q2a_r2_1" value="3">Slightly agree</td>
-			<td><input type="radio" name="q2a_r2_1" value="4">Agree</td>
-			<td><input type="radio" name="q2a_r2_1" value="5">Strongly agree</td>
+			<input type="radio" name="qfb_r1" value="0">Strongly disagree<br>
+			<input type="radio" name="qfb_r1" value="1">Disagree<br>
+			<input type="radio" name="qfb_r1" value="2">Slightly disagree<br>
+			<input type="radio" name="qfb_r1" value="3">Slightly agree<br>
+			<input type="radio" name="qfb_r1" value="4">Agree<br>
+			<input type="radio" name="qfb_r1" value="5">Strongly agree<br>
 
-			<h3>Question3-conslusions</h3>
+			<h3>Question 2</h3>
 			<p>For what appliances do you think you/your household might be interested in using a tool like the one presented above?</p>
 
-			<input type="checkbox" name="q0_r3" value="washmachine">Iron<br>
-			<input type="checkbox" name="q0_r3" value="dishwasher">Vacuum<br>
-			<input type="checkbox" name="q0_r3" value="dryer">Personal computer<br>
-			<input type="checkbox" name="q0_r3" value="True">TV<br>
-			<input type="checkbox" name="q0_r3" value="True">Tumble dryer<br>
-			<input type="checkbox" name="q0_r3" value="True">Dishwasher/washing machine (make conditional)<br>
-			<input type="checkbox" name="q0_r3" value="True">Electric stove<br> 
-			<input type="checkbox" name="q0_r3" value="True">Oven<br> 
+			<input type="checkbox" name="qfb_r2" value="washmachine">Iron<br>
+			<input type="checkbox" name="qfb_r2" value="dishwasher">Vacuum<br>
+			<input type="checkbox" name="qfb_r2" value="dryer">Personal computer<br>
+			<input type="checkbox" name="qfb_r2" value="True">TV<br>
+			<input type="checkbox" name="qfb_r2" value="True">Tumble dryer<br>
+			<input type="checkbox" name="qfb_r2" value="True">Dishwasher/washing machine (make conditional)<br>
+			<input type="checkbox" name="qfb_r2" value="True">Electric stove<br> 
+			<input type="checkbox" name="qfb_r2" value="True">Oven<br> 
 
-			<h3>Question2-conslusions</h3> 
+			<h3>Question 3</h3> 
 			<p>Would you or your household be interested in using a tool like the one presented above to be informed about your (current or hypothetical) 
 				energy consumption for the following devices?</p>
 			
-			<table cellspacing="0" style="width: 70%;"> <!--60% of the width of the window-->
+			<table cellspacing="0" style="width: 30%;"> 
 			<tr >
-				<th style="width: 40%;" >Device</th> <!--50% of the table's width-->
-				<th style="width: 10%;" class="highlight-cell">No</th>
-				<th style="width: 10%;" class="highlight-cell">Yes</th>
-				</tr>
-				<tr>
+				<th class="highlight-cell">Device</th>
+				<th class="highlight-cell">No</th>
+				<th class="highlight-cell">Yes</th>
+			</tr>
+			<tr>
 				<td >Heat pump</td>
-				<!--q2a_r2_1 correpsonds to the 1st statement from the 2nd question (r2) of list of questions q2a-->
-				<td><input type="radio" name="q2a_r2_1" value="0"></td> 
-				<td><input type="radio" name="q2a_r2_1" value="1"></td>
-				</tr>
-				<tr>
+				<td><input type="radio" name="qfb_r3_1" value="0"></td> 
+				<td><input type="radio" name="qfb_r3_1" value="1"></td>
+			</tr>
+			<tr>
 				<td >Electric vehicle</td>
-				<!--q2a_r2_1 correpsonds to the 1st statement from the 2nd question (r2) of list of questions q2a-->
-				<td><input type="radio" name="q2a_r2_1" value="0"></td> 
-				<td><input type="radio" name="q2a_r2_1" value="1"></td>
-				</tr>
+				<td><input type="radio" name="qfb_r3_2" value="0"></td> 
+				<td><input type="radio" name="qfb_r3_2" value="1"></td>
+			</tr>
 			</table>	
 
             <p style="margin-top: 100px;">
                 <input class="link-btn button" onclick="window.location.href = '/conclusion';" type="submit" value="Next page" />
-       
             </p>
         </form>
     </div>

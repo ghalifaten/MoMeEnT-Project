@@ -47,7 +47,7 @@
     <div class="questions-form"> 
         <form  action="/questions_1b" method="get">
             
-            <h3>QuestionB1a</h3>
+            <h3>Question 1</h3>
             <p><font color="red">*</font> Assuming the scenario comes true, how likely is it that you will actually run the dishwasher as you have indicated?</p>
             <!--Single answer-->
             <input type="radio" name="q0_r1" value="1" required>Definitely not<br>
@@ -55,25 +55,25 @@
             <input type="radio" name="q0_r1" value="3">Possibly not <br>
             <input type="radio" name="q0_r1" value="4">Possible<br>
             <input type="radio" name="q0_r1" value="5">Probably<br>
-            <input type="radio" name="q0_r1" value="6">Definetely<br>
+            <input type="radio" name="q0_r1" value="6">Definitely<br>
 
 
-            <h3>QuestionB2a</h3>
+            <h3>Question 2</h3>
             <p>What strategy did you follow to adjust the operation of the dishwasher according to the previous scenario?</p>
             <!--Single answer-->
-            <input type="radio" name="q0_r1" value="1">To achieve the maximum economic saving<br>
-            <input type="radio" name="q0_r1" value="2">To achieve the right trade-off between economic savings and inconvenience<br>
-            <input type="radio" name="q0_r1" value="3">To achieve higher than average savings<br>
-            <input type="radio" name="q0_r1" value="4">For the interest in testing the results of different actions<br>
-            <input type="radio" name="q0_r1" value="5">For the fun of using the tool<br>
-            <input type="radio" name="q0_r1" value="6" id="option-other">Other  <input type="text" id="option-other-text" placeholder="..." style="display: none;"><br>
+            <input type="radio" name="q1a_r2" value="1">To achieve the maximum economic saving<br>
+            <input type="radio" name="q1a_r2" value="2">To achieve the right trade-off between economic savings and inconvenience<br>
+            <input type="radio" name="q1a_r2" value="3">To achieve higher than average savings<br>
+            <input type="radio" name="q1a_r2" value="4">For the interest in testing the results of different actions<br>
+            <input type="radio" name="q1a_r2" value="5">For the fun of using the tool<br>
+            <input type="radio" name="q1a_r2" value="6" id="option-other">Other  <input type="text" id="option-other-text" placeholder="..." style="display: none;"><br>
 
-            <h3>QuestionB3a</h3>
+            <h3>Question 3</h3>
             <p>How can you/your household change when running the dishwasher as you indicated above in response to the variable electricity price scenario?</p>
             <!--Single answer-->
-            <input type="radio" name="q0_r1" value="1">Manually<br>
-            <input type="radio" name="q0_r1" value="2">Using the dishwasher automated programmer or start delay function<br>
-            <input type="radio" name="q0_r1" value="3">Both<br>
+            <input type="radio" name="q1a_r3" value="1">Manually<br>
+            <input type="radio" name="q1a_r3" value="2">Using the dishwasher automated programmer or start delay function<br>
+            <input type="radio" name="q1a_r3" value="3">Both<br>
             
             <p style="margin-top: 100px;">
                 <!--input class="link-btn button" onclick="window.location.href = '/questions_1b';" type="submit" value="Next page" /-->
@@ -96,7 +96,7 @@
         }
         }
 
-        const radioButtons = document.querySelectorAll('input[name="q0_r1"]');
+        const radioButtons = document.querySelectorAll('input[name="q1a_r2"]');
         radioButtons.forEach(radio => {
         radio.addEventListener('click', handleRadioClick);
         });

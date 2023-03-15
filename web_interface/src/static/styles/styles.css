@@ -415,6 +415,28 @@
         border-right: none;
         background-color: transparent;
     }
+
+    /*styling tables*/
+    th {
+        text-align: center;
+    }
+    th:first-child {
+        text-align: left 
+    }
+
+    td { 
+        text-align: center 
+    }
+
+    td:first-child {
+        text-align: left 
+    }
+
+    .highlight-cell{
+        background-color: rgba(95, 158, 160, 0.603);
+        color: white;
+    }
+
 /**********************************************************************************************************/
     /*
     .subtitle, label {

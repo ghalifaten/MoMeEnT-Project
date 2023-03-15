@@ -21,22 +21,15 @@
 		<!-- css -->
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css')}}">
 
-        <!--Disable Browser Back Button-->
-        <script type="text/javascript">
-            window.history.pushState(null, null, window.location.href);
-            window.onpopstate = function () {
-                window.history.go(1);
-            };
-        </script>
+    <!--Disable Browser Back Button-->
+    <script type="text/javascript">
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function () {
+            window.history.go(1);
+        };
+    </script>
 
 </head>
-
-<style>
-    .highlight-cell{
-        background-color: rgba(95, 158, 160, 0.603);
-        color: white;
-    }
-</style>
 
 <body>
     <!--TODO: change text of the popup help here-->
@@ -56,89 +49,88 @@
 
             <p>Please indicate how important the following statements are for you/your household.</p>
             
-            <table cellspacing="0" style="width: 100%;"> <!--60% of the width of the window-->
+            <table cellspacing="0" style="width: 100%;"> 
                 <tr >
-                  <th style="width: 40%;" >I/we run the dishwasher,...</th> <!--50% of the table's width-->
-                  <th style="width: 10%;" class="highlight-cell">Not at all important</th>
-                  <th style="width: 10%;" class="highlight-cell">Slightly important</th>
-                  <th style="width: 10%;" class="highlight-cell">Moderately important</th>
-                  <th style="width: 10%;" class="highlight-cell">Very important</th>
-                  <th style="width: 10%;" class="highlight-cell">Extremely important</th>
-                  <th style="width: 10%;" class="highlight-cell">Does not apply</th>
+                    <th class="highlight-cell">I/we run the dishwasher,...</th> 
+                    <th class="highlight-cell">Not at all important</th>
+                    <th class="highlight-cell">Slightly important</th>
+                    <th class="highlight-cell">Moderately important</th>
+                    <th class="highlight-cell">Very important</th>
+                    <th class="highlight-cell">Extremely important</th>
+                    <th class="highlight-cell">Does not apply</th>
                 </tr>
                 <tr>
-                  <td >whenever I/we have the time to run it</td>
-                  <!--q2a_r2_1 correpsonds to the 1st statement from the 2nd question (r2) of list of questions q2a-->
-                  <td><input type="radio" name="q2a_r2_1" value="0"></td> 
-                  <td><input type="radio" name="q2a_r2_1" value="1"></td>
-                  <td><input type="radio" name="q2a_r2_1" value="2"></td> 
-                  <td><input type="radio" name="q2a_r2_1" value="3"></td>
-                  <td><input type="radio" name="q2a_r2_1" value="4"></td>
-                  <td><input type="radio" name="q2a_r2_1" value="99"></td>
+                    <td >whenever I/we have the time to run it</td>
+                    <td><input type="radio" name="q0_r1_1" value="0"></td> 
+                    <td><input type="radio" name="q0_r1_1" value="1"></td>
+                    <td><input type="radio" name="q0_r1_1" value="2"></td> 
+                    <td><input type="radio" name="q0_r1_1" value="3"></td>
+                    <td><input type="radio" name="q0_r1_1" value="4"></td>
+                    <td><input type="radio" name="q0_r1_1" value="99"></td>
                 </tr>
                 <tr>
-                  <td >when electricity is cheaper</td>
-                  <td><input type="radio" name="q2a_r2_1" value="0"></td> 
-                  <td><input type="radio" name="q2a_r2_1" value="1"></td>
-                  <td><input type="radio" name="q2a_r2_1" value="2"></td> 
-                  <td><input type="radio" name="q2a_r2_1" value="3"></td>
-                  <td><input type="radio" name="q2a_r2_1" value="4"></td>
-                  <td><input type="radio" name="q2a_r2_1" value="99"></td>
+                    <td >when electricity is cheaper</td>
+                    <td><input type="radio" name="q0_r1_2" value="0"></td> 
+                    <td><input type="radio" name="q0_r1_2" value="1"></td>
+                    <td><input type="radio" name="q0_r1_2" value="2"></td> 
+                    <td><input type="radio" name="q0_r1_2" value="3"></td>
+                    <td><input type="radio" name="q0_r1_2" value="4"></td>
+                    <td><input type="radio" name="q0_r1_2" value="99"></td>
                 </tr>
                 <tr>
                     <td >when I/we know somebody is home for risk of malfunction</td>
-                    <td><input type="radio" name="q2a_r2_1" value="0"></td> 
-                    <td><input type="radio" name="q2a_r2_1" value="1"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="2"></td> 
-                    <td><input type="radio" name="q2a_r2_1" value="3"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="4"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="99"></td>
+                    <td><input type="radio" name="q0_r1_3" value="0"></td> 
+                    <td><input type="radio" name="q0_r1_3" value="1"></td>
+                    <td><input type="radio" name="q0_r1_3" value="2"></td> 
+                    <td><input type="radio" name="q0_r1_3" value="3"></td>
+                    <td><input type="radio" name="q0_r1_3" value="4"></td>
+                    <td><input type="radio" name="q0_r1_3" value="99"></td>
                     </tr>
                 <tr>
                     <td >when at least one item is needed soon</td>
-                    <td><input type="radio" name="q2a_r2_1" value="0"></td> 
-                    <td><input type="radio" name="q2a_r2_1" value="1"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="2"></td> 
-                    <td><input type="radio" name="q2a_r2_1" value="3"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="4"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="99"></td>
-                  </tr>
-                  <tr>
+                    <td><input type="radio" name="q0_r1_4" value="0"></td> 
+                    <td><input type="radio" name="q0_r1_4" value="1"></td>
+                    <td><input type="radio" name="q0_r1_4" value="2"></td> 
+                    <td><input type="radio" name="q0_r1_4" value="3"></td>
+                    <td><input type="radio" name="q0_r1_4" value="4"></td>
+                    <td><input type="radio" name="q0_r1_4" value="99"></td>
+                </tr>
+                <tr>
                     <td >when it is sunny to consume more energy from photovoltaic</td>
-                    <td><input type="radio" name="q2a_r2_1" value="0"></td> 
-                    <td><input type="radio" name="q2a_r2_1" value="1"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="2"></td> 
-                    <td><input type="radio" name="q2a_r2_1" value="3"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="4"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="99"></td>
-                  </tr>
-                  <tr>
+                    <td><input type="radio" name="q0_r1_5" value="0"></td> 
+                    <td><input type="radio" name="q0_r1_5" value="1"></td>
+                    <td><input type="radio" name="q0_r1_5" value="2"></td> 
+                    <td><input type="radio" name="q0_r1_5" value="3"></td>
+                    <td><input type="radio" name="q0_r1_5" value="4"></td>
+                    <td><input type="radio" name="q0_r1_5" value="99"></td>
+                </tr>
+                <tr>
                     <td >when power or water management allows</td>
-                    <td><input type="radio" name="q2a_r2_1" value="0"></td> 
-                    <td><input type="radio" name="q2a_r2_1" value="1"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="2"></td> 
-                    <td><input type="radio" name="q2a_r2_1" value="3"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="4"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="99"></td>
-                  </tr>
-                  <tr>
+                    <td><input type="radio" name="q0_r1_6" value="0"></td> 
+                    <td><input type="radio" name="q0_r1_6" value="1"></td>
+                    <td><input type="radio" name="q0_r1_6" value="2"></td> 
+                    <td><input type="radio" name="q0_r1_6" value="3"></td>
+                    <td><input type="radio" name="q0_r1_6" value="4"></td>
+                    <td><input type="radio" name="q0_r1_6" value="99"></td>
+                </tr>
+                <tr>
                     <td >when it does not disturb my neighbors or myself/my household</td>
-                    <td><input type="radio" name="q2a_r2_1" value="0"></td> 
-                    <td><input type="radio" name="q2a_r2_1" value="1"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="2"></td> 
-                    <td><input type="radio" name="q2a_r2_1" value="3"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="4"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="99"></td>
-                  </tr>
-                  <tr>
+                    <td><input type="radio" name="q0_r1_7" value="0"></td> 
+                    <td><input type="radio" name="q0_r1_7" value="1"></td>
+                    <td><input type="radio" name="q0_r1_7" value="2"></td> 
+                    <td><input type="radio" name="q0_r1_7" value="3"></td>
+                    <td><input type="radio" name="q0_r1_7" value="4"></td>
+                    <td><input type="radio" name="q0_r1_7" value="99"></td>
+                </tr>
+                <tr>
                     <td >when it is the habitual time, I/we like routines</td>
-                    <td><input type="radio" name="q2a_r2_1" value="0"></td> 
-                    <td><input type="radio" name="q2a_r2_1" value="1"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="2"></td> 
-                    <td><input type="radio" name="q2a_r2_1" value="3"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="4"></td>
-                    <td><input type="radio" name="q2a_r2_1" value="99"></td>
-                  </tr>
+                    <td><input type="radio" name="q0_r1_8" value="0"></td> 
+                    <td><input type="radio" name="q0_r1_8" value="1"></td>
+                    <td><input type="radio" name="q0_r1_8" value="2"></td> 
+                    <td><input type="radio" name="q0_r1_8" value="3"></td>
+                    <td><input type="radio" name="q0_r1_8" value="4"></td>
+                    <td><input type="radio" name="q0_r1_8" value="99"></td>
+                </tr>
             </table>
 
             <p style="margin-top: 100px;">
@@ -150,28 +142,3 @@
 	<script src="{{ url_for('static', filename='js/app.js')}}"></script>
 
 </body>
-
-<!--
-<h3>Question1</h3> 
-<p>Write text of question 1 here:</p>
-
-<input type="radio" name="q0_r1" value="1" checked>Type1<br>
-<input type="radio" name="q0_r1" value="2">Type2<br>
-<input type="radio" name="q0_r1" value="3">Type3 <br>
-
-<h3>Question2</h3>
-<p>Write text of question 2 here:</p>
-
-<textarea id="response" name="q0_r2" placeholder="Please type your answer here"></textarea>
-
-<h3>Question3</h3>
-<p>Write text of question 3 here:</p>
-
-<input type="checkbox" name="q0_r3" value="washmachine">Washing machine<br>
-<input type="checkbox" name="q0_r3" value="dishwasher">Dishwasher<br>
-<input type="checkbox" name="q0_r3" value="dryer">Clothes dryer<br>
-<input type="checkbox" name="q0_r3" value="fridge">Fridge<br>
-<input type="checkbox" name="q0_r3" value="e-stove">Electronic stove<br>
-<input type="checkbox" name="q0_r3" value="tv">TV<br>
-<input type="checkbox" name="q0_r3" value="e-car">E-car<br> 
--->
