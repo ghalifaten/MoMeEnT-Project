@@ -48,9 +48,9 @@
         <form  action="/questions_1b" method="get">
             
             <h3>QuestionB1a</h3>
-            <p>Assuming the scenario comes true, how likely is it that you will actually run the dishwasher as you have indicated?</p>
+            <p><font color="red">*</font> Assuming the scenario comes true, how likely is it that you will actually run the dishwasher as you have indicated?</p>
             <!--Single answer-->
-            <input type="radio" name="q0_r1" value="1">Definitely not<br>
+            <input type="radio" name="q0_r1" value="1" required>Definitely not<br>
             <input type="radio" name="q0_r1" value="2">Probably not<br>
             <input type="radio" name="q0_r1" value="3">Possibly not <br>
             <input type="radio" name="q0_r1" value="4">Possible<br>
@@ -103,8 +103,9 @@
             -->
 
             <p style="margin-top: 100px;">
-                <input class="link-btn button" onclick="window.location.href = '/questions_1b';" type="submit" value="Next page" />
+                <!--input class="link-btn button" onclick="window.location.href = '/questions_1b';" type="submit" value="Next page" /-->
        
+                <input class="link-btn button" type="submit" value="Next page" />
             </p>
         </form>
     </div>

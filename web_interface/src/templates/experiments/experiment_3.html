@@ -118,7 +118,7 @@
                                 </div>
                                 <div class="sub-stats-item stats-nbr" id="stats-nbr-you">
                                     <!--Default value-->
-                                    0
+                                    0 
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you">
                                     <!--Default text-->
@@ -127,24 +127,26 @@
                                  
                             </div>                            
 
-                            <div class="sub-stats" id="stats-title">
-                                Average
-                            </div>
+                            <div id="avg-stats">
+                                <div class="sub-stats" id="stats-title">
+                                    Average
+                                </div>
 
-                            <div class="sub-stats-container" id="stats-average">
-                                <div class="sub-stats-item stats-icon" id="stats-icon-avg">
-                                    <!--Default icon-->
-                                    <img src="static/data/arrow-increase.png"></img>
+                                <div class="sub-stats-container" id="stats-average">
+                                    <div class="sub-stats-item stats-icon" id="stats-icon-avg">
+                                        <!--Default icon-->
+                                        <img src="static/data/arrow-increase.png"></img>
+                                    </div>
+                                    <div class="sub-stats-item stats-nbr" id="stats-nbr-avg">
+                                        <!--Default number-->
+                                        0
+                                    </div>
+                                    <div class="sub-stats-item stats-txt" id="stats-txt-avg">
+                                        <!--Default text-->
+                                        Increase in cost for running the {{appliance}}.
+                                    </div>
+                                    
                                 </div>
-                                <div class="sub-stats-item stats-nbr" id="stats-nbr-avg">
-                                    <!--Default number-->
-                                    0
-                                </div>
-                                <div class="sub-stats-item stats-txt" id="stats-txt-avg">
-                                    <!--Default text-->
-                                    Increase in cost for running the {{appliance}}.
-                                </div>
-                                 
                             </div>
                             
                         </div>
@@ -164,5 +166,13 @@
     <!--JS scripts-->
 	<script src="{{ url_for('static', filename='js/app.js')}}"></script>
     <script src="{{ url_for('static', filename='js/barChart_3.js')}}"></script>
-
+    <script>
+        var element = document.getElementById('avg-stats')
+        var group = {{group|tojson}}
+        if(group == "A") {
+            element.style.display = 'block'; 
+        }else if(group == "B") {
+            element.style.display = 'none'; 
+        }
+    </script>
 </body>

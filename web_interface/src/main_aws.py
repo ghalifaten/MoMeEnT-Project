@@ -42,12 +42,16 @@ usage_patterns = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251).tol
                                        },
                     'energy_cycle': {'DISH_WASHER': 1, 'WASHING_MACHINE':1}
                 }
+#TODO should be read from the csv file 
+#map the values to the [0-4] range (?)         
+#or add another axis on the bar_chart     
 price_dict = {'morning':0.200439918,
               'midday':0.264827651, 
               'afternoon':0.21111789, 
               'evening':0.220015123,
               'night':0.242899301
               }
+
 RES_dict = {'morning':47.8,
               'midday':69.9, 
               'afternoon':33.3, 
@@ -71,6 +75,7 @@ def _index():
     session["hh_type"] = hh_type
     session["n_households"] = n_households
     session["appliance"] = "DISH_WASHER"
+    session["group"] = "B"
     
     table = dynamodb.Table("MomeentData-"+session["appliance"])  
 
@@ -271,7 +276,8 @@ def experiment_1():
     elif appliance == "DISH_WASHER":
         app = "dish washer"
 
-    return render_template("experiments/experiment_1.html", appliance=app)
+    group = session["group"]
+    return render_template("experiments/experiment_1.html", appliance=app, group=group)
 
 @app.route('/get-diff', methods=['POST'])
 def get_diff():
@@ -325,10 +331,10 @@ def get_diff():
     except:
         return "Error reading float values from DB."
 
-    #Compare with baseline values
-    diff_cost = baseline_cost - cost
-    diff_res = baseline_res_share - res_share
-    diff_peak = baseline_peak_load - peak_load
+    #Compute the % of in-decrease
+    diff_cost = (cost - baseline_cost) /  baseline_cost * 100
+    diff_res = (res_share - baseline_res_share) / baseline_res_share * 100
+    diff_peak = (peak_load - baseline_peak_load) / baseline_peak_load * 100
 
     response = {
         "diff_cost": math.trunc(diff_cost), 
@@ -386,7 +392,8 @@ def experiment_2():
     elif appliance == "DISH_WASHER":
         app = "dish washer"
 
-    return render_template("experiments/experiment_2.html", appliance=app)
+    group = session["group"]
+    return render_template("experiments/experiment_2.html", appliance=app, group=group)
 
 @app.route('/questions_2a', methods=['GET','POST'])
 def questions_2a():
@@ -436,7 +443,8 @@ def experiment_3():
     elif appliance == "DISH_WASHER":
         app = "dish washer"
     
-    return render_template("experiments/experiment_3.html", appliance=app)
+    group = session["group"]
+    return render_template("experiments/experiment_3.html", appliance=app, group=group)
 
 @app.route('/questions_3a', methods=['GET','POST'])
 def questions_3a():
@@ -486,7 +494,8 @@ def experiment_4():
     elif appliance == "DISH_WASHER":
         app = "dish washer"
     
-    return render_template("experiments/experiment_4.html", appliance=app)
+    group = session["group"]
+    return render_template("experiments/experiment_4.html", appliance=app, group=group)
 
 @app.route('/questions_4a', methods=['GET','POST'])
 def questions_4a():
@@ -512,10 +521,16 @@ def questions_4b():
     )
     
     file_path = "questions/{app}/questions_4b.html".format(app=appliance)
+    print()
+    print(file_path)
+    print()
     return render_template(file_path)
 
-@app.route('/conclusion')
-def conclusion():
+@app.route('/questions_final_a', methods=['GET','POST'])
+def questions_final_a():  
+    print()
+    print("we are in /questions_final_a")  
+    print()
     q4b_answers = request.args
    
     #save answers to DB
@@ -528,6 +543,52 @@ def conclusion():
         UpdateExpression='SET q4b_answers = :val1',
         ExpressionAttributeValues={
             ':val1': q4b_answers.to_dict()
+        }
+    )
+    
+    file_path = "questions/{app}/questions_final_a.html".format(app=appliance)
+    return render_template(file_path)
+
+@app.route('/questions_final_b', methods=['GET','POST'])
+def questions_final_b():    
+    print()
+    print("we are in /questions_final_b")  
+    print()
+    final_answers_a = request.args
+   
+    #save answers to DB
+    appliance = session["appliance"]
+    table = dynamodb.Table("MomeentData-"+appliance) 
+    table.update_item(
+        Key={
+            'ResponseID': session["ID"]
+        },
+        UpdateExpression='SET final_answers_a = :val1',
+        ExpressionAttributeValues={
+            ':val1': final_answers_a.to_dict()
+        }
+    )
+    
+    file_path = "questions/{app}/questions_final_b.html".format(app=appliance)
+    return render_template(file_path)
+
+@app.route('/conclusion')
+def conclusion():
+    print()
+    print("we are in /conclusion")  
+    print()
+    final_answers_b = request.args
+   
+    #save answers to DB
+    appliance = session["appliance"]
+    table = dynamodb.Table("MomeentData-"+appliance) 
+    table.update_item(
+        Key={
+            'ResponseID': session["ID"]
+        },
+        UpdateExpression='SET final_answers_b = :val1',
+        ExpressionAttributeValues={
+            ':val1': final_answers_b.to_dict()
         }
     )
 

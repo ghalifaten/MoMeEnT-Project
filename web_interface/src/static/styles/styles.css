@@ -34,6 +34,11 @@
         text-justify: inter-word;
         font-weight:lighter;
     }
+
+    strong {
+        font-weight: bold;
+    }
+    
     .title {
         text-align: center;
         width: 80%;
