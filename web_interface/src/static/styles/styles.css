@@ -407,6 +407,14 @@
         font-size: 20px;
 
     }
+    
+    input#option-other-text {
+        border-bottom: solid 1px gray;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        background-color: transparent;
+    }
 /**********************************************************************************************************/
     /*
     .subtitle, label {
