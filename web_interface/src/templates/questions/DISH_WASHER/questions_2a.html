@@ -33,43 +33,51 @@
 
 <body>
     <!--TODO: change text of the popup help here-->
-    <div class="popup" onclick="popupFunctionExp1()">
-        <i class="fa fa-question-circle-o" style="font-size:36px;"></i>
-        <span class="popuptext" id="popupExp1">Popup text... Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
-            dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non 
-            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>
-    </div> 
-
-    <h2>Questions 2-a dish washer</h2>
-    <hr>
     
+
+    <div class="page-header">
+        <div class="popup" onclick="popupFunctionExp1()">
+            <i class="fa fa-question-circle-o" style="font-size:36px;"></i>
+            <span class="popuptext" id="popupExp1">Popup text... Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
+                dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non 
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span>
+        </div> 
+    </div>   
+
     <div class="questions-form"> 
         <form  action="/questions_2b" method="get">
             
-            <h3>Question 1</h3>
-            <p>Assuming the scenario comes true, how likely is it that you will actually run the dishwasher as you have indicated?</p>
+            <p><strong>
+                Assuming the scenario comes true, how likely is it that you will actually run the dishwasher as you have indicated?
+            </strong></p>
             <!--Single answer-->
-            <input type="radio" name="q2a_r1" value="1">Definitely not<br>
-            <input type="radio" name="q2a_r1" value="2">Probably not<br>
-            <input type="radio" name="q2a_r1" value="3">Possibly not <br>
-            <input type="radio" name="q2a_r1" value="4">Possible<br>
-            <input type="radio" name="q2a_r1" value="5">Probably<br>
-            <input type="radio" name="q2a_r1" value="6">Definetely<br>
+            <input type="radio" name="q2a_r1" value="1">Definitely not
+            <input type="radio" name="q2a_r1" value="2">Probably not
+            <input type="radio" name="q2a_r1" value="3">Possibly not
+            <input type="radio" name="q2a_r1" value="4">Possible
+            <input type="radio" name="q2a_r1" value="5">Probably
+            <input type="radio" name="q2a_r1" value="6">Definetely
 
+            <br><br><br>
 
-            <h3>Question 2</h3>
-            <p>What strategy did you follow to adjust the operation of the dishwasher according to the previous scenario?</p>
+            <p><strong>
+                Which strategy did you follow to adjust the operation of the dishwasher according to the previous scenario?
+            </strong></p>
             <!--Single answer-->
             <input type="radio" name="q2a_r2" value="1">To minimize the consumption during peak hours<br>
             <input type="radio" name="q2a_r2" value="2">To achieve the right trade-off between reduced consumption during peak hours and inconvenience<br>
             <input type="radio" name="q2a_r2" value="3">To achieve perform better than average<br>
             <input type="radio" name="q2a_r2" value="4">For the interest in testing the results of different actions<br>
             <input type="radio" name="q2a_r2" value="5">For the fun of using the tool<br>
-            <input type="radio" name="q2a_r2" value="6">Other<br>
+            <input type="radio" name="q2a_r2" value="6">Other
 
-            <h3>Question 3</h3>
-            <p>How can you/your household change when running the dishwasher as indicated above in response to risk of congestion scenario?</p>
+            <br><br><br>
+            
+
+            <p><strong>
+                How can you/your household change when running the dishwasher as indicated above in response to risk of congestion scenario?
+            </strong></p>
             <!--Single answer-->
             <input type="radio" name="q2a_r3" value="1">Manually<br>
             <input type="radio" name="q2a_r3" value="2">Using the automated programmer or start delay function<br>
