@@ -47,40 +47,39 @@
 								dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non 
 								proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 						</div>
+						<p>
+							<button class="link-btn" id="scroll-down" onclick="location.href='https://survey.maximiles.com/complete?p=74503_634d9f5e&m={{m_field}}'">Submit</button>
+						</p>
 				</div>
 			</div>
 		</div>
-		
 	</div>
-
-	<script src="{{ url_for('static', filename='js/app.js')}}"></script>
-	
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.0/fullpage.min.js"></script>
-	<script>
-		new fullpage('#fullPage',{
-				anchors: ['Title', 'Demo', 'Conclusion'],
-				autoScrolling : true,
-				navigation : true,
-				slidesNavigation : true,
-				controlArrows : false,
-				scrollingSpeed :1000,
-			navigationTooltips: [
-				"Title",
-				"Introduction",
-				"Conclusion",
-			],
-			afterSlideLoad: function( section, origin, destination, direction){
-			var loadedSlide = this;
-			//load();
-			},
-		})
-	</script>
-
 </body>
 
-<footer>
-  <p>HERUS Lab - EPFL</p>
-</footer>
+
+<script src="{{ url_for('static', filename='js/app.js')}}"></script>
+	
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.0/fullpage.min.js"></script>
+<script>
+	new fullpage('#fullPage',{
+			anchors: ['Title', 'Demo', 'Conclusion'],
+			autoScrolling : true,
+			navigation : true,
+			slidesNavigation : true,
+			controlArrows : false,
+			scrollingSpeed :1000,
+		navigationTooltips: [
+			"Title",
+			"Introduction",
+			"Conclusion",
+		],
+		afterSlideLoad: function( section, origin, destination, direction){
+		var loadedSlide = this;
+		//load();
+		},
+	})
+</script>
+
 
 </html>

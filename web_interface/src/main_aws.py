@@ -28,8 +28,6 @@ dynamodb = boto3.resource('dynamodb',
                         aws_access_key_id=conf.aws_access_key_id,
                         aws_secret_access_key=conf.aws_secret_access_key)
 
-#table = dynamodb.Table('MockMomeentProjectData') #2 tables, change depending on type of appliance
-
 secret = secrets.token_urlsafe(32) #generate secret key for the current session
 app = Flask(__name__, template_folder='templates')
 app.secret_key = secret
@@ -72,11 +70,12 @@ def _index():
     weekly_freq = 2
 
     session["ID"] = ID
+    session["m_field"] = m
     session["hh_size"] = hh_size
     session["hh_type"] = hh_type
     session["n_households"] = n_households
     session["appliance"] = "DISH_WASHER"
-    session["peer"] = "FALSE"
+    session["peer"] = "TRUE"
     
     table = dynamodb.Table("MomeentData-"+session["appliance"])  
 
@@ -600,7 +599,8 @@ def conclusion():
     elif appliance == "DISH_WASHER":
         app = "dish washer"
 
-    return render_template("conclusion.html", appliance=app)
+    m_field = session["m_field"]
+    return render_template("conclusion.html", appliance=app, m_field=m_field)
 
 
 
