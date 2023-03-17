@@ -196,7 +196,6 @@ function difference(baseline_data, current_data) {
 
 d3.select("#stats-btn").on("click", function(d){   
     function getDiff() {
-        //TODO CHECK IF THIS IS THE DATA WE WANT TO SEND USE FOR THE COST COMPUTATION
         const current_data = JSON.parse(window.localStorage.getItem("current_data"))
 
         //... and send them to Flask to use them in computing the cost.
@@ -231,7 +230,7 @@ d3.select("#stats-btn").on("click", function(d){
                 }
             },
             error: function (response) {
-            alert("Error!")
+                alert("You have exceeded the limit of 3 trials for this scenario!")
             }
         });
     }

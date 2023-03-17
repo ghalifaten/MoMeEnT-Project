@@ -222,7 +222,7 @@ d3.select("#stats-btn").on("click", function(d){
                 }
             },
             error: function (response) {
-            alert("Error!")
+            alert("You have exceeded the limit of 3 trials for this scenario!")
             }
         });
     }

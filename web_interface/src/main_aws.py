@@ -3,7 +3,7 @@
 #Public IP: 35.180.87.158
 #launc: http://35.180.87.158:8080/
 
-from flask import Flask, request, render_template, jsonify, session
+from flask import Flask, request, render_template, jsonify, session, abort
 import os, sys, json
 import datetime
 import numpy as np
@@ -257,6 +257,7 @@ def questions_0():
 
 @app.route('/experiment_1')
 def experiment_1():
+    session["n_trials"] = 3
     #retrieve answers to questions_0 here
     q0_answers = request.args
 
@@ -283,68 +284,75 @@ def experiment_1():
 
 @app.route('/get-diff', methods=['POST'])
 def get_diff():
-    print("\nget-diff\n")
-    n_residents = session["hh_size"]
-    household_type = session["hh_type"]
-    n_households = session["n_households"]
-    appliance = session["appliance"]
+    n_trials = session["n_trials"]
+    if n_trials == 0:
+        abort(200)
+    else:
+        print("\nget-diff\n")
+        n_residents = session["hh_size"]
+        household_type = session["hh_type"]
+        n_households = session["n_households"]
+        appliance = session["appliance"]
 
-    #generate profile from baseline values and update usage_patterns
-    data = request.get_json()['data']
-    values_dict = process_data(data)
-    profile = generate_profile(values_dict) #ndarray(1000,24)
-    usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
+        #generate profile from baseline values and update usage_patterns
+        data = request.get_json()['data']
+        values_dict = process_data(data)
+        profile = generate_profile(values_dict) #ndarray(1000,24)
+        usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
 
-    #invoke lambda function to calculate load
-    payload = {
-        "n_residents": n_residents, 
-        "household_type": household_type, 
-        "usage_patterns":usage_patterns, 
-        "appliance":appliance,
-        "n_households":n_households}
-    load = get_load(payload) 
+        #invoke lambda function to calculate load
+        payload = {
+            "n_residents": n_residents, 
+            "household_type": household_type, 
+            "usage_patterns":usage_patterns, 
+            "appliance":appliance,
+            "n_households":n_households}
+        load = get_load(payload) 
 
-    #claculate cost, share, and peak
-    (cost, res_share, peak_load) = calculate_params(load)
+        #claculate cost, share, and peak
+        (cost, res_share, peak_load) = calculate_params(load)
 
-    #save values to DB
-    scenario = request.get_json()['scenario']
-    table = dynamodb.Table("MomeentData-"+appliance) 
-    table.update_item(
-        Key={
-            'ResponseID': session["ID"]
-        },
-        UpdateExpression="SET {scenario}_cost = :val0, {scenario}_res_share = :val1, {scenario}_peak_load = :val2".format(scenario = scenario),
-        ExpressionAttributeValues={
-            ':val0': str(cost),
-            ':val1': str(res_share),
-            ':val2': str(peak_load)
-        }
-    )
+        #save values to DB
+        scenario = request.get_json()['scenario']
+        table = dynamodb.Table("MomeentData-"+appliance) 
+        table.update_item(
+            Key={
+                'ResponseID': session["ID"]
+            },
+            UpdateExpression="SET {scenario}_cost = :val0, {scenario}_res_share = :val1, {scenario}_peak_load = :val2".format(scenario = scenario),
+            ExpressionAttributeValues={
+                ':val0': str(cost),
+                ':val1': str(res_share),
+                ':val2': str(peak_load)
+            }
+        )
 
-    #Get baseline values from DB
-    try:
-        id = session["ID"]
-        key = {'ResponseID': id}
-        baseline = table.get_item(Key=key)
-        baseline_cost = float(baseline['Item']['baseline_cost'])
-        baseline_res_share = float(baseline['Item']['baseline_res_share'])
-        baseline_peak_load = float(baseline['Item']['baseline_peak_load'])
-    except:
-        return "Error reading float values from DB."
+        #Get baseline values from DB
+        try:
+            id = session["ID"]
+            key = {'ResponseID': id}
+            baseline = table.get_item(Key=key)
+            baseline_cost = float(baseline['Item']['baseline_cost'])
+            baseline_res_share = float(baseline['Item']['baseline_res_share'])
+            baseline_peak_load = float(baseline['Item']['baseline_peak_load'])
+        except:
+            return "Error reading float values from DB."
 
-    #Compute the % of in-decrease
-    diff_cost = (cost - baseline_cost) /  baseline_cost * 100
-    diff_res = (res_share - baseline_res_share) / baseline_res_share * 100
-    diff_peak = (peak_load - baseline_peak_load) / baseline_peak_load * 100
+        #Compute the % of in-decrease
+        diff_cost = (cost - baseline_cost) /  baseline_cost * 100
+        diff_res = (res_share - baseline_res_share) / baseline_res_share * 100
+        diff_peak = (peak_load - baseline_peak_load) / baseline_peak_load * 100
 
-    response = {
-        "diff_cost": math.trunc(diff_cost), 
-        "diff_res": math.trunc(diff_res), 
-        "diff_peak": math.trunc(diff_peak)
-        }
+        response = {
+            "diff_cost": math.trunc(diff_cost), 
+            "diff_res": math.trunc(diff_res), 
+            "diff_peak": math.trunc(diff_peak)
+            }
 
-    return jsonify(response)
+        n_trials -= 1
+        session["n_trials"] = n_trials
+        print("\ntrials ", n_trials, "\n")
+        return jsonify(response)
 
 @app.route('/questions_1a', methods=['GET','POST'])
 def questions_1a():
@@ -374,6 +382,7 @@ def questions_1b():
 
 @app.route('/experiment_2')
 def experiment_2():
+    session["n_trials"] = 3
     q1b_answers = request.args
 
     #save answers to DB
@@ -425,6 +434,7 @@ def questions_2b():
 
 @app.route('/experiment_3')
 def experiment_3():
+    session["n_trials"] = 3
     q2b_answers = request.args
     
     #save answers to DB
@@ -476,6 +486,7 @@ def questions_3b():
 
 @app.route('/experiment_4')
 def experiment_4():    
+    session["n_trials"] = 3
     q3b_answers = request.args
     
     #save answers to DB
