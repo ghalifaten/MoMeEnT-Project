@@ -222,6 +222,9 @@ d3.select("#stats-btn").on("click", function(d){
                     document.getElementById("stats-txt-you").innerText = "Decrease in cost for running the dishwasher."
                     document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-decrease.png\"></img>"
                 }
+                
+                //update tooltip text of the [See Statistics] button
+                document.getElementById("stats-btn").title = response.n_trials + " trials left"                
             },
             error: function (response) {
             alert("You have exceeded the limit of 3 trials for this scenario!")

@@ -280,7 +280,8 @@ def experiment_1():
         app = "dish washer"
 
     peer = session["peer"]
-    return render_template("experiments/experiment_1.html", appliance=app, group=peer)
+    n_trials = session["n_trials"]
+    return render_template("experiments/experiment_1.html", appliance=app, group=peer, n=n_trials)
 
 @app.route('/get-diff', methods=['POST'])
 def get_diff():
@@ -343,13 +344,15 @@ def get_diff():
         diff_res = (res_share - baseline_res_share) / baseline_res_share * 100
         diff_peak = (peak_load - baseline_peak_load) / baseline_peak_load * 100
 
+        n_trials -= 1
         response = {
             "diff_cost": math.trunc(diff_cost), 
             "diff_res": math.trunc(diff_res), 
-            "diff_peak": math.trunc(diff_peak)
+            "diff_peak": math.trunc(diff_peak),
+            "n_trials": n_trials
             }
 
-        n_trials -= 1
+        
         session["n_trials"] = n_trials
         print("\ntrials ", n_trials, "\n")
         return jsonify(response)
@@ -404,7 +407,8 @@ def experiment_2():
         app = "dish washer"
 
     peer = session["peer"]
-    return render_template("experiments/experiment_2.html", appliance=app, group=peer)
+    n_trials = session["n_trials"]
+    return render_template("experiments/experiment_2.html", appliance=app, group=peer, n=n_trials)
 
 @app.route('/questions_2a', methods=['GET','POST'])
 def questions_2a():
@@ -456,7 +460,8 @@ def experiment_3():
         app = "dish washer"
     
     peer = session["peer"]
-    return render_template("experiments/experiment_3.html", appliance=app, group=peer)
+    n_trials = session["n_trials"]
+    return render_template("experiments/experiment_3.html", appliance=app, group=peer, n=n_trials)
 
 @app.route('/questions_3a', methods=['GET','POST'])
 def questions_3a():
@@ -508,7 +513,8 @@ def experiment_4():
         app = "dish washer"
     
     peer = session["peer"]
-    return render_template("experiments/experiment_4.html", appliance=app, group=peer)
+    n_trials = session["n_trials"]
+    return render_template("experiments/experiment_4.html", appliance=app, group=peer, n=n_trials)
 
 @app.route('/questions_4a', methods=['GET','POST'])
 def questions_4a():
