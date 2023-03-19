@@ -703,3 +703,8 @@
   /*.fullPage-tooltip{*/
       
   /*}*/
+
+
+  .img-tutorial {
+    max-width: 40%;
+  }
