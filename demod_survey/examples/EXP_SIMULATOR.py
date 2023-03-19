@@ -112,8 +112,17 @@ def load_simulator(
     weighted_act = [round(x) for x in weighted_act]    
     
     # estimate the load of of the activity profile
-    len_cycle = 6
-    cycle = np.ones(len_cycle) * 1000
+    power_rating = {'DISH_WASHER':np.ones(6),
+                    'WASHING_MACHINE':  np.mean(np.array([73] * (9-0) +\
+                                                 [2056] * (30-9) +\
+                                                 [73] * (82-30) +\
+                                                ([73] * 11 + [250] * 2) * 4 +\
+                                                 [568] * (139-133)
+                                                 ).reshape(-1, 10)
+                                                , axis=1)
+                }
+    len_cycle = len(power_rating[appliance])
+    cycle = power_rating[appliance]
     load_profile0 = np.append(cycle, np.zeros(144-len(cycle)))
     load_profiles = load_profile0[:,np.newaxis]
     
