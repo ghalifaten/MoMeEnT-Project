@@ -44,11 +44,11 @@ usage_patterns = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251).tol
 #TODO should be read from the csv file 
 #map the values to the [0-4] range (?)         
 #or add another axis on the bar_chart     
-price_dict = {'morning':0.200439918,
-              'midday':0.264827651, 
-              'afternoon':0.21111789, 
-              'evening':0.220015123,
-              'night':0.242899301
+price_dict = {'morning':0.37,
+              'midday':0.28, 
+              'afternoon':0.27, 
+              'evening':0.43,
+              'night':0.31
               }
 
 RES_dict = {'morning':47.8,
