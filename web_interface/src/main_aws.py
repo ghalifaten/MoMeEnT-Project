@@ -340,9 +340,9 @@ def get_diff():
             return "Error reading float values from DB."
 
         #Compute the % of in-decrease
-        diff_cost = (cost - baseline_cost) /  baseline_cost * 100
-        diff_res = (res_share - baseline_res_share) / baseline_res_share * 100
-        diff_peak = (peak_load - baseline_peak_load) / baseline_peak_load * 100
+        diff_cost = cost - baseline_cost
+        diff_res = res_share # - baseline_res_share) / baseline_res_share * 100
+        diff_peak = peak_load # - baseline_peak_load) / baseline_peak_load * 100
 
         n_trials -= 1
         response = {
