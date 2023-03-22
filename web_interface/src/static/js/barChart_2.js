@@ -187,10 +187,16 @@ function difference(baseline_data, current_data) {
 
 d3.select("#stats-btn").on("click", function(d){  
     function getDiff() {
-        //TODO CHECK IF THIS IS THE DATA WE WANT TO SEND USE FOR THE COST COMPUTATION
-        const current_data = JSON.parse(window.localStorage.getItem("current_data"))
+        //hide stats, show loader and disable buttons
+        document.getElementById("stats-icon-you").style.display = "none";    
+        document.getElementById("stats-nbr-you").style.display = "none";    
+        document.getElementById("stats-txt-you").style.display = "none";    
+        document.getElementById("loader").style.display = "block";        
+        document.getElementById("stats-btn").disabled = true;
+        document.getElementById("link-to-exp2").disabled = true;
 
-        //... and send them to Flask to use them in computing the cost.
+        //send data to flask
+        const current_data = JSON.parse(window.localStorage.getItem("current_data"))
         $.ajax({
             url: location.origin + "/get-diff",
             type: 'POST',
@@ -201,6 +207,14 @@ d3.select("#stats-btn").on("click", function(d){
             contentType: "application/json",
             dataType: "json",
             success: function (response) {
+                //when response is received, hide loader, re-activate buttons and show results 
+                document.getElementById("stats-icon-you").style.display = "block";    
+                document.getElementById("stats-nbr-you").style.display = "block";    
+                document.getElementById("stats-txt-you").style.display = "block";  
+                document.getElementById("loader").style.display = "none"
+                document.getElementById("stats-btn").disabled = false;
+                document.getElementById("link-to-exp2").disabled = false;
+
                 const cost = response.diff_cost;
                 if (cost != 0) {
                     let counts=setInterval(updated);

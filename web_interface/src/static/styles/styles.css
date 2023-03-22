@@ -147,6 +147,14 @@
         background-color: transparent;
     }
 
+    button:disabled,
+    button[disabled]{
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+    }
+
+    
     /*Styling bar_chart*/
 @media screen and (max-width: 480px) {
     .visualization {
@@ -282,6 +290,8 @@
         height: 40%;
         width: 375px;
         margin: auto;
+
+        align-items: center;
     }
     
     .sub-stats-item {
@@ -708,3 +718,29 @@
   .img-tutorial {
     max-width: 40%;
   }
+
+  /*loading spinner*/
+  .loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #2d7d82;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+
+    /*position*/
+    position: absolute;
+    margin-left: 135px;
+  }
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
