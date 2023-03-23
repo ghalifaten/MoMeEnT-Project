@@ -444,6 +444,10 @@
     }
 
     /*styling tables*/
+    tr:first-child {
+        font-size: 20px;
+    }
+
     th {
         text-align: center;
     }
@@ -454,9 +458,12 @@
 
     td { 
         text-align: center;
-        height: 100px;
+        min-height: 70px;
+        padding-bottom: 20px;
+        padding-top: 20px;
         border-bottom: solid 1px lightgray;
         line-height: 1.3em;
+        min-width: 150px;
     }
 
     td:first-child {
