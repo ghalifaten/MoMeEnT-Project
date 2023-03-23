@@ -9,7 +9,7 @@ function getSyncScriptParams() {
 
 // set the dimensions and margins of the graph
 var margin = {top: 0, right: 30, bottom: 90, left: 60},
-    width = 800 - margin.left - margin.right,
+    width = 1000 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
@@ -21,11 +21,11 @@ var svg = d3.select("#bar-chart")
 
 // initialize variables of sliders
 var morningValue = 0, middayValue = 0, afternoonValue = 0, eveningValue = 0, nightValue = 0;
-var data = [{ Period: "morning (06:00-09:59)", Value: "0" },
-                     { Period: "midday (10:00-13:59)", Value: "0" },
-                     { Period: "afternoon (14:00-17:59)", Value: "0" },
-                     { Period: "evening (18:00-21:59)", Value: "0" },
-                     { Period: "night (22:00-05:59)", Value: "0" }];
+var data = [{ Period: "Morning 06:00-09:59", Value: "0" },
+                     { Period: "Midday\n10:00-13:59", Value: "0" },
+                     { Period: "Afternoon 14:00-17:59", Value: "0" },
+                     { Period: "Evening 18:00-21:59", Value: "0" },
+                     { Period: "Night 22:00-05:59", Value: "0" }];
 
 // Add X axis
 var x = d3.scaleBand()
@@ -38,13 +38,12 @@ svg.append("g")
     .attr("transform", "translate(145," + height + ")")
     .call(d3.axisBottom(x))
     .selectAll(".tick text")
-    .call(wrap, x.bandwidth())
-    .attr("transform", "translate(30,0)")
-    .attr("font-size", "12px")
+    .call(wrap, 100)
+    .attr("transform", "translate(45,2)")
+    .attr("font-size", "16px")
     .attr("font-weight", "bold")
     .style("text-anchor", "end");
 
-    
 // Add Y axis
 var y = d3.scaleLinear()
 .domain([0, 4])
@@ -74,7 +73,7 @@ function updateChart(morningValue, middayValue, afternoonValue, eveningValue, ni
         .attr("fill", "#69b3a2")
         .attr("rx", 10)
         .attr("ry", 10)
-        .attr("transform", "translate(193,0)")
+        .attr("transform", "translate(210,0)")
         .attr("class", "new-bar")
 
     window.localStorage.setItem("baseline_data", JSON.stringify(data));
@@ -121,7 +120,7 @@ function wrap(text, width) {
           word,
           line = [],
           lineNumber = 0,
-          lineHeight = 1.1, // ems
+          lineHeight = 1.5, // ems
           y = text.attr("y"),
           dy = parseFloat(text.attr("dy")),
           tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em")
@@ -132,7 +131,11 @@ function wrap(text, width) {
           line.pop()
           tspan.text(line.join(" "))
           line = [word]
-          tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", `${++lineNumber * lineHeight + dy}em`).text(word)
+          tspan = text.append("tspan")
+                      .attr("x", 0)
+                      .attr("y", y)
+                      .attr("dy", `${++lineNumber * lineHeight + dy}em`)
+                      .text(word)
         }
       }
     })

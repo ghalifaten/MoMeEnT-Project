@@ -9,7 +9,7 @@ function getSyncScriptParams() {
 
 // set the dimensions and margins of the graph
 var margin = {top: 0, right: 30, bottom: 90, left: 60},
-    width = 800 - margin.left - margin.right,
+    width = 1000 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
@@ -31,7 +31,7 @@ window.localStorage.setItem("current_data", JSON.stringify(current_data));
 
 // Add legend (Manually)
 var legendItemSize = 12;
-var legendSpacing = 5;
+var legendSpacing = 10;
 var xOffset = 0;
 var yOffset = 10;
 
@@ -44,6 +44,7 @@ var legend_data = [ { Text: "Habitual behavior", Color: "#D3D3D3" },
 var legend = d3.select('#bar-chart-legend')
                 .append('svg')
                 .append('g')
+                .attr("transform", "translate(-150,0)")
                 .selectAll(".legendItem")
                 .data(legend_data);
 
@@ -55,13 +56,13 @@ legend.enter().append('rect')
         .attr('transform',
                     (d, i) => {
                         var x = xOffset;
-                        var y = yOffset + (legendItemSize + legendSpacing) * i;
+                        var y = yOffset + (legendItemSize + legendSpacing) * i - 12;
                         return `translate(${x}, ${y})`;
                     });
                     
 legend.enter().append('text')
         .attr('x', xOffset + legendItemSize + 5)
-        .attr('y', (d, i) => yOffset + (legendItemSize + legendSpacing) * i + 12)
+        .attr('y', (d, i) => yOffset + (legendItemSize + legendSpacing) * i)
         .text(d => d.Text); 
 
 // Load data
@@ -100,12 +101,12 @@ var x = d3.scaleBand()
             .paddingOuter(.3)
 
 svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
+    .attr("transform", "translate(-150," + height + ")")
     .call(d3.axisBottom(x))
     .selectAll(".tick text")
-    .call(wrap, x.bandwidth())
-    .attr("transform", "translate(50,0)")
-    .attr("font-size", "12px")
+    .call(wrap, 100)
+    .attr("transform", "translate(45,2)")
+    .attr("font-size", "16px")
     .attr("font-weight", "bold")
     .style("text-anchor", "end");
 
@@ -127,6 +128,7 @@ svg.selectAll("bar")
     .attr("fill", "#f9d4da")
     .attr("rx", 10)
     .attr("ry", 10)
+    .attr("transform", "translate(-120,0)")
     .attr("class", "peak-hours-rect")
 
 //Add "Renewable energy" rectangle
@@ -141,6 +143,7 @@ svg.selectAll("bar")
     .attr("fill", "#d2f8d2")
     .attr("rx", 10)
     .attr("ry", 10)
+    .attr("transform", "translate(-140,0)")
     .attr("class", "renew-energy-rect")
     
 
@@ -156,7 +159,7 @@ svg.selectAll("bar")
     .attr("fill", "#D3D3D3")
     .attr("rx", 10)
     .attr("ry", 10)
-    .attr("transform", "translate(48,0)")
+    .attr("transform", "translate(-85,0)")
     .attr("class", "baseline-bar")
 
 // A function that updates the chart when slider is moved
@@ -181,7 +184,7 @@ function updateChart(morningValue, middayValue, afternoonValue, eveningValue, ni
         .attr("fill", "#69b3a2")
         .attr("rx", 10)
         .attr("ry", 10)
-        .attr("transform", "translate(60,0)")
+        .attr("transform", "translate(-75,0)")
         .attr("class", "new-bar")
     
     window.localStorage.setItem("current_data", JSON.stringify(data));

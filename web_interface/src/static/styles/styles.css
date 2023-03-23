@@ -202,7 +202,7 @@
         /*border: 3px solid black;*/
         width: 150px;
         height: 400px;
-        font-size: 15px;
+        font-size: 17px;
     }
 
     #bar-chart{
@@ -245,10 +245,10 @@
 
     .slider-container {
         /*border: 2px solid red;*/
-        padding-left: 90px;
+        padding-left: 108px;
         display: block;
         height: 230px;
-        width: 85% ;
+        width: 1000px ;
     }
 
     input[type=range][orient=vertical] {
@@ -262,10 +262,10 @@
 
     .slider {
         /*border: 2px solid pink;*/
-        padding-right: 110px;
+        padding-right: 143px;
         margin-top: 10px;
         display:inline-block;
-        text-align: center;
+        /*text-align: center;*/
     }
 
     /*Statistics*/
@@ -598,7 +598,7 @@
   
   
   svg {
-  overflow: visible;
+    overflow: visible;
     width: 100%;
   
   }

@@ -34,10 +34,10 @@ app.secret_key = secret
 
 #---- INITIALIZE VARIABLES ----#
 n_households = 1000
-usage_patterns = {'target_cycles':{'DISH_WASHER':(np.ones(n_households)*251).tolist(),
-                                    'WASHING_MACHINE':(np.ones(n_households)*100).tolist()},
-                  'day_prob_profiles':{'DISH_WASHER':(np.ones((n_households,24))).tolist(),  
-                                       'WASHING_MACHINE':(np.ones((n_households,24))).tolist()
+usage_patterns = {'target_cycles':{'DISH_WASHER':251,
+                                    'WASHING_MACHINE':100},
+                  'day_prob_profiles':{'DISH_WASHER':(np.ones(24)).tolist(),  
+                                       'WASHING_MACHINE':(np.ones(24)).tolist()
                                        },
                     'energy_cycle': {'DISH_WASHER': 1, 'WASHING_MACHINE':1}
                 }
@@ -59,6 +59,13 @@ RES_dict = {'morning':47.8,
               }
 
 #---- FLASK ROUTES ----#
+
+def format_app(appliance):
+    if appliance == "WASHING_MACHINE":
+        return "washing machine"
+    elif appliance == "DISH_WASHER":
+        return "dish washer"
+
 #---- TEMPORARY MAIN
 @app.route('/') 
 def _index():
@@ -68,13 +75,14 @@ def _index():
     hh_size = 1
     hh_type = 1
     weekly_freq = 2
+    appliance = "DISH_WASHER"
 
     session["ID"] = ID
     session["m_field"] = m
     session["hh_size"] = hh_size
     session["hh_type"] = hh_type
     session["n_households"] = n_households
-    session["appliance"] = "DISH_WASHER"
+    session["appliance"] = appliance
     session["peer"] = "TRUE"
     
     table = dynamodb.Table("MomeentData-"+session["appliance"])  
@@ -89,7 +97,7 @@ def _index():
     }
     table.put_item(Item=item)
     session.modified = True
-    return render_template("index.html")
+    return render_template("index.html", appliance=format_app(appliance))
 #------------------------------------------
 # ORIGINAL MAIN
 @app.route('/<qualtrics_data>')
@@ -118,7 +126,7 @@ def index(qualtrics_data):
         return 'Error in extracting arguments from URL. Either missing or data type not correct.'
 
     year_freq = weekly_freq * 52 
-    usage_patterns['target_cycles'][appliance] = (np.ones(n_households)*year_freq).tolist()
+    usage_patterns['target_cycles'][appliance] = year_freq
     #usage_patterns['energy_cycle'][appliance] = some_function(program30, program40, program60, program90)
     
     #save args to session
@@ -142,17 +150,13 @@ def index(qualtrics_data):
     }
     table.put_item(Item=item)
 
-    return render_template("index.html")
+    return render_template("index.html", appliance=format_app(appliance))
 
 
 @app.route('/experiment_0')
 def experiment_0():
     appliance = session["appliance"]
-    if appliance == "WASHING_MACHINE":
-        app = "washing machine"
-    elif appliance == "DISH_WASHER":
-        app = "dish washer"
-    return render_template("experiments/experiment_0.html", appliance=app)
+    return render_template("experiments/experiment_0.html", appliance=format_app(appliance))
 
 def process_data(data):
     values_dict = {}
@@ -220,7 +224,7 @@ def get_load(payload):
                 InvocationType='RequestResponse',                                      
                 Payload=json.dumps(payload)
                 )
-    range = result['Payload'].read()  
+    range = result['Payload'].read()
     response = json.loads(range) 
     return response['load']
 
@@ -229,15 +233,14 @@ def movingaverage(interval, window_size):
     return np.convolve(interval, window, 'same')
 
 def generate_profile(values_dict):
-    raw_profile = np.asarray([values_dict['night']] * 2 + \
-                             [values_dict['morning']] * 4 + \
-                             [values_dict['midday']] * 4 + \
-                             [values_dict['afternoon']] * 4 + \
-                             [values_dict['evening']] * 4 + \
-                             [values_dict['night']] * 6
+    raw_profile = np.asarray([values_dict['night']] * 6 * 6 + \
+                             [values_dict['morning']] * 4 * 6 + \
+                             [values_dict['midday']] * 4 * 6 + \
+                             [values_dict['afternoon']] * 4 * 6 + \
+                             [values_dict['evening']] * 4 * 6 + \
+                             [values_dict['night']] * 2 * 6
                             )
-    profile = movingaverage(raw_profile, 3)
-    return np.asarray([profile for _ in range(n_households)])
+    return raw_profile 
 
 def min_profile_from_val_period(period_dict):
     profile = np.asarray([period_dict['night']] * 2 * 60 + \
@@ -273,15 +276,9 @@ def experiment_1():
             ':val1': q0_answers.to_dict()
         }
     )
-
-    if appliance == "WASHING_MACHINE":
-        app = "washing machine"
-    elif appliance == "DISH_WASHER":
-        app = "dish washer"
-
     peer = session["peer"]
     n_trials = session["n_trials"]
-    return render_template("experiments/experiment_1.html", appliance=app, group=peer, n=n_trials)
+    return render_template("experiments/experiment_1.html", appliance=format_app(appliance), group=peer, n=n_trials)
 
 @app.route('/get-diff', methods=['POST'])
 def get_diff():
@@ -289,7 +286,6 @@ def get_diff():
     if n_trials == 0:
         abort(200)
     else:
-        print("\nget-diff\n")
         n_residents = session["hh_size"]
         household_type = session["hh_type"]
         n_households = session["n_households"]
@@ -400,15 +396,9 @@ def experiment_2():
             ':val1': q1b_answers.to_dict()
         }
     )
-   
-    if appliance == "WASHING_MACHINE":
-        app = "washing machine"
-    elif appliance == "DISH_WASHER":
-        app = "dish washer"
-
     peer = session["peer"]
     n_trials = session["n_trials"]
-    return render_template("experiments/experiment_2.html", appliance=app, group=peer, n=n_trials)
+    return render_template("experiments/experiment_2.html", appliance=format_app(appliance), group=peer, n=n_trials)
 
 @app.route('/questions_2a', methods=['GET','POST'])
 def questions_2a():
@@ -452,16 +442,10 @@ def experiment_3():
         ExpressionAttributeValues={
             ':val1': q2b_answers.to_dict()
         }
-    )
-
-    if appliance == "WASHING_MACHINE":
-        app = "washing machine"
-    elif appliance == "DISH_WASHER":
-        app = "dish washer"
-    
+    )    
     peer = session["peer"]
     n_trials = session["n_trials"]
-    return render_template("experiments/experiment_3.html", appliance=app, group=peer, n=n_trials)
+    return render_template("experiments/experiment_3.html", appliance=format_app(appliance), group=peer, n=n_trials)
 
 @app.route('/questions_3a', methods=['GET','POST'])
 def questions_3a():
@@ -506,15 +490,9 @@ def experiment_4():
             ':val1': q3b_answers.to_dict()
         }
     )
-
-    if appliance == "WASHING_MACHINE":
-        app = "washing machine"
-    elif appliance == "DISH_WASHER":
-        app = "dish washer"
-    
     peer = session["peer"]
     n_trials = session["n_trials"]
-    return render_template("experiments/experiment_4.html", appliance=app, group=peer, n=n_trials)
+    return render_template("experiments/experiment_4.html", appliance=format_app(appliance), group=peer, n=n_trials)
 
 @app.route('/questions_4a', methods=['GET','POST'])
 def questions_4a():
@@ -611,13 +589,8 @@ def conclusion():
         }
     )
 
-    if appliance == "WASHING_MACHINE":
-        app = "washing machine"
-    elif appliance == "DISH_WASHER":
-        app = "dish washer"
-
     m_field = session["m_field"]
-    return render_template("conclusion.html", appliance=app, m_field=m_field)
+    return render_template("conclusion.html", appliance=format_app(appliance), m_field=m_field)
 
 
 
