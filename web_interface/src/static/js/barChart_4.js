@@ -78,7 +78,7 @@ d3.csv('static/data/price_data.csv',function (d) {
 function add_line(price_data) { 
     // Define the line
     var valueline = d3.line()
-                        .x(function(d) { return x(d.Period); })
+                        .x(function(d) { return d.Period; })
                         .y(function(d) { return y(d.Value); })
                         .curve(d3.curveStep);
                     
@@ -88,8 +88,7 @@ function add_line(price_data) {
         .style("stroke", "red")
         .style("stroke-width", 3)
         .attr("fill", "none")
-        .attr("d", valueline(price_data))
-        .attr("transform", "translate(58,0)");
+        .attr("d", valueline(price_data));
 }
 
 // Add X axis
@@ -153,7 +152,7 @@ svg.selectAll("bar")
     .enter()
     .append("rect")
     .attr("x", function(d) { return x(d.Period); })
-    .attr("y", function(d) {return y(d.Value); })
+    .attr("y", function(d) { return y(d.Value); })
     .attr("width", 20)
     .attr("height", function(d) { return height - y(d.Value); })
     .attr("fill", "#D3D3D3")

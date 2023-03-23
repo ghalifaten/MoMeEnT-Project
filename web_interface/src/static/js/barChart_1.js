@@ -86,15 +86,13 @@ function add_line(price_data) {
         .style("stroke", "red")
         .style("stroke-width", 3)
         .attr("fill", "none")
-        .attr("d", valueline(price_data))
-        .attr("transform", "translate(58,0)");
+        .attr("d", valueline(price_data));
 }
 
 // Add X axis
 var x = d3.scaleBand()
             .range([ 0, width ])
             .domain(data.map(function(d) { return d.Period; }))
-            //.padding(0.7);
             .paddingInner(.1)
             .paddingOuter(.3)
 
