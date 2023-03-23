@@ -19,7 +19,7 @@ if module_path not in sys.path:
 
 from demod.datasets.Germany.loader import GermanDataHerus
 
-from EXP_SIMULATOR import load_simulator
+from EXP_SIMULATOR import load_calculator
 
 
 #%% INPUTS
@@ -149,7 +149,7 @@ start = time.time()
 
 appliance = 'WASHING_MACHINE'
 
-load = load_simulator(
+load = load_calculator(
         hh_subgroups = subgroups,        
         n_hh_list = [n_households],
         start_datetime = datetime.datetime(2014, 4, 1, 0, 0, 0),

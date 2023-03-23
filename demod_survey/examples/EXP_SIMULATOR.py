@@ -15,7 +15,19 @@ from demod.datasets.Germany.loader import GermanDataHerus
 from demod.simulators.base_simulators import SimLogger
 from demod.simulators.activity_simulators import SubgroupsIndividualsActivitySimulator, SemiMarkovSimulator
 
-
+def lambda_handler(event, context=None):
+    n_residents = event['n_residents']
+    household_type = event['household_type']
+    n_households = event['n_households']
+    appliance = event["appliance"]
+    subgroups = [{'n_residents': n_residents, 'household_type': household_type, 'weekday':[1,2,3,4,5]}]
+    usage_patterns = event["usage_patterns"]
+    print("\nusage_patterns = ", usage_patterns)
+    load = load_calculator(hh_subgroups=subgroups, usage_patterns=usage_patterns, appliance=appliance)
+    print("\nLOAD CALCULATED SUCCESSFULLY\n")
+    return {
+        "load": load.tolist()
+    }
 
 def rejection_sampling(
         num_samples: int, x_min: float, x_max: float, profile: np.ndarray
@@ -59,7 +71,7 @@ def weighted_profile(profile, weights, intervals, n_cycles = 10000):
 
 
 
-def load_simulator(
+def load_calculator(
         hh_subgroups : list,        
         n_hh_list : list = [1000],
         start_datetime : datetime.datetime = datetime.datetime(2014, 4, 1, 0, 0, 0),
