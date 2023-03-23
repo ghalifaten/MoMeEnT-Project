@@ -438,6 +438,11 @@
         background-color: transparent;
     }
 
+    input[type='radio'] {
+        transform: scale(1.5);
+        margin: 1rem;
+    }
+
     /*styling tables*/
     th {
         text-align: center;
