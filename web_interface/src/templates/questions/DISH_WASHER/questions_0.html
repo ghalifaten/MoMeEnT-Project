@@ -134,7 +134,7 @@
             </table>
 
             <p style="margin-top: 100px;">
-                <input class="link-btn button" onclick="window.location.href = '/experiment_1';" type="submit" value="Next page" />
+                <input class="link-btn button" type="submit" value="Next page" />
             </p>
         </form>
     </div>
@@ -142,3 +142,9 @@
 	<script src="{{ url_for('static', filename='js/app.js')}}"></script>
 
 </body>
+<!--script>
+    const inputs  = document.getElementsByTagName("input")
+    for (let i = 0; i < inputs.length; i++) {
+        inputs[i].required = true;
+    }
+</script-->

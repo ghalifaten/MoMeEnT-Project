@@ -463,87 +463,34 @@
         color: white;
     }
 
-/**********************************************************************************************************/
-    /*
-    .subtitle, label {
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 400;
-        font-size: 15px;
-        fill: black;
-        color: black;
-    }
-    */
-    /*
-    .description {
-        font-family: 'Verdana', sans-serif;
-        font-weight: 400;
-        font-size: 13px;
-        fill: cornsilk;
-    }
-    */
+    /*loading spinner*/
+    .loader {
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 16px solid #2d7d82;
+        width: 120px;
+        height: 120px;
+        -webkit-animation: spin 2s linear infinite; /* Safari */
+        animation: spin 2s linear infinite;
 
-    /*
-    .content {
-        display: block;
-        overflow: hidden;
-
-    }
-    */
-
-/*
-  #buttons {
-      margin: auto;
-      padding: auto;
-      margin-top: 30px;
-      margin-bottom: 15px;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-around;
-  }
-*/
-
-/*
-  
-  #buttons_col {
-      margin: auto;
-      padding: auto;
-      margin-top: 30px;
-      margin-bottom: 15px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-  }
-*/
-
-/*
-  button {
-      font-family: inherit;
-  }
-*/
-
-
-
-    /*D3
-    .svg-container {
-        display: inline-block;
-        position: relative;
-        width: 100%;
-        padding-bottom: 50%; /* aspect ratio */
-    /*
-        vertical-align: top;
-        overflow: hidden;
-      }
-      .svg-content-responsive {
-        display: inline-block;
+        /*position*/
         position: absolute;
-        /*width: 80%;*/
-    /*
-        top: 10px;
-        left: 0;
-      }*/
-  
+        margin-left: 135px;
+    }
 
+        /* Safari */
+    @-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+    }
 
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    
+/**********************************************************************************************************/
   .tick text {
       fill: #339fa6;
   }
@@ -650,7 +597,6 @@
   }
   
   
-  
   svg {
   overflow: visible;
     width: 100%;
@@ -706,41 +652,9 @@
   fullPage-nav li, .fullPage-slidesNav li{
       color: black;
   }
-  /*#fullPage-nav li a, .fullPage-slidesNav li a
-  #fullPage-nav li, .fullPage-slidesNav li
-  #fullPage-nav ul, .fullPage-slidesNav ul
-  #fullPage-nav*/
-  /*.fullPage-tooltip{*/
-      
-  /*}*/
-
 
   .img-tutorial {
     max-width: 40%;
   }
 
-  /*loading spinner*/
-  .loader {
-    border: 16px solid #f3f3f3;
-    border-radius: 50%;
-    border-top: 16px solid #2d7d82;
-    width: 120px;
-    height: 120px;
-    -webkit-animation: spin 2s linear infinite; /* Safari */
-    animation: spin 2s linear infinite;
-
-    /*position*/
-    position: absolute;
-    margin-left: 135px;
-  }
-
-/* Safari */
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+  
