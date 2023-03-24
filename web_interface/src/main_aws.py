@@ -11,6 +11,8 @@ import boto3
 import conf.credentials as conf
 import secrets
 import math 
+from decimal import Decimal
+
 
 #---- SET UP PATH ----#
 module_path = os.path.abspath(os.path.join('..'))+'/MoMeEnT-Project'
@@ -28,7 +30,8 @@ dynamodb = boto3.resource('dynamodb',
                         aws_access_key_id=conf.aws_access_key_id,
                         aws_secret_access_key=conf.aws_secret_access_key)
 
-secret = secrets.token_urlsafe(32) #generate secret key for the current session
+#secret = secrets.token_urlsafe(32) #generate secret key for the current session
+secret = "something fixed"
 app = Flask(__name__, template_folder='templates')
 app.secret_key = secret
 
@@ -70,8 +73,12 @@ def format_app(appliance):
 @app.route('/') 
 def _index():
     #Default args
+    print()
+    print(session)
+    print()
+
     m = "1"
-    ID = "user_test"
+    ID = "test"
     hh_size = 1
     hh_type = 1
     weekly_freq = 2
@@ -84,19 +91,9 @@ def _index():
     session["n_households"] = n_households
     session["appliance"] = appliance
     session["peer"] = "TRUE"
-    
-    table = dynamodb.Table("MomeentData-"+session["appliance"])  
+    session["weekly_freq"] = weekly_freq
 
-    #Save inputs in DB
-    item = {
-        "m": m,
-        "ResponseID": ID,
-        "hh_size": hh_size,
-        "hh_type": hh_type,
-        "frequency": weekly_freq,
-    }
-    table.put_item(Item=item)
-    session.modified = True
+    
     return render_template("index.html", appliance=format_app(appliance))
 #------------------------------------------
 # ORIGINAL MAIN
@@ -136,20 +133,8 @@ def index(qualtrics_data):
     session["hh_size"] = hh_size
     session["hh_type"] = hh_type
     session["n_households"] = n_households
+    session["weekly_freq"] = frequency
     
-    #choose table depending on appliance
-    table = dynamodb.Table("MomeentData-"+appliance) 
-
-    #Save inputs in DB
-    item = {
-        "m": m,
-        "ResponseID": ID,
-        "hh_size": hh_size,
-        "hh_type": hh_type,
-        "frequency": weekly_freq,
-    }
-    table.put_item(Item=item)
-
     return render_template("index.html", appliance=format_app(appliance))
 
 
@@ -200,24 +185,16 @@ def get_baseline_values():
     #claculate (baseline) cost, share, and peak
     (cost, res_share, peak_load) = calculate_params(load)
 
-    #save values of baseline in DB
-    #Float64 is not supported in DynamoDB. Values are stored as string
-    appliance = session["appliance"]
-    table = dynamodb.Table("MomeentData-"+appliance) 
-    table.update_item(
-        Key={
-            'ResponseID': session["ID"]
-        },
-        UpdateExpression='SET baseline_values = :val1, baseline_cost = :val2, baseline_res_share = :val3, baseline_peak_load = :val4',
-        ExpressionAttributeValues={
-            ':val1': values_dict,
-            ':val2': str(cost),
-            ':val3': str(res_share),
-            ':val4': str(peak_load)
-        }
-    )
+    session["baseline_cost"] = cost
+    session["baseline_peak_load"] = peak_load
+    session["baseline_res_share"] = res_share
 
-    return {}
+    response = {
+        "b_cost":cost,
+        "b_peak":peak_load,
+        "b_share":res_share
+    }
+    return jsonify(response)
 
 def get_load(payload):   
     result = client.invoke(
@@ -263,28 +240,15 @@ def questions_0():
 def experiment_1():
     #retrieve answers to questions_0 here
     q0_answers = request.args
+    session["q0_answers"] = q0_answers.to_dict()
 
     session["n_trials"] = 3
 
-    #save answers to DB
     appliance = session["appliance"]
-    table = dynamodb.Table("MomeentData-"+appliance) 
-    table.update_item(
-        Key={
-            'ResponseID': session["ID"]
-        },
-        UpdateExpression='SET q0_answers = :val1',
-        ExpressionAttributeValues={
-            ':val1': q0_answers.to_dict()
-        }
-    )
     peer = session["peer"]
     n_trials = session["n_trials"]
 
-    id = session["ID"]
-    key = {'ResponseID': id}
-    baseline = table.get_item(Key=key)
-    baseline_cost = float(baseline['Item']['baseline_cost'])
+    baseline_cost = session["baseline_cost"]
 
     data = {
         "appliance": format_app(appliance), 
@@ -323,36 +287,14 @@ def get_diff():
         #claculate cost, share, and peak
         (cost, res_share, peak_load) = calculate_params(load)
 
-        #save values to DB
-        scenario = request.get_json()['scenario']
-        table = dynamodb.Table("MomeentData-"+appliance) 
-        table.update_item(
-            Key={
-                'ResponseID': session["ID"]
-            },
-            UpdateExpression="SET {scenario}_cost = :val0, {scenario}_res_share = :val1, {scenario}_peak_load = :val2".format(scenario = scenario),
-            ExpressionAttributeValues={
-                ':val0': str(cost),
-                ':val1': str(res_share),
-                ':val2': str(peak_load)
-            }
-        )
-
-        #Get baseline values from DB
-        try:
-            id = session["ID"]
-            key = {'ResponseID': id}
-            baseline = table.get_item(Key=key)
-            baseline_cost = float(baseline['Item']['baseline_cost'])
-            baseline_res_share = float(baseline['Item']['baseline_res_share'])
-            baseline_peak_load = float(baseline['Item']['baseline_peak_load'])
-        except:
-            return "Error reading float values from DB."
+        baseline_cost = session["baseline_cost"]
+        baseline_peak = session["baseline_peak_load"]
+        baseline_share = session["baseline_res_share"]
 
         #Compute the % of in-decrease
         diff_cost = cost - baseline_cost
-        diff_share = res_share - baseline_res_share
-        diff_peak = peak_load - baseline_peak_load
+        diff_share = res_share - baseline_share
+        diff_peak = peak_load - baseline_peak
 
         n_trials -= 1
         response = {
@@ -377,20 +319,8 @@ def questions_1a():
 @app.route('/questions_1b', methods=['GET','POST'])
 def questions_1b():
     q1a_answers = request.args
-    
-    #save answers to DB
+    session["q1a_answers"] = q1a_answers.to_dict()
     appliance = session["appliance"]
-    table = dynamodb.Table("MomeentData-"+appliance) 
-    table.update_item(
-        Key={
-            'ResponseID': session["ID"]
-        },
-        UpdateExpression='SET q1a_answers = :val1',
-        ExpressionAttributeValues={
-            ':val1': q1a_answers.to_dict()
-        }
-    )
-
     file_path = "questions/{app}/questions_1b.html".format(app=appliance)
     return render_template(file_path)
 
@@ -398,26 +328,13 @@ def questions_1b():
 def experiment_2():
     session["n_trials"] = 3
     q1b_answers = request.args
+    session["q1b_answers"] = q1b_answers.to_dict()
 
-    #save answers to DB
-    appliance = session["appliance"]
-    table = dynamodb.Table("MomeentData-"+appliance) 
-    table.update_item(
-        Key={
-            'ResponseID': session["ID"]
-        },
-        UpdateExpression='SET q1b_answers = :val1',
-        ExpressionAttributeValues={
-            ':val1': q1b_answers.to_dict()
-        }
-    )
     peer = session["peer"]
     n_trials = session["n_trials"]
-    
-    id = session["ID"]
-    key = {'ResponseID': id}
-    baseline = table.get_item(Key=key)
-    baseline_peak = float(baseline['Item']['baseline_peak_load'])
+    appliance = session["appliance"]
+
+    baseline_peak = session["baseline_peak_load"]
 
     data = {
         "appliance": format_app(appliance), 
@@ -437,19 +354,8 @@ def questions_2a():
 @app.route('/questions_2b', methods=['GET','POST'])
 def questions_2b():
     q2a_answers = request.args
-    
-    #save answers to DB
+    session["q2a_answers"] = q2a_answers.to_dict()
     appliance = session["appliance"]
-    table = dynamodb.Table("MomeentData-"+appliance) 
-    table.update_item(
-        Key={
-            'ResponseID': session["ID"]
-        },
-        UpdateExpression='SET q2a_answers = :val1',
-        ExpressionAttributeValues={
-            ':val1': q2a_answers.to_dict()
-        }
-    )
 
     file_path = "questions/{app}/questions_2b.html".format(app=appliance)
     return render_template(file_path)
@@ -457,27 +363,14 @@ def questions_2b():
 @app.route('/experiment_3')
 def experiment_3():
     session["n_trials"] = 3
+
     q2b_answers = request.args
-    
-    #save answers to DB
-    appliance = session["appliance"]
-    table = dynamodb.Table("MomeentData-"+appliance) 
-    table.update_item(
-        Key={
-            'ResponseID': session["ID"]
-        },
-        UpdateExpression='SET q2b_answers = :val1',
-        ExpressionAttributeValues={
-            ':val1': q2b_answers.to_dict()
-        }
-    )    
+    session["q2b_answers"] = q2b_answers.to_dict()
+
+    appliance = session["appliance"] 
     peer = session["peer"]
     n_trials = session["n_trials"]
-
-    id = session["ID"]
-    key = {'ResponseID': id}
-    baseline = table.get_item(Key=key)
-    baseline_share = float(baseline['Item']['baseline_res_share'])
+    baseline_share = session['baseline_res_share']
 
     data = {
         "appliance": format_app(appliance), 
@@ -496,49 +389,26 @@ def questions_3a():
 @app.route('/questions_3b', methods=['GET','POST'])
 def questions_3b():
     q3a_answers = request.args
-    
-    #save answers to DB
+    session["q3a_answers"] = q3a_answers.to_dict()
     appliance = session["appliance"]
-    table = dynamodb.Table("MomeentData-"+appliance) 
-    table.update_item(
-        Key={
-            'ResponseID': session["ID"]
-        },
-        UpdateExpression='SET q3a_answers = :val1',
-        ExpressionAttributeValues={
-            ':val1': q3a_answers.to_dict()
-        }
-    )
-    
+
     file_path = "questions/{app}/questions_3b.html".format(app=appliance)
     return render_template(file_path)
 
 @app.route('/experiment_4')
 def experiment_4():    
     session["n_trials"] = 3
-    q3b_answers = request.args
-    
-    #save answers to DB
     appliance = session["appliance"]
-    table = dynamodb.Table("MomeentData-"+appliance) 
-    table.update_item(
-        Key={
-            'ResponseID': session["ID"]
-        },
-        UpdateExpression='SET q3b_answers = :val1',
-        ExpressionAttributeValues={
-            ':val1': q3b_answers.to_dict()
-        }
-    )
+
+    q3b_answers = request.args
+    session["q3b_answers"] = q3b_answers.to_dict()
+    
     peer = session["peer"]
     n_trials = session["n_trials"]
 
-    id = session["ID"]
-    key = {'ResponseID': id}
-    baseline = table.get_item(Key=key)
-    baseline_cost = float(baseline['Item']['baseline_cost'])
-    baseline_peak = float(baseline['Item']['baseline_peak_load'])
-    baseline_share = float(baseline['Item']['baseline_res_share'])
+    baseline_cost = session["baseline_cost"]
+    baseline_peak = session["baseline_peak_load"]
+    baseline_share = session["baseline_res_share"]
 
     data = {
         "appliance": format_app(appliance), 
@@ -560,81 +430,68 @@ def questions_4a():
 @app.route('/questions_4b', methods=['GET','POST'])
 def questions_4b():    
     q4a_answers = request.args
-    
-    #save answers to DB
+    session["q4a_answers"] = q4a_answers.to_dict()
     appliance = session["appliance"]
-    table = dynamodb.Table("MomeentData-"+appliance) 
-    table.update_item(
-        Key={
-            'ResponseID': session["ID"]
-        },
-        UpdateExpression='SET q4a_answers = :val1',
-        ExpressionAttributeValues={
-            ':val1': q4a_answers.to_dict()
-        }
-    )
-    
+
     file_path = "questions/{app}/questions_4b.html".format(app=appliance)
     return render_template(file_path)
 
 @app.route('/questions_final_a', methods=['GET','POST'])
 def questions_final_a():  
     q4b_answers = request.args
-   
-    #save answers to DB
+    session["q4b_answers"] = q4b_answers.to_dict()
     appliance = session["appliance"]
-    table = dynamodb.Table("MomeentData-"+appliance) 
-    table.update_item(
-        Key={
-            'ResponseID': session["ID"]
-        },
-        UpdateExpression='SET q4b_answers = :val1',
-        ExpressionAttributeValues={
-            ':val1': q4b_answers.to_dict()
-        }
-    )
-    
+
     file_path = "questions/{app}/questions_final_a.html".format(app=appliance)
     return render_template(file_path)
 
 @app.route('/questions_final_b', methods=['GET','POST'])
 def questions_final_b():    
     final_answers_a = request.args
-   
-    #save answers to DB
+    session["final_answers_a"] = final_answers_a.to_dict()
     appliance = session["appliance"]
-    table = dynamodb.Table("MomeentData-"+appliance) 
-    table.update_item(
-        Key={
-            'ResponseID': session["ID"]
-        },
-        UpdateExpression='SET final_answers_a = :val1',
-        ExpressionAttributeValues={
-            ':val1': final_answers_a.to_dict()
-        }
-    )
-    
+
     file_path = "questions/{app}/questions_final_b.html".format(app=appliance)
     return render_template(file_path)
 
 @app.route('/conclusion')
 def conclusion():
     final_answers_b = request.args
-   
-    #save answers to DB
-    appliance = session["appliance"]
-    table = dynamodb.Table("MomeentData-"+appliance) 
-    table.update_item(
-        Key={
-            'ResponseID': session["ID"]
-        },
-        UpdateExpression='SET final_answers_b = :val1',
-        ExpressionAttributeValues={
-            ':val1': final_answers_b.to_dict()
-        }
-    )
+    session["final_answers_b"] = final_answers_b.to_dict()
 
     m_field = session["m_field"]
+    appliance = session["appliance"]
+    
+    #choose table depending on appliance
+    table = dynamodb.Table("MomeentData-"+appliance) 
+
+    #Save inputs in DB
+    item = {
+        "m": m_field,
+        "ResponseID": session["ID"],
+        "hh_size": session["hh_size"],
+        "hh_type": session["hh_type"],
+        "frequency": session["weekly_freq"],
+        "baseline_cost": session["baseline_cost"],
+        "baseline_peak_load": session["baseline_peak_load"],
+        "baseline_res_share": session["baseline_res_share"],
+        "q0_answers" : session["q0_answers"],
+        "q1a_answers" : session["q1a_answers"],
+        "q1b_answers" : session["q1b_answers"],
+        "q2a_answers" : session["q2a_answers"],
+        "q2b_answers" : session["q2b_answers"],
+        "q3a_answers" : session["q3a_answers"],
+        "q3b_answers" : session["q3b_answers"],
+        "q4a_answers" : session["q4a_answers"],
+        "q4b_answers" : session["q4b_answers"],
+        "final_answers_a" : session["final_answers_a"],
+        "final_answers_b" : session["final_answers_b"]
+    }
+
+    item = json.loads(json.dumps(item), parse_float=Decimal)
+    table.put_item(Item=item)
+
+
     return render_template("conclusion.html", appliance=format_app(appliance), m_field=m_field)
 
 
