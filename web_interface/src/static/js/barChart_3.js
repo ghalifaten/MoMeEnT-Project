@@ -189,11 +189,11 @@ function difference(baseline_data, current_data) {
 
 d3.select("#stats-btn").on("click", function(d){    
     /* RUN DEMOD */
-    function getCost() {
+    function getDiff() {
         //hide stats, show loader and disable buttons
         document.getElementById("stats-icon-you").style.display = "none";    
         document.getElementById("stats-nbr-you").style.display = "none";    
-        document.getElementById("stats-txt-you").style.display = "none";    
+        document.getElementById("stats-txt-you").hidden = true; //We use hidden instead of style none because otherwise we lose the grid display
         document.getElementById("loader").style.display = "block";        
         document.getElementById("stats-btn").disabled = true;
         document.getElementById("link-to-exp2").disabled = true;
@@ -214,66 +214,55 @@ d3.select("#stats-btn").on("click", function(d){
                 //when response is received, hide loader, re-activate buttons and show results 
                 document.getElementById("stats-icon-you").style.display = "block";    
                 document.getElementById("stats-nbr-you").style.display = "block";    
-                document.getElementById("stats-txt-you").style.display = "block";  
                 document.getElementById("loader").style.display = "none"
                 document.getElementById("stats-btn").disabled = false;
                 document.getElementById("link-to-exp2").disabled = false;
 
-                const cost = response.diff_cost;
-                if (cost != 0) {
+                const diff_share = response.diff_share;
+                const res_share = response.res_share;
+                if (diff_share != 0) {
                     let counts=setInterval(updated);
                     let upto=0;
                     function updated(){
                         var count= document.getElementById("stats-nbr-you");
                         count.innerHTML=++upto;
-                        if(upto===Math.abs(Math.ceil(cost))){ clearInterval(counts); }
+                        if(upto===Math.abs(Math.ceil(diff_share))){ clearInterval(counts); }
                     }
                 }
             
                 //update stats-you 
-                if (cost >= 0) {
-                    document.getElementById("stats-txt-you").innerText = "Increase in cost for running the dishwasher."
-                    document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-increase.png\"></img>"
+                document.getElementById("stats-new-val").innerHTML = "<strong>New share<br>" + res_share + "</strong>" 
+                document.getElementById("stats-txt-you").hidden = false; 
+
+
+                //update icon
+                if (diff_share >= 0) {
+                    document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
                 } else {
-                    document.getElementById("stats-txt-you").innerText = "Decrease in cost for running the dishwasher."
-                    document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-decrease.png\"></img>"
+                    document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
                 }
                 
                 //update tooltip text of the [See Statistics] button
                 document.getElementById("stats-btn").title = response.n_trials + " trials left"                
             },
             error: function (response) {
-            alert("You have exceeded the limit of 3 trials for this scenario!")
+                document.getElementById("link-to-exp2").disabled = false;
+                document.getElementById("loader").style.display = "none"
+                alert("You have exceeded the limit of 3 trials for this scenario!")
             }
         });
     }
-    getCost()
+    getDiff()
     
-    //Animation for statistics numbers
-    var baseline_data = JSON.parse(window.localStorage.getItem("baseline_data"));
-    var current_data = JSON.parse(window.localStorage.getItem("current_data"));
-    const differences = difference(baseline_data, current_data);
-    const diffValue = differences[0];
-    const diffAvg = differences[1];
-   
-    if (diffAvg != 0) {
+    const avg_share = 15
+    if (avg_share != 0) {
         let counts=setInterval(updated);
-        
         let upto=0;
         function updated(){
             var count= document.getElementById("stats-nbr-avg");
             count.innerHTML=++upto;
-            if(upto===Math.abs(Math.ceil(diffAvg))){ clearInterval(counts); }
+            if(upto===Math.abs(Math.ceil(avg_share))){ clearInterval(counts); }
         }
-    }
-
-    //update stats-avg
-    if (diffAvg >= 0) {
-        document.getElementById("stats-txt-avg").innerText = "Increase in cost for running the dishwasher."
-        document.getElementById("stats-icon-avg").innerHTML = "<img src=\"static/data/arrow-increase.png\"></img>"
-    } else {
-        document.getElementById("stats-txt-avg").innerText = "Decrease in cost for running the dishwasher."
-        document.getElementById("stats-icon-avg").innerHTML = "<img src=\"static/data/arrow-decrease.png\"></img>"
     }
 
 })

@@ -65,7 +65,7 @@
                     <p style="margin-bottom: 50px;">
                         Suppose you signed up for variable-price energy contract, so there are times of the day when electricity is more expensive and 
                         others when it is cheaper. You can do something to achieve some savings on your energy bill (for example, by anticipating or 
-                        waiting for the low price hours to use electricity). However, you may face some discomfort. In this situation, what time of day would you run the {{appliance}}?</p>
+                        waiting for the low price hours to use electricity). However, you may face some discomfort. In this situation, what time of day would you run the {{data.appliance}}?</p>
 
                     </div>
                     <!--D3 bar chart visualization-->
@@ -111,7 +111,7 @@
                             </div>
                         </div>
                         <div class="visualization-column2">
-                            <button title="{{n}} trials left" id="stats-btn">See statistics</button> 
+                            <button title="{{data.n}} trials left" id="stats-btn">See statistics</button> 
                         </div>
                         <div class="statistics visualization-column3">
                             <div class="sub-stats" id="stats-title">
@@ -120,15 +120,15 @@
                             <div class="sub-stats-container" id="stats-average">
                                 <div class="sub-stats-item stats-icon" id="stats-icon-you">
                                     <!--Default icon-->
-                                    <img src="static/data/arrow-increase.png"></img>
+                                    <img src="static/img/arrow-decrease.png"></img>
                                 </div>
                                 <div class="sub-stats-item stats-nbr" id="stats-nbr-you">
                                     <!--Default value-->
                                     0 
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you">
-                                    <!--Default text-->
-                                    Increase in cost for running the {{appliance}}.
+                                    <div class="stats-old-val" id="stats-old-val"><strong>Old share<br>{{data.old_share}} €</strong></div>
+                                    <div class="stats-new-val" id="stats-new-val"><strong>New share<br>? €</strong></div>
                                 </div>
 
 
@@ -146,7 +146,7 @@
                                 <div class="sub-stats-container" id="stats-average">
                                     <div class="sub-stats-item stats-icon" id="stats-icon-avg">
                                         <!--Default icon-->
-                                        <img src="static/data/arrow-increase.png"></img>
+                                        <!--img src="static/img/arrow-increase.png"></img-->
                                     </div>
                                     <div class="sub-stats-item stats-nbr" id="stats-nbr-avg">
                                         <!--Default number-->
@@ -154,7 +154,7 @@
                                     </div>
                                     <div class="sub-stats-item stats-txt" id="stats-txt-avg">
                                         <!--Default text-->
-                                        Increase in cost for running the {{appliance}}.
+                                        Increase in cost for running the {{data.appliance}}.
                                     </div>
                                     
                                 </div>
@@ -179,7 +179,7 @@
     <script src="{{ url_for('static', filename='js/barChart_4.js')}}"></script>
     <script>
         var element = document.getElementById('avg-stats')
-        var group = {{group|tojson}}
+        var group = {{data.group|tojson}}
         if(group == "TRUE") {
             element.style.display = 'block'; 
         }else if(group == "FALSE") {

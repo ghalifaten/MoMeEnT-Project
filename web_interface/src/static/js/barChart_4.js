@@ -273,10 +273,10 @@ d3.select("#stats-btn").on("click", function(d){
                 //update stats-you 
                 if (cost >= 0) {
                     document.getElementById("stats-txt-you").innerText = "Increase in cost for running the dishwasher."
-                    document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-increase.png\"></img>"
+                    document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
                 } else {
                     document.getElementById("stats-txt-you").innerText = "Decrease in cost for running the dishwasher."
-                    document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/data/arrow-decrease.png\"></img>"
+                    document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
                 }
 
                 //update tooltip text of the [See Statistics] button
@@ -310,10 +310,10 @@ d3.select("#stats-btn").on("click", function(d){
     //update stats-avg
     if (diffAvg >= 0) {
         document.getElementById("stats-txt-avg").innerText = "Increase in cost for running the dishwasher."
-        document.getElementById("stats-icon-avg").innerHTML = "<img src=\"static/data/arrow-increase.png\"></img>"
+        document.getElementById("stats-icon-avg").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
     } else {
         document.getElementById("stats-txt-avg").innerText = "Decrease in cost for running the dishwasher."
-        document.getElementById("stats-icon-avg").innerHTML = "<img src=\"static/data/arrow-decrease.png\"></img>"
+        document.getElementById("stats-icon-avg").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
     }
 
 })

@@ -60,7 +60,7 @@
                         others when it is cheaper. <strong> You can do something to achieve some savings on your energy bill </strong> (for example, by anticipating or 
                         waiting for the low price hours to use electricity). 
                         However, you may face some discomfort. 
-                       <strong> In this situation, what time of day would you run the {{appliance}}?</strong> </p>
+                       <strong> In this situation, what time of day would you run the {{data.appliance}}?</strong> </p>
 
                     </div>
                     <!--D3 bar chart visualization-->
@@ -106,24 +106,25 @@
                             </div>
                         </div>
                         <div class="visualization-column2">
-                            <button title="{{n}} trials left" id="stats-btn">See statistics</button> 
+                            <button title="{{data.n}} trials left" id="stats-btn">See statistics</button> 
                         </div>
                         <div class="statistics visualization-column3">
                             <div class="sub-stats" id="stats-title">
                                 You
                             </div>
+
                             <div class="sub-stats-container" id="stats-average">
                                 <div class="sub-stats-item stats-icon" id="stats-icon-you">
                                     <!--Default icon-->
-                                    <img src="static/data/arrow-increase.png"></img>
+                                    <img src="static/img/arrow-decrease.png"></img>
                                 </div>
                                 <div class="sub-stats-item stats-nbr" id="stats-nbr-you">
                                     <!--Default value-->
-                                    0 
+                                    ?
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you">
-                                    <!--Default text-->
-                                    Increase in cost for running the {{appliance}}.
+                                    <div class="stats-old-val" id="stats-old-val"><strong>Old cost<br>{{data.old_cost}} €</strong></div>
+                                    <div class="stats-new-val" id="stats-new-val"><strong>New cost<br>? €</strong></div>
                                 </div>
 
                                 <!--Loading Spinner-->
@@ -134,22 +135,22 @@
 
                             <div id="avg-stats">
                                 <div class="sub-stats" id="stats-title">
-                                    Average
+                                    Average cost
                                 </div>
 
-                                <div class="sub-stats-container" id="stats-average">
+                                <div class="sub-stats-container" id="stats-average" style="height: 230px;">
                                     <div class="sub-stats-item stats-icon" id="stats-icon-avg">
                                         <!--Default icon-->
-                                        <img src="static/data/arrow-increase.png"></img>
+                                        <!--img src="static/img/arrow-increase.png"></img-->
                                     </div>
                                     <div class="sub-stats-item stats-nbr" id="stats-nbr-avg">
                                         <!--Default number-->
-                                        0
+                                        ?
                                     </div>
-                                    <div class="sub-stats-item stats-txt" id="stats-txt-avg">
-                                        <!--Default text-->
-                                        Increase in cost for running the {{appliance}}.
-                                    </div>
+                                    <!--div class="sub-stats-item stats-txt" id="stats-txt-avg">
+                                        
+                                        Increase in cost for running the {{data.appliance}}.
+                                    </div-->
                                     
                                 </div>
                             </div>
@@ -173,7 +174,7 @@
     <script src="{{ url_for('static', filename='js/barChart_1.js')}}"></script>
     <script>
         var element = document.getElementById('avg-stats')
-        var group = {{group|tojson}}
+        var group = {{data.group|tojson}}
         if(group == "TRUE") {
             element.style.display = 'block'; 
         }else if(group == "FALSE") {

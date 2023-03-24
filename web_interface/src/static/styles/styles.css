@@ -318,6 +318,21 @@
         grid-row-start: hline2;
         grid-row-end: hline-end;
     }
+    
+    .sub-stats-item.stats-txt#stats-txt-you {
+        display: grid;
+        grid-template-columns: [sub_vline1] 50% [sub_vline2] 50% [sub_vline-end];
+    }
+
+    .stats-old-val {
+        grid-column-start: sub_vline1;
+        grid-column-end: sub_vline2;
+    }
+
+    .stats-new-val {
+        grid-column-start: sub_vline2;
+        grid-column-end: sub_vline-end;
+    }
 
     .sub-stats#stats-title {
         height: 5%;

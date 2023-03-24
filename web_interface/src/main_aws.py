@@ -71,7 +71,7 @@ def format_app(appliance):
 def _index():
     #Default args
     m = "1"
-    ID = "test"
+    ID = "user_test"
     hh_size = 1
     hh_type = 1
     weekly_freq = 2
@@ -164,6 +164,7 @@ def process_data(data):
         key = d["Period"].split()[0] #remove the additional information of time between ()
         value = d["Value"]
         values_dict[key] = int(value) #values_dict has the format: {'morning': 0, 'midday': 1, 'afternoon': 2, 'evening': 3, 'night': 4}
+    print(values_dict)
     return values_dict
 
 def calculate_params(load):
@@ -177,6 +178,7 @@ def calculate_params(load):
 
 @app.route('/get-baseline-values', methods=['POST'])
 def get_baseline_values():
+    print("\nI am in /get-baseline-values\n")
     n_residents = session["hh_size"]
     household_type = session["hh_type"]
     n_households = session["n_households"]
@@ -216,6 +218,7 @@ def get_baseline_values():
             ':val4': str(peak_load)
         }
     )
+
     return {}
 
 def get_load(payload):   
@@ -243,12 +246,12 @@ def generate_profile(values_dict):
     return raw_profile 
 
 def min_profile_from_val_period(period_dict):
-    profile = np.asarray([period_dict['night']] * 2 * 60 + \
+    profile = np.asarray([period_dict['night']] * 6 * 60 + \
                         [period_dict['morning']] * 4 * 60 + \
                         [period_dict['midday']] * 4 * 60+ \
                         [period_dict['afternoon']] * 4 * 60+ \
                         [period_dict['evening']] * 4 * 60+ \
-                        [period_dict['night']] * 6 * 60
+                        [period_dict['night']] * 2 * 60
                         )
     return profile
 
@@ -260,9 +263,10 @@ def questions_0():
 
 @app.route('/experiment_1')
 def experiment_1():
-    session["n_trials"] = 3
     #retrieve answers to questions_0 here
     q0_answers = request.args
+
+    session["n_trials"] = 3
 
     #save answers to DB
     appliance = session["appliance"]
@@ -278,7 +282,19 @@ def experiment_1():
     )
     peer = session["peer"]
     n_trials = session["n_trials"]
-    return render_template("experiments/experiment_1.html", appliance=format_app(appliance), group=peer, n=n_trials)
+
+    id = session["ID"]
+    key = {'ResponseID': id}
+    baseline = table.get_item(Key=key)
+    baseline_cost = float(baseline['Item']['baseline_cost'])
+
+    data = {
+        "appliance": format_app(appliance), 
+        "group": peer, 
+        "n": n_trials, 
+        "old_cost": math.trunc(baseline_cost)
+    }
+    return render_template("experiments/experiment_1.html", data=data)
 
 @app.route('/get-diff', methods=['POST'])
 def get_diff():
@@ -337,16 +353,24 @@ def get_diff():
 
         #Compute the % of in-decrease
         diff_cost = cost - baseline_cost
-        diff_res = res_share # - baseline_res_share) / baseline_res_share * 100
-        diff_peak = peak_load # - baseline_peak_load) / baseline_peak_load * 100
+        diff_share = (res_share - baseline_res_share) / baseline_res_share * 100
+        diff_peak = (peak_load - baseline_peak_load) / baseline_peak_load * 100
 
         n_trials -= 1
         response = {
             "diff_cost": math.trunc(diff_cost), 
-            "diff_res": math.trunc(diff_res), 
+            "cost": math.trunc(cost),
             "diff_peak": math.trunc(diff_peak),
+            "peak_load": math.trunc(peak_load),
+            "res_share": math.trunc(res_share),
+            "diff_share": math.trunc(diff_share), 
             "n_trials": n_trials
             }
+        print()
+        print("baseline_peak ", baseline_peak_load)
+        print("new_peak ", peak_load)
+        print("diff_peak ", diff_peak)
+        print()
 
         
         session["n_trials"] = n_trials
@@ -398,7 +422,20 @@ def experiment_2():
     )
     peer = session["peer"]
     n_trials = session["n_trials"]
-    return render_template("experiments/experiment_2.html", appliance=format_app(appliance), group=peer, n=n_trials)
+    
+    id = session["ID"]
+    key = {'ResponseID': id}
+    baseline = table.get_item(Key=key)
+    baseline_peak = float(baseline['Item']['baseline_peak_load'])
+
+    data = {
+        "appliance": format_app(appliance), 
+        "group": peer, 
+        "n": n_trials, 
+        "old_peak": math.trunc(baseline_peak)
+    }
+
+    return render_template("experiments/experiment_2.html", data=data)
 
 @app.route('/questions_2a', methods=['GET','POST'])
 def questions_2a():
@@ -445,7 +482,19 @@ def experiment_3():
     )    
     peer = session["peer"]
     n_trials = session["n_trials"]
-    return render_template("experiments/experiment_3.html", appliance=format_app(appliance), group=peer, n=n_trials)
+
+    id = session["ID"]
+    key = {'ResponseID': id}
+    baseline = table.get_item(Key=key)
+    baseline_share = float(baseline['Item']['baseline_res_share'])
+
+    data = {
+        "appliance": format_app(appliance), 
+        "group": peer, 
+        "n": n_trials, 
+        "old_share": math.trunc(baseline_share)
+    }
+    return render_template("experiments/experiment_3.html", data=data)
 
 @app.route('/questions_3a', methods=['GET','POST'])
 def questions_3a():
@@ -492,7 +541,20 @@ def experiment_4():
     )
     peer = session["peer"]
     n_trials = session["n_trials"]
-    return render_template("experiments/experiment_4.html", appliance=format_app(appliance), group=peer, n=n_trials)
+
+    id = session["ID"]
+    key = {'ResponseID': id}
+    baseline = table.get_item(Key=key)
+    baseline_share = float(baseline['Item']['baseline_res_share'])
+
+    data = {
+        "appliance": format_app(appliance), 
+        "group": peer, 
+        "n": n_trials, 
+        "old_share": math.trunc(baseline_share)
+    }
+
+    return render_template("experiments/experiment_4.html", data=data)
 
 @app.route('/questions_4a', methods=['GET','POST'])
 def questions_4a():
