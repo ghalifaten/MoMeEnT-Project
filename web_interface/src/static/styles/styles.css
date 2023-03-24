@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
 :root {
     --comment-title-color: rgba(242,118,89);
   }
@@ -22,7 +24,8 @@
     }
 
     body {
-        font-family: 'sans-serif';
+        
+        font-family: 'Montserrat', sans-serif;
         font-size: 24px;
         color: #2d7d82;
         width: 100%;
@@ -31,7 +34,7 @@
         letter-spacing: 0.08em;
         text-align: justify;
         text-justify: inter-word;
-        font-weight:lighter;
+        font-weight:400px;
     }
 
     .page-header {
@@ -49,8 +52,8 @@
         width: 80%;
         margin: auto;
         /*padding-bottom:6.25%;*/
-        font-family: 'Montserrat';
-        font-weight: 300;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 400;
         font-size: 19px;
         color: #2d7d82;
     }
