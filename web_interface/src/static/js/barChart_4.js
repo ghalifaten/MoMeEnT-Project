@@ -231,10 +231,21 @@ d3.select("#stats-btn").on("click", function(d){
     /* RUN DEMOD */
     function getCost() {
         //hide stats, show loader and disable buttons
-        document.getElementById("stats-icon-you").style.display = "none";    
-        document.getElementById("stats-nbr-you").style.display = "none";    
-        document.getElementById("stats-txt-you").style.display = "none";    
-        document.getElementById("loader").style.display = "block";        
+        document.getElementById("icon-cost").style.display = "none";   
+        document.getElementById("icon-peak").style.display = "none";   
+        document.getElementById("icon-share").style.display = "none";   
+
+        document.getElementById("stats-nbr-you-cost").style.display = "none";
+        document.getElementById("stats-nbr-you-peak").style.display = "none";
+        document.getElementById("stats-nbr-you-share").style.display = "none";
+
+        document.getElementById("stats-txt-you-cost").hidden = true;
+        document.getElementById("stats-txt-you-peak").hidden = true;
+        document.getElementById("stats-txt-you-share").hidden = true;
+
+        for(let i=0; i<3; i++) {
+            document.getElementsByClassName("loader")[i].style.display = "block";  
+        }      
         document.getElementById("stats-btn").disabled = true;
         document.getElementById("link-to-exp2").disabled = true;
 
@@ -252,70 +263,139 @@ d3.select("#stats-btn").on("click", function(d){
             dataType: "json",
             success: function (response) {
                 //when response is received, hide loader, re-activate buttons and show results 
-                document.getElementById("stats-icon-you").style.display = "block";    
-                document.getElementById("stats-nbr-you").style.display = "block";    
-                document.getElementById("stats-txt-you").style.display = "block";  
-                document.getElementById("loader").style.display = "none"
+                document.getElementById("stats-nbr-you-cost").style.display = "block";
+                document.getElementById("stats-nbr-you-peak").style.display = "block";
+                document.getElementById("stats-nbr-you-share").style.display = "block";
+
+                for(let i=0; i<3; i++) {
+                    document.getElementsByClassName("loader")[i].style.display = "none";  
+                } 
                 document.getElementById("stats-btn").disabled = false;
                 document.getElementById("link-to-exp2").disabled = false;
 
-                const cost = response.diff_cost;
-                if (cost != 0) {
+                const diff_cost = response.diff_cost;
+                const diff_peak = response.diff_peak;
+                const diff_share = response.diff_share;
+
+                const cost = response.cost;
+                const peak_load = response.peak_load;
+                const res_share = response.res_share;
+
+                //show diff values
+                /*if (diff_cost != 0) {
                     let counts=setInterval(updated);
                     let upto=0;
                     function updated(){
-                        var count= document.getElementById("stats-nbr-you");
+                        var count= document.getElementById("stats-nbr-you-cost");
                         count.innerHTML=++upto;
-                        if(upto===Math.abs(Math.ceil(cost))){ clearInterval(counts); }
+                        if(upto===Math.abs(Math.ceil(diff_cost))){ clearInterval(counts); }
                     }
                 }
-            
-                //update stats-you 
-                if (cost >= 0) {
-                    document.getElementById("stats-txt-you").innerText = "Increase in cost for running the dishwasher."
-                    document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
-                } else {
-                    document.getElementById("stats-txt-you").innerText = "Decrease in cost for running the dishwasher."
-                    document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
+                if (diff_peak != 0) {
+                    let counts=setInterval(updated);
+                    let upto=0;
+                    function updated(){
+                        var count= document.getElementById("stats-nbr-you-peak");
+                        count.innerHTML=++upto;
+                        if(upto===Math.abs(Math.ceil(diff_peak))){ clearInterval(counts); }
+                    }
                 }
+                if (diff_share != 0) {
+                    let counts=setInterval(updated);
+                    let upto=0;
+                    function updated(){
+                        var count= document.getElementById("stats-nbr-you-share");
+                        count.innerHTML=++upto;
+                        if(upto===Math.abs(Math.ceil(diff_share))){ clearInterval(counts); }
+                    }
+                }*/
+
+                document.getElementById("stats-nbr-you-cost").innerHTML = Math.abs(diff_cost) + " €"
+                document.getElementById("stats-nbr-you-peak").innerHTML = Math.abs(diff_peak) + " %"
+                document.getElementById("stats-nbr-you-share").innerHTML = Math.abs(diff_share) + " %"
+
+
+                 //update stats
+                 document.getElementById("stats-new-val-cost").innerHTML = "<strong>New<br>" + cost + "</strong>" 
+                 document.getElementById("stats-new-val-peak").innerHTML = "<strong>New<br>" + peak_load + "</strong>" 
+                 document.getElementById("stats-new-val-share").innerHTML = "<strong>New<br>" + res_share + "</strong>" 
+                
+                 document.getElementById("stats-txt-you-cost").hidden = false;
+                 document.getElementById("stats-txt-you-peak").hidden = false;
+                 document.getElementById("stats-txt-you-share").hidden = false;
+ 
+ 
+                 //update icons
+                 if (diff_cost >= 0) {
+                    document.getElementById("icon-cost").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
+                } else {
+                    document.getElementById("icon-cost").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
+                }
+
+                if (diff_peak >= 0) {
+                    document.getElementById("icon-peak").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
+                } else {
+                    document.getElementById("icon-peak").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
+                }
+
+                if (diff_share >= 0) {
+                    document.getElementById("icon-share").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
+                } else {
+                    document.getElementById("icon-share").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
+                }
+
+                document.getElementById("icon-cost").style.display = "block";  
+                document.getElementById("icon-peak").style.display = "block";  
+                document.getElementById("icon-share").style.display = "block";  
+
 
                 //update tooltip text of the [See Statistics] button
                 document.getElementById("stats-btn").title = response.n_trials + " trials left"                
             },
             error: function (response) {
+            document.getElementById("link-to-exp2").disabled = false;
+            for(let i=0; i<3; i++) {
+                document.getElementsByClassName("loader")[i].style.display = "none";  
+            } 
             alert("You have exceeded the limit of 3 trials for this scenario!")
             }
         });
     }
     getCost()
-    
-    //Animation for statistics numbers
-    var baseline_data = JSON.parse(window.localStorage.getItem("baseline_data"));
-    var current_data = JSON.parse(window.localStorage.getItem("current_data"));
-    const differences = difference(baseline_data, current_data);
-    const diffValue = differences[0];
-    const diffAvg = differences[1];
-   
-    if (diffAvg != 0) {
+
+    const avg_cost = 35
+    if (avg_cost != 0) {
         let counts=setInterval(updated);
-        
         let upto=0;
         function updated(){
-            var count= document.getElementById("stats-nbr-avg");
+            var count= document.getElementById("stats-nbr-avg-cost");
             count.innerHTML=++upto;
-            if(upto===Math.abs(Math.ceil(diffAvg))){ clearInterval(counts); }
+            if(upto===Math.abs(Math.ceil(avg_cost))){ clearInterval(counts); }
         }
     }
 
-    //update stats-avg
-    if (diffAvg >= 0) {
-        document.getElementById("stats-txt-avg").innerText = "Increase in cost for running the dishwasher."
-        document.getElementById("stats-icon-avg").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
-    } else {
-        document.getElementById("stats-txt-avg").innerText = "Decrease in cost for running the dishwasher."
-        document.getElementById("stats-icon-avg").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
+    const avg_peak = 25
+    if (avg_peak != 0) {
+        let counts=setInterval(updated);
+        let upto=0;
+        function updated(){
+            var count= document.getElementById("stats-nbr-avg-peak");
+            count.innerHTML=++upto;
+            if(upto===Math.abs(Math.ceil(avg_peak))){ clearInterval(counts); }
+        }
     }
 
+    const avg_share = 15
+    if (avg_share != 0) {
+        let counts=setInterval(updated);
+        let upto=0;
+        function updated(){
+            var count= document.getElementById("stats-nbr-avg-share");
+            count.innerHTML=++upto;
+            if(upto===Math.abs(Math.ceil(avg_share))){ clearInterval(counts); }
+        }
+    }
+    
 })
 
 

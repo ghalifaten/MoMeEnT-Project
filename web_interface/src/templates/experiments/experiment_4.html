@@ -110,25 +110,30 @@
                                 </div>
                             </div>
                         </div>
+
+
                         <div class="visualization-column2">
                             <button title="{{data.n}} trials left" id="stats-btn">See statistics</button> 
                         </div>
-                        <div class="statistics visualization-column3">
-                            <div class="sub-stats" id="stats-title">
-                                You
+
+
+                        <div class="statistics-all-combined visualization-column3">
+                            <!----->
+                            <div class="sub-stats combined-stats" id="stats-title">
+                                Cost
                             </div>
-                            <div class="sub-stats-container" id="stats-average">
-                                <div class="sub-stats-item stats-icon" id="stats-icon-you">
+                            <div class="sub-stats-container combined-stats" id="stats-average">
+                                <div class="sub-stats-item stats-icon" id="icon-cost">
                                     <!--Default icon-->
                                     <img src="static/img/arrow-decrease.png"></img>
                                 </div>
-                                <div class="sub-stats-item stats-nbr" id="stats-nbr-you">
+                                <div class="sub-stats-item stats-nbr" id="stats-nbr-you-cost">
                                     <!--Default value-->
-                                    0 
+                                    ? 
                                 </div>
-                                <div class="sub-stats-item stats-txt" id="stats-txt-you">
-                                    <div class="stats-old-val" id="stats-old-val"><strong>Old share<br>{{data.old_share}} €</strong></div>
-                                    <div class="stats-new-val" id="stats-new-val"><strong>New share<br>? €</strong></div>
+                                <div class="sub-stats-item stats-txt" id="stats-txt-you-cost" style="padding:0px;">
+                                    <div class="stats-old-val" id="stats-old-val-cost"><strong>Old<br>{{data.old_cost}}</strong></div>
+                                    <div class="stats-new-val" id="stats-new-val-cost"><strong>New<br>?</strong></div>
                                 </div>
 
 
@@ -138,29 +143,102 @@
                                  
                             </div>                            
 
-                            <div id="avg-stats">
-                                <div class="sub-stats" id="stats-title">
-                                    Average
+                            <div class="sub-stats combined-stats" id="stats-title">
+                                Peak
+                            </div>
+                            <div class="sub-stats-container combined-stats" id="stats-average">
+                                <div class="sub-stats-item stats-icon" id="icon-peak">
+                                    <!--Default icon-->
+                                    <img src="static/img/arrow-decrease.png"></img>
+                                </div>
+                                <div class="sub-stats-item stats-nbr" id="stats-nbr-you-peak">
+                                    <!--Default value-->
+                                    ? 
+                                </div>
+                                <div class="sub-stats-item stats-txt" id="stats-txt-you-peak" style="padding:0px;">
+                                    <div class="stats-old-val" id="stats-old-val-peak"><strong>Old<br>{{data.old_peak}}</strong></div>
+                                    <div class="stats-new-val" id="stats-new-val-peak"><strong>New<br>?</strong></div>
                                 </div>
 
-                                <div class="sub-stats-container" id="stats-average">
-                                    <div class="sub-stats-item stats-icon" id="stats-icon-avg">
-                                        <!--Default icon-->
-                                        <!--img src="static/img/arrow-increase.png"></img-->
-                                    </div>
-                                    <div class="sub-stats-item stats-nbr" id="stats-nbr-avg">
-                                        <!--Default number-->
-                                        0
-                                    </div>
-                                    <div class="sub-stats-item stats-txt" id="stats-txt-avg">
-                                        <!--Default text-->
-                                        Increase in cost for running the {{data.appliance}}.
-                                    </div>
-                                    
-                                </div>
+
+                                <!--Loading Spinner-->
+                                <div class="loader" id="loader" style="display: none;"></div>
+
+                                 
+                            </div> 
+
+                            <div class="sub-stats combined-stats" id="stats-title">
+                                Share
                             </div>
+                            <div class="sub-stats-container combined-stats" id="stats-average">
+                                <div class="sub-stats-item stats-icon" id="icon-share">
+                                    <!--Default icon-->
+                                    <img src="static/img/arrow-decrease.png"></img>
+                                </div>
+                                <div class="sub-stats-item stats-nbr" id="stats-nbr-you-share">
+                                    <!--Default value-->
+                                    ? 
+                                </div>
+                                <div class="sub-stats-item stats-txt" id="stats-txt-you-share" style="padding:0px;">
+                                    <div class="stats-old-val" id="stats-old-val-share"><strong>Old<br>{{data.old_share}}</strong></div>
+                                    <div class="stats-new-val" id="stats-new-val-share"><strong>New<br>?</strong></div>
+                                </div>
+
+
+                                <!--Loading Spinner-->
+                                <div class="loader" id="loader" style="display: none;"></div>
+
+                                 
+                            </div> 
+
+                            <!----->
                             
                         </div>
+
+                        <div class="statistics-all-combined visualization-column4">
+                            
+                            <div class="sub-stats combined-stats combined-stats-avg" id="stats-title">
+                                Avg. cost
+                            </div>
+                            <div class="sub-stats-container combined-stats combined-stats-avg" id="stats-average">
+
+                                <div class="sub-stats-item stats-nbr" id="stats-nbr-avg-cost" style="position:absolute; width: 200px;">
+                                    ? 
+                                </div>
+
+                                <div class="loader" id="loader" style="display: none;"></div>
+                         
+                            </div>                            
+
+                            <div class="sub-stats combined-stats combined-stats-avg" id="stats-title">
+                                Avg. peak
+                            </div>
+                            <div class="sub-stats-container combined-stats combined-stats-avg" id="stats-average">
+                                <div class="sub-stats-item stats-nbr" id="stats-nbr-avg-peak" style="position:absolute; width: 200px;">
+                                    ? 
+                                </div>
+
+                                <div class="loader" id="loader" style="display: none;"></div>
+                                 
+                            </div> 
+
+                            <div class="sub-stats combined-stats combined-stats-avg" id="stats-title">
+                                Avg. share
+                            </div>
+                            <div class="sub-stats-container combined-stats combined-stats-avg" id="stats-average">
+
+                                <div class="sub-stats-item stats-nbr" id="stats-nbr-avg-share" style="position:absolute; width: 200px;">
+                                    ? 
+                                </div>
+
+                                <div class="loader" id="loader" style="display: none;"></div>
+
+                                 
+                            </div> 
+                            
+                        </div>
+
+
                     </div>
                     
                     <div style="clear:both">
@@ -177,7 +255,7 @@
     <!--JS scripts-->
 	<script src="{{ url_for('static', filename='js/app.js')}}"></script>
     <script src="{{ url_for('static', filename='js/barChart_4.js')}}"></script>
-    <script>
+    <!--script>
         var element = document.getElementById('avg-stats')
         var group = {{data.group|tojson}}
         if(group == "TRUE") {
@@ -185,5 +263,5 @@
         }else if(group == "FALSE") {
             element.style.display = 'none'; 
         }
-    </script>
+    </script-->
 </body>

@@ -153,7 +153,6 @@ d3.select(".link-btn").on("click", function(d){
         contentType: "application/json",
         dataType: "json",
         success: function (response) {
-            console.log("get-baseline-values called successfully")
         },
         error: function (response) {
             alert("Error!")

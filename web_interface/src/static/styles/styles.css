@@ -176,6 +176,11 @@
         border: 2px solid red;
         order: 3;
     }
+
+    .visualization-column4 {
+        border: 2px solid red;
+        order: 4;
+    }
 }
     .visualization {
         /*border: 5px solid gray;*/
@@ -318,8 +323,8 @@
         grid-row-start: hline2;
         grid-row-end: hline-end;
     }
-    
-    .sub-stats-item.stats-txt#stats-txt-you {
+
+    .stats-txt {
         display: grid;
         grid-template-columns: [sub_vline1] 50% [sub_vline2] 50% [sub_vline-end];
     }
@@ -366,6 +371,23 @@
         padding: auto;
     }
 
+    .combined-stats {
+        text-align: center;
+        width: 350px;
+        height: 180px;
+        margin-left: 15px;
+    }
+    .combined-stats#stats-title {
+        width: 350px;
+        margin-left: 15px;
+    }
+
+    .combined-stats.combined-stats-avg {
+        width: 200px;
+    }
+    .combined-stats.combined-stats-avg#stats-title {
+        width: 200px;
+    }
     /*Remove slide buttons*/
     #fp-nav ul li a span, .fp-slidesNav ul li a span, .fp-bottom {
       display: none;

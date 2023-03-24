@@ -164,7 +164,6 @@ def process_data(data):
         key = d["Period"].split()[0] #remove the additional information of time between ()
         value = d["Value"]
         values_dict[key] = int(value) #values_dict has the format: {'morning': 0, 'midday': 1, 'afternoon': 2, 'evening': 3, 'night': 4}
-    print(values_dict)
     return values_dict
 
 def calculate_params(load):
@@ -178,7 +177,6 @@ def calculate_params(load):
 
 @app.route('/get-baseline-values', methods=['POST'])
 def get_baseline_values():
-    print("\nI am in /get-baseline-values\n")
     n_residents = session["hh_size"]
     household_type = session["hh_type"]
     n_households = session["n_households"]
@@ -353,8 +351,8 @@ def get_diff():
 
         #Compute the % of in-decrease
         diff_cost = cost - baseline_cost
-        diff_share = (res_share - baseline_res_share) / baseline_res_share * 100
-        diff_peak = (peak_load - baseline_peak_load) / baseline_peak_load * 100
+        diff_share = res_share - baseline_res_share
+        diff_peak = peak_load - baseline_peak_load
 
         n_trials -= 1
         response = {
@@ -366,15 +364,8 @@ def get_diff():
             "diff_share": math.trunc(diff_share), 
             "n_trials": n_trials
             }
-        print()
-        print("baseline_peak ", baseline_peak_load)
-        print("new_peak ", peak_load)
-        print("diff_peak ", diff_peak)
-        print()
-
         
         session["n_trials"] = n_trials
-        print("\ntrials ", n_trials, "\n")
         return jsonify(response)
 
 @app.route('/questions_1a', methods=['GET','POST'])
@@ -545,12 +536,16 @@ def experiment_4():
     id = session["ID"]
     key = {'ResponseID': id}
     baseline = table.get_item(Key=key)
+    baseline_cost = float(baseline['Item']['baseline_cost'])
+    baseline_peak = float(baseline['Item']['baseline_peak_load'])
     baseline_share = float(baseline['Item']['baseline_res_share'])
 
     data = {
         "appliance": format_app(appliance), 
         "group": peer, 
         "n": n_trials, 
+        "old_cost": math.trunc(baseline_cost),
+        "old_peak": math.trunc(baseline_peak),
         "old_share": math.trunc(baseline_share)
     }
 
@@ -580,16 +575,10 @@ def questions_4b():
     )
     
     file_path = "questions/{app}/questions_4b.html".format(app=appliance)
-    print()
-    print(file_path)
-    print()
     return render_template(file_path)
 
 @app.route('/questions_final_a', methods=['GET','POST'])
 def questions_final_a():  
-    print()
-    print("we are in /questions_final_a")  
-    print()
     q4b_answers = request.args
    
     #save answers to DB
@@ -610,9 +599,6 @@ def questions_final_a():
 
 @app.route('/questions_final_b', methods=['GET','POST'])
 def questions_final_b():    
-    print()
-    print("we are in /questions_final_b")  
-    print()
     final_answers_a = request.args
    
     #save answers to DB
@@ -633,9 +619,6 @@ def questions_final_b():
 
 @app.route('/conclusion')
 def conclusion():
-    print()
-    print("we are in /conclusion")  
-    print()
     final_answers_b = request.args
    
     #save answers to DB
