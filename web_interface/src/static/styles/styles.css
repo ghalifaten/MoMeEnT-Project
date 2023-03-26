@@ -402,15 +402,15 @@
         top: 50px;
     }
     
-    /* Popup container */
+    /* Popup container 
     .popup {
         position: relative;
         left: 98%;
         display: inline-block;
         cursor: pointer;
-    }
+    }*/
 
-    /* The actual popup (appears on top) */
+    /* The actual popup (appears on top) 
     .popup .popuptext {
         visibility: hidden;
         width: 300px;
@@ -424,16 +424,16 @@
         top: 125%;
         transform: translate(-85%, -5%); 
         margin-left: -80px;
-    }
+    }*/
 
-    /* Toggle this class when clicking on the popup container (hide and show the popup) */
+    /* Toggle this class when clicking on the popup container (hide and show the popup)
     .popup .show {
         visibility: visible;
         -webkit-animation: fadeIn 1s;
         animation: fadeIn 1s
-    }
+    } */
 
-    /* Add animation (fade in the popup) */
+    /* Add animation (fade in the popup)
     @-webkit-keyframes fadeIn {
         from {opacity: 0;}
         to {opacity: 1;}
@@ -442,7 +442,7 @@
     @keyframes fadeIn {
         from {opacity: 0;}
         to {opacity:1 ;}
-    }
+    } */
 
     .form-plot {
         text-align: center;
