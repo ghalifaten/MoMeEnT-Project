@@ -193,7 +193,8 @@ d3.select("#stats-btn").on("click", function(d){
         //hide stats, show loader and disable buttons
         document.getElementById("stats-icon-you").style.display = "none";    
         document.getElementById("stats-nbr-you").style.display = "none";    
-        document.getElementById("stats-txt-you").hidden = true; //We use hidden instead of style none because otherwise we lose the grid display
+        document.getElementById("stats-old-val").hidden = true; 
+        document.getElementById("stats-new-val").hidden = true;
         document.getElementById("loader").style.display = "block";        
         document.getElementById("stats-btn").disabled = true;
         document.getElementById("link-to-exp2").disabled = true;
@@ -232,7 +233,8 @@ d3.select("#stats-btn").on("click", function(d){
             
                 //update stats-you 
                 document.getElementById("stats-new-val").innerHTML = "<strong>New share<br>" + res_share + "</strong>" 
-                document.getElementById("stats-txt-you").hidden = false; 
+                document.getElementById("stats-old-val").hidden = false; 
+                document.getElementById("stats-new-val").hidden = false;
 
 
                 //update icon

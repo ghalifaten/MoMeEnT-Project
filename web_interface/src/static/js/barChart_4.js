@@ -239,9 +239,14 @@ d3.select("#stats-btn").on("click", function(d){
         document.getElementById("stats-nbr-you-peak").style.display = "none";
         document.getElementById("stats-nbr-you-share").style.display = "none";
 
-        document.getElementById("stats-txt-you-cost").hidden = true;
-        document.getElementById("stats-txt-you-peak").hidden = true;
-        document.getElementById("stats-txt-you-share").hidden = true;
+        document.getElementById("stats-old-val-cost").hidden = true; 
+        document.getElementById("stats-new-val-cost").hidden = true;
+
+        document.getElementById("stats-old-val-peak").hidden = true;
+        document.getElementById("stats-new-val-peak").hidden = true;
+
+        document.getElementById("stats-old-val-share").hidden = true;
+        document.getElementById("stats-new-val-share").hidden = true;
 
         for(let i=0; i<3; i++) {
             document.getElementsByClassName("loader")[i].style.display = "block";  
@@ -281,34 +286,6 @@ d3.select("#stats-btn").on("click", function(d){
                 const peak_load = response.peak_load;
                 const res_share = response.res_share;
 
-                //show diff values
-                /*if (diff_cost != 0) {
-                    let counts=setInterval(updated);
-                    let upto=0;
-                    function updated(){
-                        var count= document.getElementById("stats-nbr-you-cost");
-                        count.innerHTML=++upto;
-                        if(upto===Math.abs(Math.ceil(diff_cost))){ clearInterval(counts); }
-                    }
-                }
-                if (diff_peak != 0) {
-                    let counts=setInterval(updated);
-                    let upto=0;
-                    function updated(){
-                        var count= document.getElementById("stats-nbr-you-peak");
-                        count.innerHTML=++upto;
-                        if(upto===Math.abs(Math.ceil(diff_peak))){ clearInterval(counts); }
-                    }
-                }
-                if (diff_share != 0) {
-                    let counts=setInterval(updated);
-                    let upto=0;
-                    function updated(){
-                        var count= document.getElementById("stats-nbr-you-share");
-                        count.innerHTML=++upto;
-                        if(upto===Math.abs(Math.ceil(diff_share))){ clearInterval(counts); }
-                    }
-                }*/
 
                 document.getElementById("stats-nbr-you-cost").innerHTML = Math.abs(diff_cost) + " €"
                 document.getElementById("stats-nbr-you-peak").innerHTML = Math.abs(diff_peak) + " %"
@@ -320,9 +297,14 @@ d3.select("#stats-btn").on("click", function(d){
                  document.getElementById("stats-new-val-peak").innerHTML = "<strong>New<br>" + peak_load + "</strong>" 
                  document.getElementById("stats-new-val-share").innerHTML = "<strong>New<br>" + res_share + "</strong>" 
                 
-                 document.getElementById("stats-txt-you-cost").hidden = false;
-                 document.getElementById("stats-txt-you-peak").hidden = false;
-                 document.getElementById("stats-txt-you-share").hidden = false;
+                 document.getElementById("stats-old-val-cost").hidden = false; 
+                 document.getElementById("stats-new-val-cost").hidden = false;
+         
+                 document.getElementById("stats-old-val-peak").hidden = false;
+                 document.getElementById("stats-new-val-peak").hidden = false;
+         
+                 document.getElementById("stats-old-val-share").hidden = false;
+                 document.getElementById("stats-new-val-share").hidden = false;
  
  
                  //update icons
