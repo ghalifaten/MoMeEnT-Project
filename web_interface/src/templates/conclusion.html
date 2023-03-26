@@ -54,28 +54,24 @@
 			</div>
 		</div>
 	</div>
-</body>	
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.js"></script>
+</body>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.0/fullpage.min.js"></script>
 <script>
 	new fullpage('#fullPage',{
-			anchors: ['Title', 'Demo', 'Conclusion'],
+			anchors: ['Conclusion'],
 			autoScrolling : true,
 			navigation : true,
 			slidesNavigation : true,
 			controlArrows : false,
 			scrollingSpeed :1000,
 		navigationTooltips: [
-			"Title",
-			"Introduction",
 			"Conclusion",
 		],
 		afterSlideLoad: function( section, origin, destination, direction){
 		var loadedSlide = this;
-		//load();
 		},
 	})
 </script>
-
 
 </html>
