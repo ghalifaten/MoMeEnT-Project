@@ -15,16 +15,7 @@
       box-sizing: border-box;
   }
 
-    /*Make the document fill the whole viewport, this overrides any weird defaults that browsers might have.*/
-    .center {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 50%;
-    }
-
     body {
-        
         font-family: 'Montserrat', sans-serif;
         font-size: 24px;
         color: #2d7d82;
@@ -34,26 +25,48 @@
         letter-spacing: 0.08em;
         text-align: justify;
         text-justify: inter-word;
-        font-weight:400px;
+        /*font-weight:400px;*/
     }
 
-    .page-header {
-        background-color: lightgray;
-        height: 120px;
-        margin-bottom: 20px;
+    h2 {
+        width: 80%; 
+        text-align: center;
+        margin: auto;
+        padding-bottom: 15px;
+        color: #287e85;
+    }
+
+    hr {
+        color: lightgray;
+    }
+    
+    p {
+        font-size: 24px; 
+        letter-spacing: 0.08em;
+        text-align: justify;
+        text-justify: inter-word;
+        /*font-weight: lighter;*/
+        line-height: 1.65em;
+        color: #287e85;
     }
 
     strong {
         font-weight: bold;
     }
     
+    .page-header {
+        background-color: lightgray;
+        height: 120px;
+        margin-bottom: 20px;
+    }
+
     .title {
         text-align: center;
         width: 80%;
         margin: auto;
         /*padding-bottom:6.25%;*/
         font-family: 'Montserrat', sans-serif;
-        font-weight: 400;
+        /*font-weight: 400;*/
         font-size: 19px;
         color: #2d7d82;
     }
@@ -67,28 +80,6 @@
         width: 80%;
         margin: auto;
         font-size: 1em;
-    }
-
-    h2 {
-        width: 80%; 
-        text-align: center;
-        margin: auto;
-        padding-bottom: 15px;
-        color: #287e85;
-    }
-
-    h3 {
-        color: white;
-    }
-
-    p {
-        font-size: 24px; 
-        letter-spacing: 0.08em;
-        text-align: justify;
-        text-justify: inter-word;
-        font-weight: lighter;
-        line-height: 1.65em;
-        color: #287e85;
     }
 
     /*Reposition text on Demo page*/
@@ -159,32 +150,33 @@
 
     
     /*Styling bar_chart*/
-@media screen and (max-width: 480px) {
-    .visualization {
-        border: 2px solid pink;
-        flex-direction: column;
+    @media screen and (max-width: 480px) {
+        .visualization {
+            border: 2px solid pink;
+            flex-direction: column;
+        }
+
+        .visualization-column1 {
+            border: 2px solid orange;
+            order: 1;
+        }
+
+        .visualization-column2 {
+            border: 2px solid purple;
+            order: 2;
+        }
+
+        .visualization-column3 {
+            border: 2px solid red;
+            order: 3;
+        }
+
+        .visualization-column4 {
+            border: 2px solid red;
+            order: 4;
+        }
     }
 
-    .visualization-column1 {
-        border: 2px solid orange;
-        order: 1;
-    }
-
-    .visualization-column2 {
-        border: 2px solid purple;
-        order: 2;
-    }
-
-    .visualization-column3 {
-        border: 2px solid red;
-        order: 3;
-    }
-
-    .visualization-column4 {
-        border: 2px solid red;
-        order: 4;
-    }
-}
     .visualization {
         /*border: 5px solid gray;*/
         height: 630px;
@@ -221,6 +213,11 @@
         padding-top: 20px;
     }
 
+    svg {
+        overflow: visible;
+        width: 100%;
+    }
+
     .svg-style {
         width: 20%;
         display:inline-block;    
@@ -231,6 +228,10 @@
         margin: auto;
         position: relative;  
     }
+
+    .tick text {
+        fill: #339fa6;
+      }
 
     /*Styling sliders*/
     .sliders-section {
@@ -266,7 +267,6 @@
         height: 175px;
         padding: 0 5px;
     }
-
 
     .slider {
         /*border: 2px solid pink;*/
@@ -391,70 +391,10 @@
     .combined-stats.combined-stats-avg#stats-title {
         width: 200px;
     }
+
     /*Remove slide buttons*/
     #fp-nav ul li a span, .fp-slidesNav ul li a span, .fp-bottom {
       display: none;
-    }
-
-    /*reposition video*/
-    #video {
-        position: relative;
-        top: 50px;
-    }
-    
-    /* Popup container 
-    .popup {
-        position: relative;
-        left: 98%;
-        display: inline-block;
-        cursor: pointer;
-    }*/
-
-    /* The actual popup (appears on top) 
-    .popup .popuptext {
-        visibility: hidden;
-        width: 300px;
-        background-color: #555;
-        color: #fff;
-        text-align: center;
-        border-radius: 6px;
-        padding: 8px 0;
-        position: absolute;
-        z-index: 1;
-        top: 125%;
-        transform: translate(-85%, -5%); 
-        margin-left: -80px;
-    }*/
-
-    /* Toggle this class when clicking on the popup container (hide and show the popup)
-    .popup .show {
-        visibility: visible;
-        -webkit-animation: fadeIn 1s;
-        animation: fadeIn 1s
-    } */
-
-    /* Add animation (fade in the popup)
-    @-webkit-keyframes fadeIn {
-        from {opacity: 0;}
-        to {opacity: 1;}
-    }
-
-    @keyframes fadeIn {
-        from {opacity: 0;}
-        to {opacity:1 ;}
-    } */
-
-    .form-plot {
-        text-align: center;
-    }
-
-    img {
-        display: block;
-        margin: auto;
-        margin-top: 20px;
-        margin-bottom: 20px;
-        padding: auto;
-        width: 80%;
     }
 
     /* Styling questions */
@@ -541,172 +481,24 @@
         100% { transform: rotate(360deg); }
     }
 
+    /*triangles in experiments and images of tutorial*/
+    img {
+        display: block;
+        margin: auto;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: auto;
+        width: 80%;
+    }
+
+    /*tutorial image*/
+    .img-tutorial {
+        max-width: 40%;
+    }
+
+    /*reposition video*/
+    #video {
+        position: relative;
+        top: 50px;
+    }
     
-/**********************************************************************************************************/
-  .tick text {
-      fill: #339fa6;
-  }
-  
-  .axis {
-      font-size: inherit;
-  
-  }
-  
-  .axis line{
-    stroke: black;
-  }
-  
-  .axis path{
-    stroke: black;
-  }
-  
-  .axis text{
-    font-size: 12px;
-  }  
-  
-  .bttn-simple {
-      margin: 0;
-      padding: 0;
-      width: 130px;
-      outline: none;
-      border-width: 0;
-      border-color: transparent;
-      background: transparent;
-      font-weight: 400;
-      cursor: pointer;
-      position: relative;
-      font-size: 14px;
-      font-family: inherit;
-      padding: 3px 6px;
-      overflow: hidden;
-      border-width: 0;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.14);
-      color: #fff;
-      -webkit-transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
-      transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
-  }
-  
-  .bttn-simple:focus {
-      background: rgba(255, 99, 99, 0.5);
-  }
-  
-  .bttn-simple:hover {
-      opacity: 0.4;
-  }
-  
-  .collapsible {
-      width: 100%;
-      margin: 0;
-      padding: 0;
-      outline: none;
-      border-width: 0;
-      border-color: transparent;
-      background: transparent;
-      font-weight: 400;
-      cursor: pointer;
-      position: relative;
-      font-size: 20px;
-      font-weight: 400;
-      font-family: inherit;
-      padding: 5px 12px;
-      overflow: hidden;
-      border-width: 0;
-      border-radius: 0px;
-      background: rgba(255, 255, 255, 0.08);
-      /*color: #fff;*/
-      -webkit-transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
-      transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
-  }
-  
-  div.comment-title{
-      color:  white;
-  }
-  
-  
-  .collapsible:hover {
-      opacity: 0.4;
-  }
-  
-  
-  .comment {
-      margin: auto;
-  }
-  
-  .comment-title {
-      background-color: var(--comment-title-color);
-      width: max-content;
-      text-align: left;
-      padding: 4px 10px 4px 10px;
-      font-weight: bold;
-      font-size: 18px;
-  }
-  
-  .comment-content {
-      background-color: rgb(91 34 34 / 12%);
-      font-size: 16px;
-      padding: 10px 20px 15px 20px;
-  }
-  
-  
-  svg {
-    overflow: visible;
-    width: 100%;
-  
-  }
-  
-  #eventCheckbox
-  {
-      position: relative;
-      top: 20px;
-      right: 60px;
-      float: right;
-      transform: scale(2);
-      
-  }
-  
-  #eventCheckboxLabel
-  {
-      position: relative;
-      top: 20px;
-      right: 60px;
-      float: right;
-  }
-  
-  /*remove?*/
-  div.tooltip {   
-      position: absolute;
-      text-align: center;
-      font-family: -webkit-pictograph;
-      padding: 1px;
-      font-size: 15px;
-      /*font: 20px Fantasy;*/
-      background: var(--comment-title-color);
-      color: cornsilk;
-      border: 0px;
-      /*border-radius: 8px;*/
-      pointer-events: none;         
-  }
-  
-  .line-bar {
-  fill: none;
-  stroke: black;
-  stroke-width: 3px;
-  }
-  
-  .radio-group{
-      position: absolute;
-      float: right;
-      margin-top: 2em;
-      margin-left: 40em;
-  }
-  
-  fullPage-nav li, .fullPage-slidesNav li{
-      color: black;
-  }
-
-  .img-tutorial {
-    max-width: 40%;
-  }
-
-  
