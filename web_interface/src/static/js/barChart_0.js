@@ -22,10 +22,10 @@ var svg = d3.select("#bar-chart")
 // initialize variables of sliders
 var morningValue = 0, middayValue = 0, afternoonValue = 0, eveningValue = 0, nightValue = 0;
 var data = [{ Period: "morning 06:00-09:59", Value: "0" },
-                     { Period: "midday\n10:00-13:59", Value: "0" },
-                     { Period: "afternoon 14:00-17:59", Value: "0" },
-                     { Period: "evening 18:00-21:59", Value: "0" },
-                     { Period: "night 22:00-05:59", Value: "0" }];
+            { Period: "midday 10:00-13:59", Value: "0" },
+            { Period: "afternoon 14:00-17:59", Value: "0" },
+            { Period: "evening 18:00-21:59", Value: "0" },
+            { Period: "night 22:00-05:59", Value: "0" }];
 
 // Add X axis
 var x = d3.scaleBand()

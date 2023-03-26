@@ -18,83 +18,8 @@ var svg = d3.select("#bar-chart")
             .attr("class", "svg-style")
             .append("g");
 
-
-// initialize variables of sliders
-var morningValue = 0, middayValue = 0, afternoonValue = 0, eveningValue = 0, nightValue = 0;
-var current_data = [{ Period: "morning (06:00-09:59)", Value: "0" },
-                    { Period: "midday (10:00-13:59)", Value: "0" },
-                    { Period: "afternoon (14:00-17:59)", Value: "0" },
-                    { Period: "evening (18:00-21:59)", Value: "0" },
-                    { Period: "night (22:00-05:59)", Value: "0" }];
-
-window.localStorage.setItem("current_data", JSON.stringify(current_data));
-
-// Add legend (Manually)
-var legendItemSize = 12;
-var legendSpacing = 10;
-var xOffset = 0;
-var yOffset = 10;
-
-var legend_data = [ { Text: "Habitual behavior", Color: "#D3D3D3" },
-                    { Text: "New behavior", Color: "#69b3a2" },
-                    { Text: "Price line", Color: "red"},
-                    { Text: "Peak hours", Color: "#f9d4da"},
-                    { Text: "Renewable energy", Color: "#d2f8d2"}];
-
-var legend = d3.select('#bar-chart-legend')
-                .append('svg')
-                .append('g')
-                .attr("transform", "translate(-150,0)")
-                .selectAll(".legendItem")
-                .data(legend_data);
-
-legend.enter().append('rect')
-        .attr('class', 'legendItem')
-        .attr('width', legendItemSize)
-        .attr('height', legendItemSize)
-        .style('fill', d => d.Color)
-        .attr('transform',
-                    (d, i) => {
-                        var x = xOffset;
-                        var y = yOffset + (legendItemSize + legendSpacing) * i - 12;
-                        return `translate(${x}, ${y})`;
-                    });
-                    
-legend.enter().append('text')
-        .attr('x', xOffset + legendItemSize + 5)
-        .attr('y', (d, i) => yOffset + (legendItemSize + legendSpacing) * i)
-        .text(d => d.Text); 
-
 // Load data
 var data = JSON.parse(window.localStorage.getItem("baseline_data"));
-
-// Load price data and add line to the chart
-d3.csv('static/data/price_data.csv',function (d) {
-    return d
-},
-function (data) {     
-    var x = d3.scaleBand()
-            .range([ 0, width ])
-            .domain(data.map(function(d) { return d.Period; }))
-            .paddingInner(.1)
-            .paddingOuter(.3)
-
-    var y = d3.scaleLinear()
-        .domain([1, 4])
-        .range([height, 0]);
-
-    svg.append("path")
-        .datum(data)
-        .attr("class", "line")
-        .style("stroke", "red")
-        .style("stroke-width", 3)
-        .attr("fill", "none")
-        .attr("transform", "translate(-80,0)")
-        .attr("d", d3.line()
-                    .x(function(d) { return x(d.Period); })
-                    .y(function(d) { return y(d.Value); })
-                    .curve(d3.curveStep));
-});
 
 // Add X axis
 var x = d3.scaleBand()
@@ -150,8 +75,7 @@ svg.selectAll("bar")
     .attr("transform", "translate(-140,0)")
     .attr("class", "renew-energy-rect")
     
-
-// Bars
+// Baseline bars
 svg.selectAll("bar")
     .data(data)
     .enter()
@@ -165,6 +89,103 @@ svg.selectAll("bar")
     .attr("ry", 10)
     .attr("transform", "translate(-85,0)")
     .attr("class", "baseline-bar")
+
+
+// initialize new bars and sliders to values of baseline barchart
+var current_data = JSON.parse(window.localStorage.getItem("baseline_data"));
+
+svg.selectAll("bar")
+    .data(current_data)
+    .enter()
+    .append("rect")
+    .attr("x", function(d) { return x(d.Period); })
+    .attr("y", function(d) { return y(d.Value); })
+    .attr("width", 20)
+    .attr("height", function(d) { return height - y(d.Value); })
+    .attr("fill", "#69b3a2")
+    .attr("rx", 10)
+    .attr("ry", 10)
+    .attr("transform", "translate(-75,0)")
+    .attr("class", "new-bar")
+
+var morningValue   = current_data[0].Value,
+    middayValue    = current_data[1].Value,
+    afternoonValue = current_data[2].Value,
+    eveningValue   = current_data[3].Value, 
+    nightValue     = current_data[4].Value; 
+document.getElementById("morningSlider").value = morningValue;
+document.getElementById("middaySlider").value = middayValue;
+document.getElementById("afternoonSlider").value = afternoonValue;
+document.getElementById("eveningSlider").value = eveningValue;
+document.getElementById("nightSlider").value = nightValue;
+
+window.localStorage.setItem("current_data", JSON.stringify(current_data));
+
+
+// Add legend (Manually)
+var legendItemSize = 12;
+var legendSpacing = 10;
+var xOffset = 0;
+var yOffset = 10;
+
+var legend_data = [ { Text: "Habitual behavior", Color: "#D3D3D3" },
+                    { Text: "New behavior", Color: "#69b3a2" },
+                    { Text: "Price line", Color: "red"},
+                    { Text: "Peak hours", Color: "#f9d4da"},
+                    { Text: "Renewable energy", Color: "#d2f8d2"}];
+
+var legend = d3.select('#bar-chart-legend')
+                .append('svg')
+                .append('g')
+                .attr("transform", "translate(-150,0)")
+                .selectAll(".legendItem")
+                .data(legend_data);
+
+legend.enter().append('rect')
+        .attr('class', 'legendItem')
+        .attr('width', legendItemSize)
+        .attr('height', legendItemSize)
+        .style('fill', d => d.Color)
+        .attr('transform',
+                    (d, i) => {
+                        var x = xOffset;
+                        var y = yOffset + (legendItemSize + legendSpacing) * i - 12;
+                        return `translate(${x}, ${y})`;
+                    });
+                    
+legend.enter().append('text')
+        .attr('x', xOffset + legendItemSize + 5)
+        .attr('y', (d, i) => yOffset + (legendItemSize + legendSpacing) * i)
+        .text(d => d.Text); 
+
+
+// Load price data and add line to the chart
+d3.csv('static/data/price_data.csv',function (d) {
+    return d
+},
+function (data) {     
+    var x = d3.scaleBand()
+            .range([ 0, width ])
+            .domain(data.map(function(d) { return d.Period; }))
+            .paddingInner(.1)
+            .paddingOuter(.3)
+
+    var y = d3.scaleLinear()
+        .domain([1, 4])
+        .range([height, 0]);
+
+    svg.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .style("stroke", "red")
+        .style("stroke-width", 3)
+        .attr("fill", "none")
+        .attr("transform", "translate(-80,0)")
+        .attr("d", d3.line()
+                    .x(function(d) { return x(d.Period); })
+                    .y(function(d) { return y(d.Value); })
+                    .curve(d3.curveStep));
+});
 
 // A function that updates the chart when slider is moved
 function updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue) {

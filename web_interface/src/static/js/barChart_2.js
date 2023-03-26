@@ -18,14 +18,89 @@ var svg = d3.select("#bar-chart")
             .attr("class", "svg-style")
             .append("g");
 
+// Load data
+var data = JSON.parse(window.localStorage.getItem("baseline_data"));
 
-// initialize variables of sliders
-var morningValue = 0, middayValue = 0, afternoonValue = 0, eveningValue = 0, nightValue = 0;
-var current_data = [{ Period: "morning (06:00-09:59)", Value: "0" },
-                    { Period: "midday (10:00-13:59)", Value: "0" },
-                    { Period: "afternoon (14:00-17:59)", Value: "0" },
-                    { Period: "evening (18:00-21:59)", Value: "0" },
-                    { Period: "night (22:00-05:59)", Value: "0" }];
+// Add X axis
+var x = d3.scaleBand()
+            .range([ 0, width ])
+            .domain(data.map(function(d) { return d.Period; }))
+            //.padding(0.7);
+            .paddingInner(.1)
+            .paddingOuter(.3)
+
+svg.append("g")
+    .attr("transform", "translate(-150," + height + ")")
+    .call(d3.axisBottom(x))
+    .selectAll(".tick text")
+    .call(wrap, 100)
+    .attr("transform", "translate(45,2)")
+    .attr("font-size", "16px")
+    .attr("font-weight", "bold")
+    .style("text-anchor", "end");
+    
+// Add Y axis
+var y = d3.scaleLinear()
+.domain([0, 4])
+.range([height, 0]);
+
+//Add "Peak hours" rectangle
+svg.selectAll("bar")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("x", function(d) { return x(data[2].Period); })
+    .attr("y", 0)
+    .attr("width", 250)
+    .attr("height", 310)
+    .attr("fill", "#f9d4da")
+    .attr("rx", 10)
+    .attr("ry", 10)
+    .attr("transform", "translate(-120,0)")
+    .attr("class", "peak-hours-rect")
+
+// Baseline bars
+svg.selectAll("bar")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("x", function(d) { return x(d.Period); })
+    .attr("y", function(d) {return y(d.Value); })
+    .attr("width", 20)
+    .attr("height", function(d) { return height - y(d.Value); })
+    .attr("fill", "#D3D3D3")
+    .attr("rx", 10)
+    .attr("ry", 10)
+    .attr("transform", "translate(-85,0)")
+    .attr("class", "baseline-bar")
+
+// initialize new bars and sliders to values of baseline barchart
+var current_data = JSON.parse(window.localStorage.getItem("baseline_data"));
+
+svg.selectAll("bar")
+    .data(current_data)
+    .enter()
+    .append("rect")
+    .attr("x", function(d) { return x(d.Period); })
+    .attr("y", function(d) { return y(d.Value); })
+    .attr("width", 20)
+    .attr("height", function(d) { return height - y(d.Value); })
+    .attr("fill", "#69b3a2")
+    .attr("rx", 10)
+    .attr("ry", 10)
+    .attr("transform", "translate(-75,0)")
+    .attr("class", "new-bar")
+
+var morningValue   = current_data[0].Value,
+    middayValue    = current_data[1].Value,
+    afternoonValue = current_data[2].Value,
+    eveningValue   = current_data[3].Value, 
+    nightValue     = current_data[4].Value; 
+document.getElementById("morningSlider").value = morningValue;
+document.getElementById("middaySlider").value = middayValue;
+document.getElementById("afternoonSlider").value = afternoonValue;
+document.getElementById("eveningSlider").value = eveningValue;
+document.getElementById("nightSlider").value = nightValue;
 
 window.localStorage.setItem("current_data", JSON.stringify(current_data));
 
@@ -62,65 +137,7 @@ legend.enter().append('text')
         .attr('x', xOffset + legendItemSize + 5)
         .attr('y', (d, i) => yOffset + (legendItemSize + legendSpacing) * i)
         .text(d => d.Text); 
-
-// Load data
-var data = JSON.parse(window.localStorage.getItem("baseline_data"));
-
-// Add X axis
-var x = d3.scaleBand()
-            .range([ 0, width ])
-            .domain(data.map(function(d) { return d.Period; }))
-            //.padding(0.7);
-            .paddingInner(.1)
-            .paddingOuter(.3)
-
-svg.append("g")
-    .attr("transform", "translate(-150," + height + ")")
-    .call(d3.axisBottom(x))
-    .selectAll(".tick text")
-    .call(wrap, 100)
-    .attr("transform", "translate(45,2)")
-    .attr("font-size", "16px")
-    .attr("font-weight", "bold")
-    .style("text-anchor", "end");
-
     
-// Add Y axis
-var y = d3.scaleLinear()
-.domain([0, 4])
-.range([height, 0]);
-
-//Add "Peak hours" rectangle
-svg.selectAll("bar")
-    .data(data)
-    .enter()
-    .append("rect")
-    .attr("x", function(d) { return x(data[2].Period); })
-    .attr("y", 0)
-    .attr("width", 250)
-    .attr("height", 310)
-    .attr("fill", "#f9d4da")
-    .attr("rx", 10)
-    .attr("ry", 10)
-    .attr("transform", "translate(-120,0)")
-    .attr("class", "peak-hours-rect")
-    
-
-// Bars
-svg.selectAll("bar")
-    .data(data)
-    .enter()
-    .append("rect")
-    .attr("x", function(d) { return x(d.Period); })
-    .attr("y", function(d) {return y(d.Value); })
-    .attr("width", 20)
-    .attr("height", function(d) { return height - y(d.Value); })
-    .attr("fill", "#D3D3D3")
-    .attr("rx", 10)
-    .attr("ry", 10)
-    .attr("transform", "translate(-85,0)")
-    .attr("class", "baseline-bar")
-
 // A function that updates the chart when slider is moved
 function updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue) {
     //TODO optimize this
