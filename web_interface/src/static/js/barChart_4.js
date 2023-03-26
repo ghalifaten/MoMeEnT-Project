@@ -121,7 +121,6 @@ document.getElementById("nightSlider").value = nightValue;
 
 window.localStorage.setItem("current_data", JSON.stringify(current_data));
 
-
 // Add legend (Manually)
 var legendItemSize = 12;
 var legendSpacing = 10;
@@ -159,34 +158,6 @@ legend.enter().append('text')
         .text(d => d.Text); 
 
 
-// Load price data and add line to the chart
-d3.csv('static/data/price_data.csv',function (d) {
-    return d
-},
-function (data) {     
-    var x = d3.scaleBand()
-            .range([ 0, width ])
-            .domain(data.map(function(d) { return d.Period; }))
-            .paddingInner(.1)
-            .paddingOuter(.3)
-
-    var y = d3.scaleLinear()
-        .domain([1, 4])
-        .range([height, 0]);
-
-    svg.append("path")
-        .datum(data)
-        .attr("class", "line")
-        .style("stroke", "red")
-        .style("stroke-width", 3)
-        .attr("fill", "none")
-        .attr("transform", "translate(-80,0)")
-        .attr("d", d3.line()
-                    .x(function(d) { return x(d.Period); })
-                    .y(function(d) { return y(d.Value); })
-                    .curve(d3.curveStep));
-});
-
 // A function that updates the chart when slider is moved
 function updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue) {
     //TODO optimize this
@@ -212,7 +183,10 @@ function updateChart(morningValue, middayValue, afternoonValue, eveningValue, ni
         .attr("transform", "translate(-75,0)")
         .attr("class", "new-bar")
     
+    //keep price line in the front
+    svg.selectAll(".price-line").raise(); 
     window.localStorage.setItem("current_data", JSON.stringify(data));
+
     return data;
 }
 
@@ -243,15 +217,47 @@ d3.select("#nightSlider").on("change", function(d){
     current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
 })
 
+// Load price data and add line to the chart
+d3.csv('static/data/price_data.csv',function (d) {
+    return d
+},
+function (data) {     
+    var x = d3.scaleBand()
+            .range([ 0, width ])
+            .domain(data.map(function(d) { return d.Period; }))
+            .paddingInner(.1)
+            .paddingOuter(.3)
 
-// Listen to the submit button
-function difference(baseline_data, current_data) {
-    var baseline_sum = baseline_data.reduce((partialSum, a) => partialSum + parseInt(a.Value), 0);
-    var baseline_avg = baseline_sum/5 * 100;
-    var current_sum = current_data.reduce((partialSum, a) => partialSum + parseInt(a.Value), 0);
-    var current_avg = current_sum/5 * 100;
-    return [current_sum - baseline_sum, current_avg - baseline_avg];
-}
+    var y = d3.scaleLinear()
+        .domain([1, 4])
+        .range([height, 0]);
+
+    svg.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .style("stroke", "red")
+        .style("stroke-width", 3)
+        .attr("fill", "none")
+        .attr("transform", "translate(-80,0)")
+        .attr("d", d3.line()
+                    .x(function(d) { return x(d.Period); })
+                    .y(function(d) { return y(d.Value); })
+                    .curve(d3.curveStep))
+        .attr("class", "price-line")
+        
+    svg.selectAll(null)
+        .data(data)
+        .enter()
+        .append("text")
+        .attr("x", function(d) { return x(d.Period) })
+        .attr("y", function(d) { return y(d.Value)})
+        .attr("transform", "translate(-100,-10)")
+        .attr("font-size", "18px")
+        .attr("fill", "red")
+        .attr("font-weight", "bold")
+        .text((d) => d.Text)
+        .attr("class", "price-line")
+});
 
 d3.select("#stats-btn").on("click", function(d){    
     /* RUN DEMOD */
