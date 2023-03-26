@@ -65,29 +65,6 @@ legend.enter().append('text')
 
 // Load data
 var data = JSON.parse(window.localStorage.getItem("baseline_data"));
-var price_data;
-
-// Load price data and add line to the chart
-d3.csv('static/data/price_data.csv',function (d) {
-    price_data = d;
-    add_line(price_data);
-});
-
-function add_line(price_data) { 
-    // Define the line
-    var valueline = d3.line()
-                        .x(function(d) { return x(d.Period); })
-                        .y(function(d) { return y(d.Value); })
-                        .curve(d3.curveStep);
-                    
-    // Add the line path
-    svg.append("path")
-        .attr("class", "line")
-        .style("stroke", "red")
-        .style("stroke-width", 3)
-        .attr("fill", "none")
-        .attr("d", valueline(price_data));
-}
 
 // Add X axis
 var x = d3.scaleBand()
@@ -109,8 +86,36 @@ svg.append("g")
     
 // Add Y axis
 var y = d3.scaleLinear()
-.domain([0, 4])
-.range([height, 0]);
+          .domain([0, 4])
+          .range([height, 0]);
+
+// Load price data and add line to the chart
+d3.csv('static/data/price_data.csv',function (d) {
+    return d
+},
+function (data) {     
+    var x = d3.scaleBand()
+            .range([ 0, width ])
+            .domain(data.map(function(d) { return d.Period; }))
+            .paddingInner(.1)
+            .paddingOuter(.3)
+
+    var y = d3.scaleLinear()
+        .domain([1, 4])
+        .range([height, 0]);
+
+    svg.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .style("stroke", "red")
+        .style("stroke-width", 3)
+        .attr("fill", "none")
+        .attr("transform", "translate(-80,0)")
+        .attr("d", d3.line()
+                    .x(function(d) { return x(d.Period); })
+                    .y(function(d) { return y(d.Value); })
+                    .curve(d3.curveStep));
+});
 
 // Bars
 svg.selectAll("bar")
@@ -118,7 +123,7 @@ svg.selectAll("bar")
     .enter()
     .append("rect")
     .attr("x", function(d) { return x(d.Period); })
-    .attr("y", function(d) {return y(d.Value); })
+    .attr("y", function(d) { return y(d.Value); })
     .attr("width", 20)
     .attr("height", function(d) { return height - y(d.Value); })
     .attr("fill", "#D3D3D3")

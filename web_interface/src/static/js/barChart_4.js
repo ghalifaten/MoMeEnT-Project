@@ -67,29 +67,34 @@ legend.enter().append('text')
 
 // Load data
 var data = JSON.parse(window.localStorage.getItem("baseline_data"));
-var price_data;
 
 // Load price data and add line to the chart
 d3.csv('static/data/price_data.csv',function (d) {
-    price_data = d;
-    add_line(price_data);
-});
+    return d
+},
+function (data) {     
+    var x = d3.scaleBand()
+            .range([ 0, width ])
+            .domain(data.map(function(d) { return d.Period; }))
+            .paddingInner(.1)
+            .paddingOuter(.3)
 
-function add_line(price_data) { 
-    // Define the line
-    var valueline = d3.line()
-                        .x(function(d) { return d.Period; })
-                        .y(function(d) { return y(d.Value); })
-                        .curve(d3.curveStep);
-                    
-    // Add the line path
+    var y = d3.scaleLinear()
+        .domain([1, 4])
+        .range([height, 0]);
+
     svg.append("path")
+        .datum(data)
         .attr("class", "line")
         .style("stroke", "red")
         .style("stroke-width", 3)
         .attr("fill", "none")
-        .attr("d", valueline(price_data));
-}
+        .attr("transform", "translate(-80,0)")
+        .attr("d", d3.line()
+                    .x(function(d) { return x(d.Period); })
+                    .y(function(d) { return y(d.Value); })
+                    .curve(d3.curveStep));
+});
 
 // Add X axis
 var x = d3.scaleBand()
