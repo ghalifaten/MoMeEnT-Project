@@ -241,7 +241,7 @@ d3.select("#stats-btn").on("click", function(d){
                 }
             
                 //update stats-you 
-                document.getElementById("stats-new-val").innerHTML = "<strong>New peak <br>" + peak + "</strong>" 
+                document.getElementById("stats-new-val").innerHTML = "<strong>New peak <br>" + peak + " %</strong>" 
                 document.getElementById("stats-old-val").hidden = false; 
                 document.getElementById("stats-new-val").hidden = false;
 

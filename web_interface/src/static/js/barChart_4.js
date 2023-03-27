@@ -325,9 +325,9 @@ d3.select("#stats-btn").on("click", function(d){
 
 
                  //update stats
-                 document.getElementById("stats-new-val-cost").innerHTML = "<strong>New<br>" + cost + "</strong>" 
-                 document.getElementById("stats-new-val-peak").innerHTML = "<strong>New<br>" + peak_load + "</strong>" 
-                 document.getElementById("stats-new-val-share").innerHTML = "<strong>New<br>" + res_share + "</strong>" 
+                 document.getElementById("stats-new-val-cost").innerHTML = "<strong>New<br>" + cost + " €" + "</strong>" 
+                 document.getElementById("stats-new-val-peak").innerHTML = "<strong>New<br>" + peak_load + " %" + "</strong>" 
+                 document.getElementById("stats-new-val-share").innerHTML = "<strong>New<br>" + res_share + " %" + "</strong>" 
                 
                  document.getElementById("stats-old-val-cost").hidden = false; 
                  document.getElementById("stats-new-val-cost").hidden = false;
@@ -377,7 +377,7 @@ d3.select("#stats-btn").on("click", function(d){
     }
     getCost()
 
-    const avg_cost = 35
+    const avg_cost = 83
     if (avg_cost != 0) {
         let counts=setInterval(updated);
         let upto=0;
@@ -388,7 +388,7 @@ d3.select("#stats-btn").on("click", function(d){
         }
     }
 
-    const avg_peak = 25
+    const avg_peak = 58
     if (avg_peak != 0) {
         let counts=setInterval(updated);
         let upto=0;
@@ -399,7 +399,7 @@ d3.select("#stats-btn").on("click", function(d){
         }
     }
 
-    const avg_share = 15
+    const avg_share = 31
     if (avg_share != 0) {
         let counts=setInterval(updated);
         let upto=0;

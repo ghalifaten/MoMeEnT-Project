@@ -252,7 +252,7 @@ d3.select("#stats-btn").on("click", function(d){
                 }
             
                 //update stats-you 
-                document.getElementById("stats-new-val").innerHTML = "<strong>New share<br>" + res_share + "</strong>" 
+                document.getElementById("stats-new-val").innerHTML = "<strong>New value<br>" + res_share + " %</strong>" 
                 document.getElementById("stats-old-val").hidden = false; 
                 document.getElementById("stats-new-val").hidden = false;
 

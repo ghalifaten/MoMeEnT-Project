@@ -269,7 +269,7 @@ d3.select("#stats-btn").on("click", function(d){
                 }
             
                 //update stats-you 
-                document.getElementById("stats-new-val").innerHTML = "<strong>New cost<br>" + cost + " €</strong>" 
+                document.getElementById("stats-new-val").innerHTML = "<strong>New value<br>" + cost + " €</strong>" 
                 document.getElementById("stats-old-val").hidden = false; 
                 document.getElementById("stats-new-val").hidden = false;
 
@@ -295,7 +295,7 @@ d3.select("#stats-btn").on("click", function(d){
     getDiff()
 
 
-    const avg_cost = 25
+    const avg_cost = 80
     if (avg_cost != 0) {
         let counts=setInterval(updated);
         let upto=0;

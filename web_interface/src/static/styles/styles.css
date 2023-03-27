@@ -56,7 +56,7 @@
     
     .page-header {
         background-color: lightgray;
-        height: 120px;
+        height: 40px;
         margin-bottom: 20px;
     }
 
@@ -493,8 +493,26 @@
 
     /*tutorial image*/
     .img-tutorial {
-        max-width: 40%;
+        margin-top: -100px;
+        margin-bottom: -100px;
+        max-width: 100%;
     }
+
+    /*EPFL image*/
+    .img-epfl {
+        margin-top: -50px;
+        margin-bottom: -50px;
+        max-width: 25%;
+    }
+
+    /*icons image*/
+    .img-icon {
+        margin: auto;
+        max-width: 45px;
+        vertical-align: middle;
+        display: inline-block;
+    }
+
 
     /*reposition video*/
     #video {
@@ -502,4 +520,8 @@
         top: 50px;
     }
 
+    
+
+
+    
     

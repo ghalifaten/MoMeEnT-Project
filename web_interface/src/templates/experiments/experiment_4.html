@@ -42,9 +42,13 @@
                 <div id="exp1">
                     <div id="text">
                     <p style="margin-bottom: 50px;">
-                        Suppose you signed up for variable-price energy contract, so there are times of the day when electricity is more expensive and 
-                        others when it is cheaper. You can do something to achieve some savings on your energy bill (for example, by anticipating or 
-                        waiting for the low price hours to use electricity). However, you may face some discomfort. In this situation, what time of day would you run the {{data.appliance}}?</p>
+                        Suppose you have signed a variable-price energy contract. 
+                        Also, although they are very sunny days, most people consume too much electricity in the afternoon hours increase the risk of blackouts. 
+                        <strong> You can do something to save on your energy bill, reduce emissions from the energy you consume, 
+                        and reduce the risk of blackouts by changing your washing habits </strong>  
+                        However, you may face some inconvenience. 
+                        <br>
+                       <strong> In this situation, what time of day would you run the {{data.appliance}}? </strong> </p>
 
                     </div>
                     <!--D3 bar chart visualization-->
@@ -99,7 +103,7 @@
                         <div class="statistics-all-combined visualization-column3">
                             <!----->
                             <div class="sub-stats combined-stats" id="stats-title">
-                                Cost
+                                Yearly cost
                             </div>
                             <div class="sub-stats-container combined-stats" id="stats-average">
                                 <div class="sub-stats-item stats-icon" id="icon-cost">
@@ -111,7 +115,7 @@
                                     ? 
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you-cost" style="padding:0px;">
-                                    <div class="stats-old-val" id="stats-old-val-cost"><strong>Old<br>{{data.old_cost}}</strong></div>
+                                    <div class="stats-old-val" id="stats-old-val-cost"><strong>Old<br>{{data.old_cost}} €</strong></div>
                                     <div class="stats-new-val" id="stats-new-val-cost"><strong>New<br>?</strong></div>
                                 </div>
 
@@ -123,7 +127,7 @@
                             </div>                            
 
                             <div class="sub-stats combined-stats" id="stats-title">
-                                Peak
+                                Load peak hours
                             </div>
                             <div class="sub-stats-container combined-stats" id="stats-average">
                                 <div class="sub-stats-item stats-icon" id="icon-peak">
@@ -135,7 +139,7 @@
                                     ? 
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you-peak" style="padding:0px;">
-                                    <div class="stats-old-val" id="stats-old-val-peak"><strong>Old<br>{{data.old_peak}}</strong></div>
+                                    <div class="stats-old-val" id="stats-old-val-peak"><strong>Old<br>{{data.old_peak}} %</strong></div>
                                     <div class="stats-new-val" id="stats-new-val-peak"><strong>New<br>?</strong></div>
                                 </div>
 
@@ -147,7 +151,7 @@
                             </div> 
 
                             <div class="sub-stats combined-stats" id="stats-title">
-                                Share
+                                Green energy
                             </div>
                             <div class="sub-stats-container combined-stats" id="stats-average">
                                 <div class="sub-stats-item stats-icon" id="icon-share">
@@ -159,7 +163,7 @@
                                     ? 
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you-share" style="padding:0px;">
-                                    <div class="stats-old-val" id="stats-old-val-share"><strong>Old<br>{{data.old_share}}</strong></div>
+                                    <div class="stats-old-val" id="stats-old-val-share"><strong>Old<br>{{data.old_share}} %</strong></div>
                                     <div class="stats-new-val" id="stats-new-val-share"><strong>New<br>?</strong></div>
                                 </div>
 
