@@ -147,8 +147,9 @@ function (data) {
         .attr("d", d3.line()
                     .x(function(d) { return x(d.Period); })
                     .y(function(d) { return y(d.Value); })
-                    .curve(d3.curveStep));
-                    
+                    .curve(d3.curveStep))
+        .attr("class", "price-line");
+
         svg.selectAll(null)
         .data(data)
         .enter()
@@ -160,7 +161,7 @@ function (data) {
         .attr("fill", "red")
         .attr("font-weight", "bold")
         .text((d) => d.Text)
-        .attr("class", "price-line")
+        .attr("class", "price-line");
 });
 
 
@@ -188,8 +189,11 @@ function updateChart(morningValue, middayValue, afternoonValue, eveningValue, ni
         .attr("ry", 10)
         .attr("transform", "translate(-75,0)")
         .attr("class", "new-bar")
-    
+
+    //keep price line in the front
+    svg.selectAll(".price-line").raise(); 
     window.localStorage.setItem("current_data", JSON.stringify(data));
+
     return data;
 }
 
