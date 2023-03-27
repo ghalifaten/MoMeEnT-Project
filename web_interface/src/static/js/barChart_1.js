@@ -148,6 +148,19 @@ function (data) {
                     .x(function(d) { return x(d.Period); })
                     .y(function(d) { return y(d.Value); })
                     .curve(d3.curveStep));
+                    
+        svg.selectAll(null)
+        .data(data)
+        .enter()
+        .append("text")
+        .attr("x", function(d) { return x(d.Period) })
+        .attr("y", function(d) { return y(d.Value)})
+        .attr("transform", "translate(-100,-10)")
+        .attr("font-size", "18px")
+        .attr("fill", "red")
+        .attr("font-weight", "bold")
+        .text((d) => d.Text)
+        .attr("class", "price-line")
 });
 
 
