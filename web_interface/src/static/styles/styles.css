@@ -289,17 +289,16 @@
     }
 
     .sub-stats-container {
+        border: 2px solid lightgray;
+        border-radius: 6px;
+        width: 375px;
+        height: 230px; /*equal to line-height of .stats-nbr#stats-nbr-avg*/
+    }
+
+    .sub-stats-grid {
         display: grid;
         grid-template-columns: [vline1] 30% [vline2] auto [vline-end];
         grid-template-rows: [hline1] 60% [hline2] auto [hline-end];
-
-        border: 2px solid lightgray;
-        border-radius: 6px;
-        height: 40%;
-        width: 375px;
-        margin: auto;
-
-        align-items: center;
     }
     
     .sub-stats-item {
@@ -350,7 +349,6 @@
         margin-bottom: 5px;
         margin-top: 20px;
         font-weight: bold;
-        font-size: larger;
         color: 339fa6;
         background-color: lightgrey;
     }
@@ -359,6 +357,10 @@
         font-weight: bold;
         font-size: 65px;
         color: #555;
+    }
+
+    .stats-nbr#stats-nbr-avg {
+        line-height: 230px; /*equal to height of .sub-stats-container to center text*/
     }
 
     .stats-txt {
@@ -377,12 +379,18 @@
     .combined-stats {
         text-align: center;
         width: 350px;
-        height: 180px;
+        height: 200px; /*should be equal to line-height of combined-stats-nbr*/ 
         margin-left: 15px;
     }
     .combined-stats#stats-title {
         width: 350px;
         margin-left: 15px;
+    }
+
+    .combined-stats-nbr {
+        position:absolute; 
+        width: 200px; 
+        line-height: 200px; /*should be equal to height of combined-stats*/ 
     }
 
     .combined-stats.combined-stats-avg {
@@ -468,6 +476,7 @@
         /*position*/
         position: absolute;
         margin-left: 135px;
+        margin-top: 55px;
     }
 
         /* Safari */
