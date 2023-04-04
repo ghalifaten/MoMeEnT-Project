@@ -25,7 +25,6 @@ var data = JSON.parse(window.localStorage.getItem("baseline_data"));
 var x = d3.scaleBand()
             .range([ 0, width ])
             .domain(data.map(function(d) { return d.Period; }))
-            //.padding(0.7);
             .paddingInner(.1)
             .paddingOuter(.3)
 
@@ -336,26 +335,26 @@ d3.select("#stats-btn").on("click", function(d){
  
                  //update icons
                  if (diff_cost >= 0) {
-                    document.getElementById("stats-nbr-you-cost").innerHTML = "+" + diff_cost + " €"
+                    document.getElementById("sub-stats-nbr-you-cost").innerHTML = "+" + diff_cost + "€"
                     document.getElementById("icon-cost").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
                 } else {
-                    document.getElementById("stats-nbr-you-cost").innerHTML = diff_cost + " €"
+                    document.getElementById("sub-stats-nbr-you-cost").innerHTML = diff_cost + "€"
                     document.getElementById("icon-cost").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
                 }
 
                 if (diff_peak >= 0) {
-                    document.getElementById("stats-nbr-you-peak").innerHTML = "+" + diff_peak + " %"
+                    document.getElementById("sub-stats-nbr-you-peak").innerHTML = "+" + diff_peak + "%"
                     document.getElementById("icon-peak").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
                 } else {
-                    document.getElementById("stats-nbr-you-peak").innerHTML = diff_peak + " %"
+                    document.getElementById("sub-stats-nbr-you-peak").innerHTML = diff_peak + "%"
                     document.getElementById("icon-peak").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
                 }
 
                 if (diff_share >= 0) {
-                    document.getElementById("stats-nbr-you-share").innerHTML = "+" + diff_share + " %"
+                    document.getElementById("sub-stats-nbr-you-share").innerHTML = "+" + diff_share + "%"
                     document.getElementById("icon-share").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
                 } else {
-                    document.getElementById("stats-nbr-you-share").innerHTML = diff_share + " %"
+                    document.getElementById("sub-stats-nbr-you-share").innerHTML = diff_share + "%"
                     document.getElementById("icon-share").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
                 }
 
@@ -386,6 +385,7 @@ d3.select("#stats-btn").on("click", function(d){
             var count= document.getElementById("stats-nbr-avg-cost");
             count.innerHTML=++upto;
             if(upto===Math.abs(Math.ceil(avg_cost))){ clearInterval(counts); }
+            count.innerHTML+= "€"
         }
     }
 
@@ -397,6 +397,7 @@ d3.select("#stats-btn").on("click", function(d){
             var count= document.getElementById("stats-nbr-avg-peak");
             count.innerHTML=++upto;
             if(upto===Math.abs(Math.ceil(avg_peak))){ clearInterval(counts); }
+            count.innerHTML+= "%"
         }
     }
 
@@ -408,6 +409,7 @@ d3.select("#stats-btn").on("click", function(d){
             var count= document.getElementById("stats-nbr-avg-share");
             count.innerHTML=++upto;
             if(upto===Math.abs(Math.ceil(avg_share))){ clearInterval(counts); }
+            count.innerHTML+= "%"
         }
     }
     

@@ -6,13 +6,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<title>MoMeEnt</title>
-
-		 
-		 
-		 
-	  
-  		 
+		<title>MoMeEnt</title>  		 
 
 		<!-- css -->
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css')}}">
@@ -30,6 +24,25 @@
 
         <!--ajax-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <style>
+            .loader {
+                display: none;
+                margin-left: 120px;
+                margin-top: 40px;
+            }
+            .stats-txt {
+                padding: 0px;
+            }
+            .change {
+                font-size:22px; 
+                margin-top: -15px;
+                padding-bottom: 22px;
+            }
+            .stats-icon {
+                padding-top: 40px;
+            }
+        </style>
 
 </head>
 
@@ -112,16 +125,16 @@
                                 </div>
                                 <div class="sub-stats-item stats-nbr" id="stats-nbr-you-cost">
                                     <!--Default value-->
-                                    ? 
+                                    <div class="change">Change</div> <div id="sub-stats-nbr-you-cost">?</div>
                                 </div>
-                                <div class="sub-stats-item stats-txt" id="stats-txt-you-cost" style="padding:0px;">
+                                <div class="sub-stats-item stats-txt" id="stats-txt-you-cost">
                                     <div class="stats-old-val" id="stats-old-val-cost"><strong>Old<br>{{data.old_cost}} €</strong></div>
                                     <div class="stats-new-val" id="stats-new-val-cost"><strong>New<br>?</strong></div>
                                 </div>
 
 
                                 <!--Loading Spinner-->
-                                <div class="loader" id="loader" style="display: none;"></div>
+                                <div class="loader" id="loader"></div>
 
                                  
                             </div>                            
@@ -136,16 +149,16 @@
                                 </div>
                                 <div class="sub-stats-item stats-nbr" id="stats-nbr-you-peak">
                                     <!--Default value-->
-                                    ? 
+                                    <div class="change">Change</div> <div id="sub-stats-nbr-you-peak">?</div>
                                 </div>
-                                <div class="sub-stats-item stats-txt" id="stats-txt-you-peak" style="padding:0px;">
+                                <div class="sub-stats-item stats-txt" id="stats-txt-you-peak">
                                     <div class="stats-old-val" id="stats-old-val-peak"><strong>Old<br>{{data.old_peak}} %</strong></div>
                                     <div class="stats-new-val" id="stats-new-val-peak"><strong>New<br>?</strong></div>
                                 </div>
 
 
                                 <!--Loading Spinner-->
-                                <div class="loader" id="loader" style="display: none;"></div>
+                                <div class="loader" id="loader"></div>
 
                                  
                             </div> 
@@ -160,9 +173,9 @@
                                 </div>
                                 <div class="sub-stats-item stats-nbr" id="stats-nbr-you-share">
                                     <!--Default value-->
-                                    ? 
+                                    <div class="change">Change</div> <div id="sub-stats-nbr-you-share">?</div>
                                 </div>
-                                <div class="sub-stats-item stats-txt" id="stats-txt-you-share" style="padding:0px;">
+                                <div class="sub-stats-item stats-txt" id="stats-txt-you-share">
                                     <div class="stats-old-val" id="stats-old-val-share"><strong>Old<br>{{data.old_share}} %</strong></div>
                                     <div class="stats-new-val" id="stats-new-val-share"><strong>New<br>?</strong></div>
                                 </div>

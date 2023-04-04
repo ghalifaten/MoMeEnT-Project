@@ -522,6 +522,10 @@
         display: inline-block;
     }
 
+    #stats-icon-you {
+        padding-top: 45px;
+    }
+
 
     /*reposition video*/
     #video {

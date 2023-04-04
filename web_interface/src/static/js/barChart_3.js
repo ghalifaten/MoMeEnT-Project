@@ -250,10 +250,10 @@ d3.select("#stats-btn").on("click", function(d){
 
                 //update icon
                 if (diff_share >= 0) {
-                    document.getElementById("stats-nbr-you").innerText = "+" + diff_share + " %"
+                    document.getElementById("sub-stats-nbr-you").innerText = "+" + diff_share + " %"
                     document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
                 } else {
-                    document.getElementById("stats-nbr-you").innerText = diff_share + " %"
+                    document.getElementById("sub-stats-nbr-you").innerText = diff_share + " %"
                     document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
                 }
                 
@@ -277,6 +277,7 @@ d3.select("#stats-btn").on("click", function(d){
             var count= document.getElementById("stats-nbr-avg");
             count.innerHTML=++upto;
             if(upto===Math.abs(Math.ceil(avg_share))){ clearInterval(counts); }
+            count.innerHTML+= " %"
         }
     }
 
