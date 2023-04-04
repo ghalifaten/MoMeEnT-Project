@@ -288,6 +288,13 @@
         float: right;
     }
 
+    .sub-stats-upper-txt {
+        border: solid 1px #555;
+        background-color: bisque;
+        color: #555;
+        font-size: 22px;
+    }
+
     .sub-stats-container {
         border: 2px solid lightgray;
         border-radius: 6px;
