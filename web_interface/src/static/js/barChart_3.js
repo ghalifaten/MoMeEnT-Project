@@ -241,15 +241,6 @@ d3.select("#stats-btn").on("click", function(d){
 
                 const diff_share = response.diff_share;
                 const res_share = response.res_share;
-                if (diff_share != 0) {
-                    let counts=setInterval(updated);
-                    let upto=0;
-                    function updated(){
-                        var count= document.getElementById("stats-nbr-you");
-                        count.innerHTML=++upto;
-                        if(upto===Math.abs(Math.ceil(diff_share))){ clearInterval(counts); }
-                    }
-                }
             
                 //update stats-you 
                 document.getElementById("stats-new-val").innerHTML = "<strong>New value<br>" + res_share + " %</strong>" 
@@ -259,8 +250,10 @@ d3.select("#stats-btn").on("click", function(d){
 
                 //update icon
                 if (diff_share >= 0) {
+                    document.getElementById("stats-nbr-you").innerText = "+" + diff_share + " %"
                     document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
                 } else {
+                    document.getElementById("stats-nbr-you").innerText = diff_share + " %"
                     document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
                 }
                 

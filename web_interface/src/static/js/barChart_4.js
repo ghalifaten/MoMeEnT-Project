@@ -319,12 +319,7 @@ d3.select("#stats-btn").on("click", function(d){
                 const res_share = response.res_share;
 
 
-                document.getElementById("stats-nbr-you-cost").innerHTML = Math.abs(diff_cost) + " €"
-                document.getElementById("stats-nbr-you-peak").innerHTML = Math.abs(diff_peak) + " %"
-                document.getElementById("stats-nbr-you-share").innerHTML = Math.abs(diff_share) + " %"
-
-
-                 //update stats
+                //update stats
                  document.getElementById("stats-new-val-cost").innerHTML = "<strong>New<br>" + cost + " €" + "</strong>" 
                  document.getElementById("stats-new-val-peak").innerHTML = "<strong>New<br>" + peak_load + " %" + "</strong>" 
                  document.getElementById("stats-new-val-share").innerHTML = "<strong>New<br>" + res_share + " %" + "</strong>" 
@@ -341,20 +336,26 @@ d3.select("#stats-btn").on("click", function(d){
  
                  //update icons
                  if (diff_cost >= 0) {
+                    document.getElementById("stats-nbr-you-cost").innerHTML = "+" + diff_cost + " €"
                     document.getElementById("icon-cost").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
                 } else {
+                    document.getElementById("stats-nbr-you-cost").innerHTML = diff_cost + " €"
                     document.getElementById("icon-cost").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
                 }
 
                 if (diff_peak >= 0) {
+                    document.getElementById("stats-nbr-you-peak").innerHTML = "+" + diff_peak + " %"
                     document.getElementById("icon-peak").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
                 } else {
+                    document.getElementById("stats-nbr-you-peak").innerHTML = diff_peak + " %"
                     document.getElementById("icon-peak").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
                 }
 
                 if (diff_share >= 0) {
+                    document.getElementById("stats-nbr-you-share").innerHTML = "+" + diff_share + " %"
                     document.getElementById("icon-share").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
                 } else {
+                    document.getElementById("stats-nbr-you-share").innerHTML = diff_share + " %"
                     document.getElementById("icon-share").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
                 }
 

@@ -227,18 +227,6 @@ d3.select("#stats-btn").on("click", function(d){
 
                 const diff_peak = response.diff_peak;
                 const peak = response.peak_load;
-
-                var count = document.getElementById("stats-nbr-you");
-                if (diff_peak != 0) {
-                    let counts=setInterval(updated);
-                    let upto=0;
-                    function updated(){
-                        count.innerHTML=++upto;
-                        if(upto===Math.abs(Math.ceil(diff_peak))){ clearInterval(counts); }
-                    }
-                } else {
-                    count.innerHTML = 0
-                }
             
                 //update stats-you 
                 document.getElementById("stats-new-val").innerHTML = "<strong>New peak <br>" + peak + " %</strong>" 
@@ -247,8 +235,10 @@ d3.select("#stats-btn").on("click", function(d){
 
                 //update icon
                 if (diff_peak >= 0) {
+                    document.getElementById("stats-nbr-you").innerText = "+" + diff_peak + " %"
                     document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
                 } else {
+                    document.getElementById("stats-nbr-you").innerText = diff_peak + " %"
                     document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
                 }
 
