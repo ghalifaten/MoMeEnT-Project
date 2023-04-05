@@ -261,27 +261,15 @@ function (data) {
 d3.select("#stats-btn").on("click", function(d){    
     /* RUN DEMOD */
     function getCost() {
-        //hide stats, show loader and disable buttons
-        document.getElementById("icon-cost").style.display = "none";   
-        document.getElementById("icon-peak").style.display = "none";   
-        document.getElementById("icon-share").style.display = "none";   
-
-        document.getElementById("stats-nbr-you-cost").style.display = "none";
-        document.getElementById("stats-nbr-you-peak").style.display = "none";
-        document.getElementById("stats-nbr-you-share").style.display = "none";
-
-        document.getElementById("stats-old-val-cost").hidden = true; 
-        document.getElementById("stats-new-val-cost").hidden = true;
-
-        document.getElementById("stats-old-val-peak").hidden = true;
-        document.getElementById("stats-new-val-peak").hidden = true;
-
-        document.getElementById("stats-old-val-share").hidden = true;
-        document.getElementById("stats-new-val-share").hidden = true;
-
+        //hide stats, show loader
         for(let i=0; i<3; i++) {
             document.getElementsByClassName("loader")[i].style.display = "block";  
+            document.getElementsByClassName("stats-txt")[i].style.visibility = "hidden"; 
+            document.getElementsByClassName("stats-nbr")[i].style.display = "none";  
+            document.getElementsByClassName("stats-icon")[i].style.display = "none";  
         }      
+
+        //disable buttons
         document.getElementById("stats-btn").disabled = true;
         document.getElementById("link-to-exp2").disabled = true;
 
@@ -298,17 +286,6 @@ d3.select("#stats-btn").on("click", function(d){
             contentType: "application/json",
             dataType: "json",
             success: function (response) {
-                //when response is received, hide loader, re-activate buttons and show results 
-                document.getElementById("stats-nbr-you-cost").style.display = "block";
-                document.getElementById("stats-nbr-you-peak").style.display = "block";
-                document.getElementById("stats-nbr-you-share").style.display = "block";
-
-                for(let i=0; i<3; i++) {
-                    document.getElementsByClassName("loader")[i].style.display = "none";  
-                } 
-                document.getElementById("stats-btn").disabled = false;
-                document.getElementById("link-to-exp2").disabled = false;
-
                 const diff_cost = response.diff_cost;
                 const diff_peak = response.diff_peak;
                 const diff_share = response.diff_share;
@@ -317,21 +294,14 @@ d3.select("#stats-btn").on("click", function(d){
                 const peak_load = response.peak_load;
                 const res_share = response.res_share;
 
+                //reactivate buttons
+                document.getElementById("stats-btn").disabled = false;
+                document.getElementById("link-to-exp2").disabled = false;
 
                 //update stats
-                 document.getElementById("stats-new-val-cost").innerHTML = "<strong>New<br>" + cost + " €" + "</strong>" 
-                 document.getElementById("stats-new-val-peak").innerHTML = "<strong>New<br>" + peak_load + " %" + "</strong>" 
-                 document.getElementById("stats-new-val-share").innerHTML = "<strong>New<br>" + res_share + " %" + "</strong>" 
-                
-                 document.getElementById("stats-old-val-cost").hidden = false; 
-                 document.getElementById("stats-new-val-cost").hidden = false;
-         
-                 document.getElementById("stats-old-val-peak").hidden = false;
-                 document.getElementById("stats-new-val-peak").hidden = false;
-         
-                 document.getElementById("stats-old-val-share").hidden = false;
-                 document.getElementById("stats-new-val-share").hidden = false;
- 
+                 document.getElementById("stats-new-val-cost").innerText = cost + " €" 
+                 document.getElementById("stats-new-val-peak").innerText = peak_load + " %" 
+                 document.getElementById("stats-new-val-share").innerText = res_share + " %" 
  
                  //update icons
                  if (diff_cost >= 0) {
@@ -358,10 +328,13 @@ d3.select("#stats-btn").on("click", function(d){
                     document.getElementById("icon-share").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
                 }
 
-                document.getElementById("icon-cost").style.display = "block";  
-                document.getElementById("icon-peak").style.display = "block";  
-                document.getElementById("icon-share").style.display = "block";  
-
+                //display changes and hide loader
+                for(let i=0; i<3; i++) {
+                    document.getElementsByClassName("loader")[i].style.display = "none";  
+                    document.getElementsByClassName("stats-txt")[i].style.visibility = "visible"; 
+                    document.getElementsByClassName("stats-nbr")[i].style.display = "block";  
+                    document.getElementsByClassName("stats-icon")[i].style.display = "block";  
+                } 
 
                 //update tooltip text of the [See Statistics] button
                 document.getElementById("stats-btn").title = response.n_trials + " trials left"                

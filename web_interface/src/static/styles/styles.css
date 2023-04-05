@@ -1,7 +1,8 @@
 /*@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');*/
 
 :root {
-    --comment-title-color: rgba(242,118,89);
+    --box-height: 230px;
+    --gray: #555;
   }
   
   /*
@@ -237,7 +238,7 @@
     .sliders-section {
         /*border: 2px solid black;*/
         display: flex;
-        height: 230px;
+        height: var(--box-height);
         z-index: 2;
     }
 
@@ -249,14 +250,14 @@
         font-size: 18px; 
         line-height: 2.2; 
         margin-top: 0px;
-        height: 230px; 
+        height: var(--box-height); 
     }
 
     .slider-container {
         /*border: 2px solid red;*/
         padding-left: 108px;
         display: block;
-        height: 230px;
+        height: var(--box-height);
         width: 1000px ;
     }
 
@@ -289,17 +290,16 @@
     }
 
     .sub-stats-upper-txt {
-        border: solid 1px #555;
+        border: solid 1px var(--gray);
         background-color: bisque;
-        color: #555;
+        color: var(--gray);
         font-size: 22px;
     }
 
     .sub-stats-container {
         border: 2px solid lightgray;
         border-radius: 6px;
-        width: 375px;
-        height: 230px; /*equal to line-height of .stats-nbr#stats-nbr-avg*/
+        height: var(--box-height); 
     }
 
     .sub-stats-grid {
@@ -363,16 +363,16 @@
     .stats-nbr {
         font-weight: bold;
         font-size: 65px;
-        color: #555;
+        color: var(--gray);
     }
 
     .stats-nbr#stats-nbr-avg {
-        line-height: 230px; /*equal to height of .sub-stats-container to center text*/
+        line-height: var(--box-height);
     }
 
     .stats-txt {
         font-size: 20px;
-        color: #555;
+        color: var(--gray);
         padding: 15px;
     }
 
@@ -383,29 +383,100 @@
         padding: auto;
     }
 
+    /***********************************************************************************************/
+    .combined-stats {
+        display: grid;
+        grid-template-columns: [v0] 320px [v1] 200px [v2];
+        grid-template-rows: [h0] auto [h1] var(--box-height) [h2] auto [h3] var(--box-height) [h4] auto [h5] var(--box-height) [h6];
+        grid-gap: 5px;
+
+    }
+
+    /**************/
+    .upper-text-1 {
+        grid-column-start: v0;
+        grid-column-end: v2;
+        grid-row-start: h0;
+        grid-row-end: h1;
+    }
+
+    .stats-you-1 {
+        grid-column-start: v0;
+        grid-column-end: v1;
+        grid-row-start: h1;
+        grid-row-end: h2;
+    }
+
+    .stats-avg-1 {
+        grid-column-start: v1;
+        grid-column-end: v2;
+        grid-row-start: h1;
+        grid-row-end: h2;
+    }
+
+    /**************/
+    .upper-text-2 {
+        grid-column-start: v0;
+        grid-column-end: v2;
+        grid-row-start: h2;
+        grid-row-end: h3;
+    }
+
+    .stats-you-2 {
+        grid-column-start: v0;
+        grid-column-end: v1;
+        grid-row-start: h3;
+        grid-row-end: h4;
+    }
+
+    .stats-avg-2 {
+        grid-column-start: v1;
+        grid-column-end: v2;
+        grid-row-start: h3;
+        grid-row-end: h4;
+    }
+
+    /**************/
+    .upper-text-3 {
+        grid-column-start: v0;
+        grid-column-end: v2;
+        grid-row-start: h4;
+        grid-row-end: h5;
+    }
+
+    .stats-you-3 {
+        grid-column-start: v0;
+        grid-column-end: v1;
+        grid-row-start: h5;
+        grid-row-end: h6;
+    }
+
+    .stats-avg-3 {
+        grid-column-start: v1;
+        grid-column-end: v2;
+        grid-row-start: h5;
+        grid-row-end: h6;
+    }
+
+
+    .combined-stats-nbr-avg {
+        font-weight: bold;
+        font-size: 65px;
+        color: var(--gray);
+        line-height: calc(var(--box-height) - 90px);
+    }
+
+
+
+    /***********************************************************************************************/
+
     .combined-stats {
         text-align: center;
-        width: 350px;
-        height: 200px; /*should be equal to line-height of combined-stats-nbr*/ 
-        margin-left: 15px;
-    }
-    .combined-stats#stats-title {
-        width: 350px;
         margin-left: 15px;
     }
 
-    .combined-stats-nbr {
-        position:absolute; 
-        width: 200px; 
-        line-height: 200px; /*should be equal to height of combined-stats*/ 
-    }
+    /***********************************************************************************************/
 
-    .combined-stats.combined-stats-avg {
-        width: 200px;
-    }
-    .combined-stats.combined-stats-avg#stats-title {
-        width: 200px;
-    }
 
     /*Remove slide buttons*/
     #fp-nav ul li a span, .fp-slidesNav ul li a span, .fp-bottom {

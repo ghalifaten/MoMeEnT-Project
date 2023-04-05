@@ -28,14 +28,18 @@
         <style>
             .loader {
                 display: none;
-                margin-left: 120px;
-                margin-top: 40px;
+                margin-left: 100px;
+                margin-top: 50px;
             }
             .stats-txt {
                 padding: 0px;
             }
+            .smaller {
+                font-size:20px; 
+                font-weight: bold;
+                color: #555;
+            }
             .change {
-                font-size:22px; 
                 margin-top: -15px;
                 padding-bottom: 22px;
             }
@@ -64,8 +68,10 @@
                        <strong> In this situation, what time of day would you run the {{data.appliance}}? </strong> </p>
 
                     </div>
-                    <!--D3 bar chart visualization-->
                     <div class="visualization">
+
+                        <!--D3 bar chart visualization-->
+
                         <div class="visualization-column1">
                             <div class="chart_container">
                                 <div id="bar-chart-legend"></div>
@@ -107,134 +113,106 @@
                             </div>
                         </div>
 
+                        <!--See Statistics Button-->
 
                         <div class="visualization-column2">
                             <button title="{{data.n}} trials left" id="stats-btn">See statistics</button> 
                         </div>
 
+                        <!--Statistics grid-->
 
-                        <div class="statistics-all-combined visualization-column3">
-                            
-                            <div class="sub-stats-upper-txt"> Some text here ... </div> 
-
-                            <div class="sub-stats combined-stats" id="stats-title">
-                                Yearly cost
+                        <div class="combined-stats visualization-column3"> <!--combined-stats: grid, column3 for position-->
+                            <!--yearly cost-->
+                            <div class="upper-text-1 sub-stats-upper-txt">
+                                Some text about cost here
                             </div>
-                            <div class="sub-stats-container combined-stats sub-stats-grid" id="stats-average">
+
+                            <div class="stats-you-1 sub-stats-container sub-stats-grid"> <!--stats-you-1 for grid, sub-stats-container for border sub-stats-grid for old/new val-->
                                 <div class="sub-stats-item stats-icon" id="icon-cost">
                                     <!--Default icon-->
                                     <img src="static/img/arrow-decrease.png"></img>
                                 </div>
                                 <div class="sub-stats-item stats-nbr" id="stats-nbr-you-cost">
                                     <!--Default value-->
-                                    <div class="change">Change</div> <div id="sub-stats-nbr-you-cost">?</div>
+                                    <div class="change smaller">Your change</div> <div id="sub-stats-nbr-you-cost">?</div>
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you-cost">
-                                    <div class="stats-old-val" id="stats-old-val-cost"><strong>Old<br>{{data.old_cost}} €</strong></div>
-                                    <div class="stats-new-val" id="stats-new-val-cost"><strong>New<br>?</strong></div>
+                                    <div class="stats-old-val smaller" >Old <div id="stats-old-val-cost">{{data.old_cost}} €</div></div>
+                                    <div class="stats-new-val smaller" >New<div id="stats-new-val-cost">?</div></div>
                                 </div>
-
-
                                 <!--Loading Spinner-->
                                 <div class="loader" id="loader"></div>
-
-                                 
-                            </div>                            
-
-                            <div class="sub-stats combined-stats" id="stats-title">
-                                Load peak hours
                             </div>
-                            <div class="sub-stats-container combined-stats sub-stats-grid" id="stats-average">
+
+                            <div class="stats-avg-1 sub-stats-container">
+                                <div class="smaller" style="margin-top: 12px;">Average</div>
+                                <div class="combined-stats-nbr-avg" id="stats-nbr-avg-cost">  
+                                    ? 
+                                </div>
+                            </div>
+
+                            <!--peak hours-->
+                            <div class="upper-text-2 sub-stats-upper-txt">
+                                Some text about cost here
+                            </div>
+
+                            <div class="stats-you-2 sub-stats-container sub-stats-grid">
                                 <div class="sub-stats-item stats-icon" id="icon-peak">
                                     <!--Default icon-->
                                     <img src="static/img/arrow-decrease.png"></img>
                                 </div>
                                 <div class="sub-stats-item stats-nbr" id="stats-nbr-you-peak">
                                     <!--Default value-->
-                                    <div class="change">Change</div> <div id="sub-stats-nbr-you-peak">?</div>
+                                    <div class="change smaller">Your change</div> <div id="sub-stats-nbr-you-peak">?</div>
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you-peak">
-                                    <div class="stats-old-val" id="stats-old-val-peak"><strong>Old<br>{{data.old_peak}} %</strong></div>
-                                    <div class="stats-new-val" id="stats-new-val-peak"><strong>New<br>?</strong></div>
+                                    <div class="stats-old-val smaller" >Old<div id="stats-old-val-peak">{{data.old_peak}} €</div></div>
+                                    <div class="stats-new-val smaller" >New<div id="stats-new-val-peak">?</div></div>
                                 </div>
-
-
                                 <!--Loading Spinner-->
                                 <div class="loader" id="loader"></div>
-
-                                 
-                            </div> 
-
-                            <div class="sub-stats combined-stats" id="stats-title">
-                                Green energy
                             </div>
-                            <div class="sub-stats-container combined-stats sub-stats-grid" id="stats-average">
+
+                            <div class="stats-avg-2 sub-stats-container">
+                                <div class="smaller" style="margin-top: 12px;">Average</div>
+                                <div class="combined-stats-nbr-avg" id="stats-nbr-avg-peak">  
+                                    ? 
+                                </div>
+                            </div>
+
+                            <!--res share-->
+                            <div class="upper-text-3 sub-stats-upper-txt">
+                                Some text about cost here
+                            </div>
+
+                            <div class="stats-you-3 sub-stats-container sub-stats-grid">
                                 <div class="sub-stats-item stats-icon" id="icon-share">
                                     <!--Default icon-->
                                     <img src="static/img/arrow-decrease.png"></img>
                                 </div>
                                 <div class="sub-stats-item stats-nbr" id="stats-nbr-you-share">
                                     <!--Default value-->
-                                    <div class="change">Change</div> <div id="sub-stats-nbr-you-share">?</div>
+                                    <div class="change smaller">Your change</div> <div id="sub-stats-nbr-you-share">?</div>
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you-share">
-                                    <div class="stats-old-val" id="stats-old-val-share"><strong>Old<br>{{data.old_share}} %</strong></div>
-                                    <div class="stats-new-val" id="stats-new-val-share"><strong>New<br>?</strong></div>
+                                    <div class="stats-old-val smaller" >Old <div id="stats-old-val-share">{{data.old_share}} €</div></div>
+                                    <div class="stats-new-val smaller" >New<div id="stats-new-val-share">?</div></div>
                                 </div>
-
-
                                 <!--Loading Spinner-->
                                 <div class="loader" id="loader"></div>
+                            </div>
 
-                                 
-                            </div> 
+                            <div class="stats-avg-3 sub-stats-container">
+                                <div class="smaller" style="margin-top: 12px;">Average</div>
+                                <div class="combined-stats-nbr-avg" id="stats-nbr-avg-share">  
+                                    ? 
+                                </div>
+                            </div>
 
-                            <!----->
-                            
                         </div>
 
-                        <div class="statistics-all-combined visualization-column4">
-                            
-                            <div class="sub-stats combined-stats combined-stats-avg" id="stats-title">
-                                Avg. cost
-                            </div>
-                            <div class="sub-stats-container combined-stats combined-stats-avg" id="stats-average">
 
-                                <div class="sub-stats-item stats-nbr combined-stats-nbr" id="stats-nbr-avg-cost">
-                                    ? 
-                                </div>
-
-                                <div class="loader" id="loader"></div>
-                         
-                            </div>                            
-
-                            <div class="sub-stats combined-stats combined-stats-avg" id="stats-title">
-                                Avg. peak
-                            </div>
-                            <div class="sub-stats-container combined-stats combined-stats-avg" id="stats-average">
-                                <div class="sub-stats-item stats-nbr combined-stats-nbr" id="stats-nbr-avg-peak">
-                                    ? 
-                                </div>
-
-                                <div class="loader" id="loader"></div>
-                                 
-                            </div> 
-
-                            <div class="sub-stats combined-stats combined-stats-avg" id="stats-title">
-                                Avg. share
-                            </div>
-                            <div class="sub-stats-container combined-stats combined-stats-avg" id="stats-average">
-
-                                <div class="sub-stats-item stats-nbr combined-stats-nbr" id="stats-nbr-avg-share">
-                                    ? 
-                                </div>
-
-                                <div class="loader" id="loader"></div>
-
-                                 
-                            </div> 
-                            
-                        </div>
+                        
 
 
                     </div>
