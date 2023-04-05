@@ -386,7 +386,7 @@
     /***********************************************************************************************/
     .combined-stats {
         display: grid;
-        grid-template-columns: [v0] 320px [v1] 200px [v2];
+        grid-template-columns: [v0] 320px [v1] 250px [v2];
         grid-template-rows: [h0] auto [h1] var(--box-height) [h2] auto [h3] var(--box-height) [h4] auto [h5] var(--box-height) [h6];
         grid-gap: 5px;
 
@@ -463,7 +463,7 @@
         font-weight: bold;
         font-size: 65px;
         color: var(--gray);
-        line-height: calc(var(--box-height) - 90px);
+        line-height: calc(var(--box-height) - 130px);
     }
 
 
@@ -610,8 +610,6 @@
         position: relative;
         top: 50px;
     }
-
-    
 
 
     

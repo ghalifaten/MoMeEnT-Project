@@ -90,7 +90,7 @@ def _index():
     session["hh_type"] = hh_type
     session["n_households"] = n_households
     session["appliance"] = appliance
-    session["peer"] = "TRUE"
+    session["peer"] = "FALSE"
     session["weekly_freq"] = weekly_freq
 
     
@@ -503,4 +503,4 @@ def conclusion():
 
 #---- MAIN CALL ----# 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
