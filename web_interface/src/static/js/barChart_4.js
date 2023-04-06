@@ -126,9 +126,9 @@ var legendSpacing = 10;
 var xOffset = 0;
 var yOffset = 10;
 
-var legend_data = [ { Text: "Habitual behavior", Color: "#D3D3D3" },
-                    { Text: "New behavior", Color: "#69b3a2" },
-                    { Text: "Price line", Color: "red"},
+var legend_data = [ { Text: "Habitual washing behavior", Color: "#D3D3D3" },
+                    { Text: "New washing behavior", Color: "#69b3a2" },
+                    { Text: "Electricity price", Color: "rgba(255, 77, 0, 0.719)"},
                     { Text: "Peak hours", Color: "#f9d4da"},
                     { Text: "Renewable energy", Color: "#d2f8d2"}];
 
@@ -234,7 +234,7 @@ function (data) {
     svg.append("path")
         .datum(data)
         .attr("class", "line")
-        .style("stroke", "red")
+        .style("stroke", "rgba(255, 77, 0, 0.719)")
         .style("stroke-width", 3)
         .attr("fill", "none")
         .attr("transform", "translate(-80,0)")
@@ -252,7 +252,7 @@ function (data) {
         .attr("y", function(d) { return y(d.Value)})
         .attr("transform", "translate(-100,-10)")
         .attr("font-size", "18px")
-        .attr("fill", "red")
+        .attr("fill", "rgba(255, 77, 0, 0.719)")
         .attr("font-weight", "bold")
         .text((d) => d.Text)
         .attr("class", "price-line")

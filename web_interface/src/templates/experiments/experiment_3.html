@@ -50,8 +50,8 @@
                     <div id="text">
                     <p style="margin-bottom: 50px;">
                         Suppose it is a sunny day and photvoltaic systems produce an abundant amount of green elecricity. 
-                        <strong> You can do something to reduce the emissions of the energy you consume </strong> 
-                        (for example, running your dishwasher during the hours when production from the sun is highly available).
+                        <strong> You reduce the emissions of the energy you consume </strong>,
+                        for example by running your dishwasher during the hours when production from the sun is highly available).
                         However, you may face some incovenience. 
                         <br>
                         <strong>In this situation, what time of day would you run the {{data.appliance}}?</strong> </p>
@@ -108,7 +108,7 @@
                         
                         <div class="statistics visualization-column3">
                             
-                            <div class="sub-stats-upper-txt"> Some text here ... </div> 
+                            <div class="sub-stats-upper-txt-pv"><strong>Share PV energy for<br>running the {{data.appliance}}</strong></div> 
 
                             <div class="sub-stats" id="stats-title">
                                 You
@@ -123,8 +123,8 @@
                                     <div class="change">Change</div> <div id="sub-stats-nbr-you">?</div>
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you" >
-                                    <div class="stats-old-val" id="stats-old-val"><strong>Old value<br>{{data.old_share}}</strong></div>
-                                    <div class="stats-new-val" id="stats-new-val"><strong>New value<br>?</strong></div>
+                                    <div class="stats-old-val" id="stats-old-val"><strong>Old share<br>{{data.old_share}} %</strong></div>
+                                    <div class="stats-new-val" id="stats-new-val"><strong>New share<br>?</strong></div>
                                 </div>
 
 
@@ -136,7 +136,7 @@
 
                             <div id="avg-stats">
                                 <div class="sub-stats" id="stats-title">
-                                    Average 
+                                    Average household
                                 </div>
 
                                 <div class="sub-stats-container stats-nbr" id="stats-nbr-avg">

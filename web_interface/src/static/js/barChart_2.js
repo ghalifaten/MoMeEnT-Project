@@ -110,8 +110,8 @@ var legendSpacing = 10;
 var xOffset = 0;
 var yOffset = 10;
 
-var legend_data = [ { Text: "Habitual behavior", Color: "#D3D3D3" },
-                    { Text: "New behavior", Color: "#69b3a2" },
+var legend_data = [ { Text: "Habitual washing behavior", Color: "#D3D3D3" },
+                    { Text: "New washing behavior", Color: "#69b3a2" },
                     { Text: "Peak hours", Color: "#f9d4da"}];
 
 var legend = d3.select('#bar-chart-legend')
@@ -229,7 +229,7 @@ d3.select("#stats-btn").on("click", function(d){
                 const peak = response.peak_load;
             
                 //update stats-you 
-                document.getElementById("stats-new-val").innerHTML = "<strong>New peak <br>" + peak + " %</strong>" 
+                document.getElementById("stats-new-val").innerHTML = "<strong>New share <br>" + peak + " %</strong>" 
                 document.getElementById("stats-old-val").hidden = false; 
                 document.getElementById("stats-new-val").hidden = false;
 

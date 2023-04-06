@@ -288,10 +288,24 @@
         position: relative;
         float: right;
     }
-
-    .sub-stats-upper-txt {
+    
+    .sub-stats-upper-txt-cost {
         border: solid 1px var(--gray);
-        background-color: bisque;
+        background-color: rgba(255, 77, 0, 0.435);
+        color: var(--gray);
+        font-size: 22px;
+    }
+
+    .sub-stats-upper-txt-peak {
+        border: solid 1px var(--gray);
+        background-color: #f9d4da;
+        color: var(--gray);
+        font-size: 22px;
+    }
+
+    .sub-stats-upper-txt-pv {
+        border: solid 1px var(--gray);
+        background-color: #d2f8d2;
         color: var(--gray);
         font-size: 22px;
     }
