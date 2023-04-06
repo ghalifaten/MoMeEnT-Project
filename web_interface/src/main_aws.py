@@ -90,7 +90,7 @@ def _index():
     session["hh_type"] = hh_type
     session["n_households"] = n_households
     session["appliance"] = appliance
-    session["peer"] = "FALSE"
+    session["peer"] = "TRUE"
     session["weekly_freq"] = weekly_freq
 
     
