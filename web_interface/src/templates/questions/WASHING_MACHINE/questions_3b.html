@@ -33,10 +33,45 @@
     
     <div class="questions-form"> 
         <form  action="/experiment_4" method="get">
-            <h3>Question1</h3>
-            <p>Type of the household:</p>
-            <!--Single answer-->
-            <input type="radio" name="q3b_r1" value="1" checked>Type1<br>
+            
+            <p><strong>
+                To consume more energy from renewable sources, how likely are you or your household to implement the following actions?
+            </strong></p>
+            <table cellspacing="0" style="width: 100%;"> 
+                <tr >
+                    <th style="width: 50%;"class="highlight-cell"></th>
+                    <th class="highlight-cell">Not at all <br> likely</th> 
+                    <th class="highlight-cell">Not likely</th>
+                    <th class="highlight-cell">Somewhat <br> likely</th>
+                    <th class="highlight-cell">Likely</th>
+                    <th class="highlight-cell">Very likely</th>
+                </tr>
+                <tr>
+                    <td >To select washing programs with higher energy intensity (e.g., a higher washing temperature) only during periods when electricity from renewable source is highly available</td>
+                    <td><input type="radio" name="q3b_r1_1" value="0"></td> 
+                    <td><input type="radio" name="q3b_r1_1" value="1"></td>
+                    <td><input type="radio" name="q3b_r1_1" value="2"></td> 
+                    <td><input type="radio" name="q3b_r1_1" value="3"></td>
+                    <td><input type="radio" name="q3b_r1_1" value="4"></td>
+                    </tr>
+                <tr>
+                    <td >To schedule washing on days when more renewable power (e.g. PV or wind) is available</td>
+                    <td><input type="radio" name="q3b_r1_2" value="0"></td> 
+                    <td><input type="radio" name="q3b_r1_2" value="1"></td>
+                    <td><input type="radio" name="q3b_r1_2" value="2"></td> 
+                    <td><input type="radio" name="q3b_r1_2" value="3"></td>
+                    <td><input type="radio" name="q3b_r1_2" value="4"></td>
+                    </tr>
+                <tr>
+                    <td >To use the tumble dryer only when more renewable power (e.g. PV or wind) is available</td>
+                    <td><input type="radio" name="q3b_r1_3" value="0"></td> 
+                    <td><input type="radio" name="q3b_r1_3" value="1"></td>
+                    <td><input type="radio" name="q3b_r1_3" value="2"></td> 
+                    <td><input type="radio" name="q3b_r1_3" value="3"></td>
+                    <td><input type="radio" name="q3b_r1_3" value="4"></td>
+                    </tr>
+                  
+            </table>
 
             <p style="margin-top: 100px;">
                 <input class="link-btn button" onclick="window.location.href = '/experiment_4';" type="submit" value="Next page" />

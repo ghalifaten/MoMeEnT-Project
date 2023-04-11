@@ -10,7 +10,6 @@
 
 		 
 		 
-		  
 		 
 	  
   		 
@@ -33,12 +32,53 @@
     
     <div class="questions-form"> 
         <form  action="/experiment_3" method="get">
-            <h3>Question1</h3>
-            <p>Type of the household:</p>
-            <!--Single answer-->
-            <input type="radio" name="q2b_r1" value="1" checked>Type1<br>
-            <input type="radio" name="q2b_r1" value="2">Type2<br>
-            <input type="radio" name="q2b_r1" value="3">Type3 <br>
+            
+            <p><strong>
+                To further help reduce the risk of balck-out, how likely are you / your household to implement the following actions?
+            </strong></p>
+            <table cellspacing="0" style="width: 100%;"> 
+                <tr>
+                    <th style="width: 50%;"class="highlight-cell"></th>
+                    <th class="highlight-cell">Not at all <br> likely</th> 
+                    <th class="highlight-cell">Not likely</th>
+                    <th class="highlight-cell">Somewhat <br> likely</th>
+                    <th class="highlight-cell">Likely</th>
+                    <th class="highlight-cell">Very likely</th>
+                </tr>
+                <tr>
+                    <td >To reduce the number of wash cycles per week</td>
+                    <td><input type="radio" name="q2b_r1_1" value="0"></td> 
+                    <td><input type="radio" name="q2b_r1_1" value="1"></td>
+                    <td><input type="radio" name="q2b_r1_1" value="2"></td> 
+                    <td><input type="radio" name="q2b_r1_1" value="3"></td>
+                    <td><input type="radio" name="q2b_r1_1" value="4"></td>
+                </tr>
+                
+                <tr>
+                    <td >Select washing programs with lower energy intensity (e.g., a lower washing temperature) during peak periods</td>
+                    <td><input type="radio" name="q2b_r1_2" value="0"></td> 
+                    <td><input type="radio" name="q2b_r1_2" value="1"></td>
+                    <td><input type="radio" name="q2b_r1_2" value="2"></td> 
+                    <td><input type="radio" name="q2b_r1_2" value="3"></td>
+                    <td><input type="radio" name="q2b_r1_2" value="4"></td>
+                </tr>
+                <tr>
+                    <td >To wash during weekend days if the risk of black-outs is lower compared to weekdays</td>
+                    <td><input type="radio" name="q2b_r1_3" value="0"></td> 
+                    <td><input type="radio" name="q2b_r1_3" value="1"></td>
+                    <td><input type="radio" name="q2b_r1_3" value="2"></td> 
+                    <td><input type="radio" name="q2b_r1_3" value="3"></td>
+                    <td><input type="radio" name="q2b_r1_3" value="4"></td>
+                </tr>
+                <tr>
+                    <td >To avoid drying with tumble dryer during peak periods</td>
+                    <td><input type="radio" name="q2b_r1_4" value="0"></td> 
+                    <td><input type="radio" name="q2b_r1_4" value="1"></td>
+                    <td><input type="radio" name="q2b_r1_4" value="2"></td> 
+                    <td><input type="radio" name="q2b_r1_4" value="3"></td>
+                    <td><input type="radio" name="q2b_r1_4" value="4"></td>
+                </tr>
+            </table>
 
             <p style="margin-top: 100px;">
                 <input class="link-btn button" onclick="window.location.href = '/experiment_3';" type="submit" value="Next page" />
@@ -46,5 +86,4 @@
             </p>
         </form>
     </div>
-
 </body>
