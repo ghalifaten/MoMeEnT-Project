@@ -20,8 +20,42 @@
 
 </head>
 
+<body>
+	<div id="fullPage"> 
+		
+		<div class="section s1">
+			<div class="page-content">
 
+					<img src="../static/img/intro_tutorial.JPG" class="img-tutorial" alt="tool" style="vertical-align:top">
+					<p>
+						<button class="link-btn" id="scroll-down" onclick="location.href='/experiment_1'">Start</button>
+					</p>
+		    </div>
+		</div>
+	</div>
 
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.0/fullpage.min.js"></script>
+	<script>
+		new fullpage('#fullPage',{
+				anchors: ['Title'],
+				autoScrolling : true,
+				navigation : true,
+				slidesNavigation : true,
+				controlArrows : false,
+				scrollingSpeed :1000,
+			navigationTooltips: [
+				"Title",
+			],
+			afterSlideLoad: function( section, origin, destination, direction){
+			var loadedSlide = this;
+			//load();
+			},
+		})
+	</script>
+
+</body>
+
+<!-- 
 <body>
 	<div id="fullPage"> 
 		
@@ -124,5 +158,6 @@
 	</script>
 
 </body>
+-->
 
 </html>

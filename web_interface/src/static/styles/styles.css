@@ -291,6 +291,7 @@
     
     .sub-stats-upper-txt-cost {
         border: solid 1px var(--gray);
+        border-radius: 6px;
         background-color: rgba(255, 77, 0, 0.435);
         color: var(--gray);
         font-size: 22px;
@@ -298,6 +299,7 @@
 
     .sub-stats-upper-txt-peak {
         border: solid 1px var(--gray);
+        border-radius: 6px;
         background-color: #f9d4da;
         color: var(--gray);
         font-size: 22px;
@@ -305,6 +307,7 @@
 
     .sub-stats-upper-txt-pv {
         border: solid 1px var(--gray);
+        border-radius: 6px;
         background-color: #d2f8d2;
         color: var(--gray);
         font-size: 22px;
@@ -376,7 +379,7 @@
 
     .stats-nbr {
         font-weight: bold;
-        font-size: 65px;
+        font-size: 50px;
         color: var(--gray);
     }
 
