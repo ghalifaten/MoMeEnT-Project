@@ -246,73 +246,62 @@ def experiment_1():
     q0_answers = request.args
     session["q0_answers"] = q0_answers.to_dict()
 
-    session["n_trials"] = 3
-
     appliance = session["appliance"]
     peer = session["peer"]
-    n_trials = session["n_trials"]
 
     baseline_cost = session["baseline_cost"]
 
     data = {
         "appliance": format_app(appliance), 
         "group": peer, 
-        "n": n_trials, 
         "old_cost": math.trunc(baseline_cost)
     }
     return render_template("experiments/experiment_1.html", data=data)
 
 @app.route('/get-diff', methods=['POST'])
 def get_diff():
-    n_trials = session["n_trials"]
-    if n_trials == 0:
-        abort(200)
-    else:
-        n_residents = session["hh_size"]
-        household_type = session["hh_type"]
-        n_households = session["n_households"]
-        appliance = session["appliance"]
+    n_residents = session["hh_size"]
+    household_type = session["hh_type"]
+    n_households = session["n_households"]
+    appliance = session["appliance"]
 
-        #generate profile from baseline values and update usage_patterns
-        data = request.get_json()['data']
-        values_dict = process_data(data)
-        profile = generate_profile(values_dict) #ndarray(1000,24)
-        usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
+    #generate profile from baseline values and update usage_patterns
+    data = request.get_json()['data']
+    values_dict = process_data(data)
+    profile = generate_profile(values_dict) #ndarray(1000,24)
+    usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
 
-        #invoke lambda function to calculate load
-        payload = {
-            "n_residents": n_residents, 
-            "household_type": household_type, 
-            "usage_patterns":usage_patterns, 
-            "appliance":appliance,
-            "n_households":n_households}
-        load = get_load(payload) 
+    #invoke lambda function to calculate load
+    payload = {
+        "n_residents": n_residents, 
+        "household_type": household_type, 
+        "usage_patterns":usage_patterns, 
+        "appliance":appliance,
+        "n_households":n_households}
+    load = get_load(payload) 
 
-        #claculate cost, share, and peak
-        (cost, res_share, peak_load) = calculate_params(load)
+    #claculate cost, share, and peak
+    (cost, res_share, peak_load) = calculate_params(load)
 
-        baseline_cost = session["baseline_cost"]
-        baseline_peak = session["baseline_peak_load"]
-        baseline_share = session["baseline_res_share"]
+    baseline_cost = session["baseline_cost"]
+    baseline_peak = session["baseline_peak_load"]
+    baseline_share = session["baseline_res_share"]
 
-        #Compute the % of in-decrease
-        diff_cost = cost - baseline_cost
-        diff_share = res_share - baseline_share
-        diff_peak = peak_load - baseline_peak
+    #Compute the % of in-decrease
+    diff_cost = cost - baseline_cost
+    diff_share = res_share - baseline_share
+    diff_peak = peak_load - baseline_peak
 
-        n_trials -= 1
-        response = {
-            "diff_cost": math.trunc(diff_cost), 
-            "cost": math.trunc(cost),
-            "diff_peak": math.trunc(diff_peak),
-            "peak_load": math.trunc(peak_load),
-            "res_share": math.trunc(res_share),
-            "diff_share": math.trunc(diff_share), 
-            "n_trials": n_trials
-            }
-        
-        session["n_trials"] = n_trials
-        return jsonify(response)
+    response = {
+        "diff_cost": math.trunc(diff_cost), 
+        "cost": math.trunc(cost),
+        "diff_peak": math.trunc(diff_peak),
+        "peak_load": math.trunc(peak_load),
+        "res_share": math.trunc(res_share),
+        "diff_share": math.trunc(diff_share)
+        }
+
+    return jsonify(response)
 
 @app.route('/questions_1a', methods=['GET','POST'])
 def questions_1a():
@@ -330,12 +319,10 @@ def questions_1b():
 
 @app.route('/experiment_2')
 def experiment_2():
-    session["n_trials"] = 3
     q1b_answers = request.args
     session["q1b_answers"] = q1b_answers.to_dict()
 
     peer = session["peer"]
-    n_trials = session["n_trials"]
     appliance = session["appliance"]
 
     baseline_peak = session["baseline_peak_load"]
@@ -343,7 +330,6 @@ def experiment_2():
     data = {
         "appliance": format_app(appliance), 
         "group": peer, 
-        "n": n_trials, 
         "old_peak": math.trunc(baseline_peak)
     }
 
@@ -366,20 +352,16 @@ def questions_2b():
 
 @app.route('/experiment_3')
 def experiment_3():
-    session["n_trials"] = 3
-
     q2b_answers = request.args
     session["q2b_answers"] = q2b_answers.to_dict()
 
     appliance = session["appliance"] 
     peer = session["peer"]
-    n_trials = session["n_trials"]
     baseline_share = session['baseline_res_share']
 
     data = {
         "appliance": format_app(appliance), 
         "group": peer, 
-        "n": n_trials, 
         "old_share": math.trunc(baseline_share)
     }
     return render_template("experiments/experiment_3.html", data=data)
@@ -401,14 +383,12 @@ def questions_3b():
 
 @app.route('/experiment_4')
 def experiment_4():    
-    session["n_trials"] = 3
     appliance = session["appliance"]
 
     q3b_answers = request.args
     session["q3b_answers"] = q3b_answers.to_dict()
     
     peer = session["peer"]
-    n_trials = session["n_trials"]
 
     baseline_cost = session["baseline_cost"]
     baseline_peak = session["baseline_peak_load"]
@@ -417,7 +397,6 @@ def experiment_4():
     data = {
         "appliance": format_app(appliance), 
         "group": peer, 
-        "n": n_trials, 
         "old_cost": math.trunc(baseline_cost),
         "old_peak": math.trunc(baseline_peak),
         "old_share": math.trunc(baseline_share)
@@ -425,27 +404,9 @@ def experiment_4():
 
     return render_template("experiments/experiment_4.html", data=data)
 
-@app.route('/questions_4a', methods=['GET','POST'])
-def questions_4a():
-    appliance = session["appliance"]
-    file_path = "questions/{app}/questions_4a.html".format(app=appliance)
-    return render_template(file_path)
-
-@app.route('/questions_4b', methods=['GET','POST'])
-def questions_4b():    
-    q4a_answers = request.args
-    session["q4a_answers"] = q4a_answers.to_dict()
-    appliance = session["appliance"]
-
-    file_path = "questions/{app}/questions_4b.html".format(app=appliance)
-    return render_template(file_path)
-
 @app.route('/questions_final_a', methods=['GET','POST'])
 def questions_final_a():  
-    q4b_answers = request.args
-    session["q4b_answers"] = q4b_answers.to_dict()
     appliance = session["appliance"]
-
     file_path = "questions/{app}/questions_final_a.html".format(app=appliance)
     return render_template(file_path)
 
@@ -486,8 +447,6 @@ def conclusion():
         "q2b_answers" : session["q2b_answers"],
         "q3a_answers" : session["q3a_answers"],
         "q3b_answers" : session["q3b_answers"],
-        "q4a_answers" : session["q4a_answers"],
-        "q4b_answers" : session["q4b_answers"],
         "final_answers_a" : session["final_answers_a"],
         "final_answers_b" : session["final_answers_b"]
     }
@@ -495,10 +454,7 @@ def conclusion():
     item = json.loads(json.dumps(item), parse_float=Decimal)
     table.put_item(Item=item)
 
-
     return render_template("conclusion.html", appliance=format_app(appliance), m_field=m_field)
-
-
 
 
 #---- MAIN CALL ----# 

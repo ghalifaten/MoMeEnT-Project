@@ -147,6 +147,15 @@ function updateChart(morningValue, middayValue, afternoonValue, eveningValue, ni
     data[3].Value = eveningValue;
     data[4].Value = nightValue;
 
+    //Disable button if all values are 0
+    if (data.every(d => d.Value == 0 ) ) {
+        document.getElementById("link-to-quests").disabled = true;
+        document.getElementById("stats-btn").disabled = true;
+    }else {
+        document.getElementById("link-to-quests").disabled = false;
+        document.getElementById("stats-btn").disabled = false;
+    }
+    
     svg.selectAll(".new-bar").remove();
     
     svg.selectAll("bar")
@@ -204,7 +213,7 @@ d3.select("#stats-btn").on("click", function(d){
         document.getElementById("stats-new-val").hidden = true;
         document.getElementById("loader").style.display = "block";        
         document.getElementById("stats-btn").disabled = true;
-        document.getElementById("link-to-exp2").disabled = true;
+        document.getElementById("link-to-quests").disabled = true;
 
         //send data to flask
         const current_data = JSON.parse(window.localStorage.getItem("current_data"))
@@ -223,7 +232,7 @@ d3.select("#stats-btn").on("click", function(d){
                 document.getElementById("stats-nbr-you").style.display = "block";    
                 document.getElementById("loader").style.display = "none"
                 document.getElementById("stats-btn").disabled = false;
-                document.getElementById("link-to-exp2").disabled = false;
+                document.getElementById("link-to-quests").disabled = false;
 
                 const diff_peak = response.diff_peak;
                 const peak = response.peak_load;
@@ -241,14 +250,11 @@ d3.select("#stats-btn").on("click", function(d){
                     document.getElementById("sub-stats-nbr-you").innerText = diff_peak + " %"
                     document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
                 }
-
-                //update tooltip text of the [See Statistics] button
-                document.getElementById("stats-btn").title = response.n_trials + " trials left"
             },
             error: function (response) {
-                document.getElementById("link-to-exp2").disabled = false;
+                document.getElementById("link-to-quests").disabled = false;
                 document.getElementById("loader").style.display = "none"
-                alert("You have exceeded the limit of 3 trials for this scenario!")
+                alert("Error!")
             }
         });
     }
