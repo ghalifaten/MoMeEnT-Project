@@ -12,12 +12,11 @@ import conf.credentials as conf
 import secrets
 import math 
 from decimal import Decimal
+import pandas as pd
 
 
 #---- SET UP PATH ----#
-module_path = os.path.abspath(os.path.join('..'))+'/MoMeEnT-Project'
-if module_path not in sys.path:
-    sys.path.append(module_path)
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 #---- SET UP CONNECTIONS ----#
 client = boto3.client('lambda',
@@ -44,6 +43,9 @@ usage_patterns = {'target_cycles':{'DISH_WASHER':251,
                                        },
                     'energy_cycle': {'DISH_WASHER': 1, 'WASHING_MACHINE':1}
                 }
+
+df = pd.read_csv(dir_path+"/static/data/vals_peer_comparison.csv")
+
 #TODO should be read from the csv file 
 #map the values to the [0-4] range (?)         
 #or add another axis on the bar_chart     
@@ -73,16 +75,17 @@ def format_app(appliance):
 @app.route('/') 
 def _index():
     #Default args
-    print()
-    print(session)
-    print()
-
     m = "1"
     ID = "test"
     hh_size = 1
     hh_type = 1
     weekly_freq = 2
     appliance = "DISH_WASHER"
+
+    record = df.loc[(df['appliance'] == appliance) & (df['n_residents'] == hh_size) & (df['household_type'] == hh_type)]
+    avg_cost = record['cost'].values[0]
+    avg_peak = record['peak'].values[0]
+    avg_res = record['RES'].values[0]
 
     session["ID"] = ID
     session["m_field"] = m
@@ -92,7 +95,9 @@ def _index():
     session["appliance"] = appliance
     session["peer"] = "TRUE"
     session["weekly_freq"] = weekly_freq
-
+    session["avg_cost"] = avg_cost
+    session["avg_peak"] = avg_peak
+    session["avg_res"] = avg_res
     
     return render_template("index.html", appliance=format_app(appliance))
 #------------------------------------------
@@ -126,6 +131,11 @@ def index(qualtrics_data):
     usage_patterns['target_cycles'][appliance] = year_freq
     #usage_patterns['energy_cycle'][appliance] = some_function(program30, program40, program60, program90)
     
+    record = df.loc[(df['appliance'] == appliance) & (df['n_residents'] == hh_size) & (df['household_type'] == hh_type)]
+    avg_cost = record['cost'].values[0]
+    avg_peak = record['peak'].values[0]
+    avg_res = record['RES'].values[0]
+
     #save args to session
     session["appliance"] = appliance
     session["peer"] = peer
@@ -134,7 +144,10 @@ def index(qualtrics_data):
     session["hh_type"] = hh_type
     session["n_households"] = n_households
     session["weekly_freq"] = frequency
-    
+    session["avg_cost"] = avg_cost
+    session["avg_peak"] = avg_peak
+    session["avg_res"] = avg_res
+
     return render_template("index.html", appliance=format_app(appliance))
 
 
@@ -250,11 +263,13 @@ def experiment_1():
     peer = session["peer"]
 
     baseline_cost = session["baseline_cost"]
+    avg_cost = session["avg_cost"]
 
     data = {
         "appliance": format_app(appliance), 
         "group": peer, 
-        "old_cost": math.trunc(baseline_cost)
+        "old_cost": math.trunc(baseline_cost),
+        "avg_cost": avg_cost,
     }
     return render_template("experiments/experiment_1.html", data=data)
 
@@ -275,9 +290,10 @@ def get_diff():
     payload = {
         "n_residents": n_residents, 
         "household_type": household_type, 
-        "usage_patterns":usage_patterns, 
-        "appliance":appliance,
-        "n_households":n_households}
+        "usage_patterns": usage_patterns, 
+        "appliance": appliance,
+        "n_households": n_households,
+        }
     load = get_load(payload) 
 
     #claculate cost, share, and peak
@@ -326,11 +342,12 @@ def experiment_2():
     appliance = session["appliance"]
 
     baseline_peak = session["baseline_peak_load"]
-
+    avg_peak = session["avg_peak"]
     data = {
         "appliance": format_app(appliance), 
         "group": peer, 
-        "old_peak": math.trunc(baseline_peak)
+        "old_peak": math.trunc(baseline_peak),
+        "avg_peak": avg_peak
     }
 
     return render_template("experiments/experiment_2.html", data=data)
@@ -358,11 +375,13 @@ def experiment_3():
     appliance = session["appliance"] 
     peer = session["peer"]
     baseline_share = session['baseline_res_share']
+    avg_res = session["avg_res"]
 
     data = {
         "appliance": format_app(appliance), 
         "group": peer, 
-        "old_share": math.trunc(baseline_share)
+        "old_share": math.trunc(baseline_share),
+        "avg_res": avg_res
     }
     return render_template("experiments/experiment_3.html", data=data)
 
@@ -393,13 +412,19 @@ def experiment_4():
     baseline_cost = session["baseline_cost"]
     baseline_peak = session["baseline_peak_load"]
     baseline_share = session["baseline_res_share"]
+    avg_cost = session["avg_cost"]
+    avg_peak = session["avg_peak"]
+    avg_res = session["avg_res"]
 
     data = {
         "appliance": format_app(appliance), 
         "group": peer, 
         "old_cost": math.trunc(baseline_cost),
         "old_peak": math.trunc(baseline_peak),
-        "old_share": math.trunc(baseline_share)
+        "old_share": math.trunc(baseline_share),
+        "avg_cost": avg_cost,
+        "avg_peak": avg_peak,
+        "avg_res": avg_res
     }
 
     return render_template("experiments/experiment_4.html", data=data)

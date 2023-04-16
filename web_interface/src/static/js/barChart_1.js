@@ -280,8 +280,7 @@ d3.select("#stats-btn").on("click", function(d){
                 } else {
                     document.getElementById("sub-stats-nbr-you").innerText = diff_cost + " €"
                     document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-decrease-green.png\"></img>"
-                }
-                
+                }              
             },
             error: function (response) {
                 document.getElementById("link-to-quests").disabled = false;
@@ -291,19 +290,6 @@ d3.select("#stats-btn").on("click", function(d){
         });
     }
     getDiff()
-
-
-    const avg_cost = 80
-    if (avg_cost != 0) {
-        let counts=setInterval(updated);
-        let upto=0;
-        function updated(){
-            var count= document.getElementById("stats-nbr-avg");
-            count.innerHTML=++upto;
-            if(upto===Math.abs(Math.ceil(avg_cost))){ clearInterval(counts); }
-            count.innerHTML+= " €"
-        }
-    }
 
 })
 

@@ -125,7 +125,7 @@
                         <!--See Statistics Button-->
 
                         <div class="visualization-column2">
-                            <button id="stats-btn">See statistics</button> 
+                            <button id="stats-btn"  onclick="show_avg()">See statistics</button> 
                         </div>
 
                         <!--Statistics grid-->
@@ -236,6 +236,14 @@
 
     <!--JS scripts-->
     <script src="{{ url_for('static', filename='js/barChart_4.js')}}"></script>
+
+    <script>
+        function show_avg() {
+            document.getElementById("stats-nbr-avg-cost").innerText = Math.ceil({{data.avg_cost|tojson}}) + " €";
+            document.getElementById("stats-nbr-avg-peak").innerText = Math.ceil({{data.avg_peak|tojson}}) + " %";
+            document.getElementById("stats-nbr-avg-share").innerText = Math.ceil({{data.avg_res|tojson}}) + " %";
+        }  
+    </script>
     <!--script>
         var element = document.getElementById('avg-stats')
         var group = {{data.group|tojson}}

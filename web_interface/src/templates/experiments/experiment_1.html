@@ -106,7 +106,7 @@
 
 
                         <div class="visualization-column2">
-                            <button id="stats-btn">See statistics</button> 
+                            <button id="stats-btn" onclick="show_avg()">See statistics</button> 
                         </div>
 
 
@@ -142,8 +142,8 @@
                                     For an average household
                                 </div>
 
-                                <div class="sub-stats-container stats-nbr" id="stats-nbr-avg">
-                                        ?
+                                <div class="sub-stats-container stats-nbr" id="stats-nbr-avg"> 
+                                    ?
                                 </div>
                             </div>
                             
@@ -171,5 +171,17 @@
         }else if(group == "FALSE") {
             element.style.display = 'none'; 
         }
+
+        function show_avg() {
+            var avg_cost = {{data.avg_cost|tojson}}
+            let counts=setInterval(updated);
+            let upto=0;
+            function updated(){
+                var count= document.getElementById("stats-nbr-avg");
+                count.innerHTML=++upto;
+                if(upto===Math.abs(Math.ceil(avg_cost))){ clearInterval(counts); }
+                count.innerHTML+= " €"
+            }
+        }        
     </script>
 </body>

@@ -259,20 +259,6 @@ d3.select("#stats-btn").on("click", function(d){
         });
     }
     getDiff()
-
-    const avg_peak = 35
-    if (avg_peak != 0) {
-        let counts=setInterval(updated);
-        
-        let upto=0;
-        function updated(){
-            var count= document.getElementById("stats-nbr-avg");
-            count.innerHTML=++upto;
-            if(upto===Math.abs(Math.ceil(avg_peak))){ clearInterval(counts); }
-            count.innerHTML+= " %"
-        }
-    }
-
 })
 
 
