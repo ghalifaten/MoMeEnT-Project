@@ -245,10 +245,10 @@ d3.select("#stats-btn").on("click", function(d){
                 //update icon
                 if (diff_peak >= 0) {
                     document.getElementById("sub-stats-nbr-you").innerText = "+" + diff_peak + " %"
-                    document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
+                    document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-increase-red.png\"></img>"
                 } else {
                     document.getElementById("sub-stats-nbr-you").innerText = diff_peak + " %"
-                    document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
+                    document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-decrease-green.png\"></img>"
                 }
             },
             error: function (response) {

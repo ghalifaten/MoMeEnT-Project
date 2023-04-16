@@ -315,26 +315,26 @@ d3.select("#stats-btn").on("click", function(d){
                  //update icons
                  if (diff_cost >= 0) {
                     document.getElementById("sub-stats-nbr-you-cost").innerHTML = "+" + diff_cost + "€"
-                    document.getElementById("icon-cost").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
+                    document.getElementById("icon-cost").innerHTML = "<img src=\"static/img/arrow-increase-red.png\"></img>"
                 } else {
                     document.getElementById("sub-stats-nbr-you-cost").innerHTML = diff_cost + "€"
-                    document.getElementById("icon-cost").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
+                    document.getElementById("icon-cost").innerHTML = "<img src=\"static/img/arrow-decrease-green.png\"></img>"
                 }
 
                 if (diff_peak >= 0) {
                     document.getElementById("sub-stats-nbr-you-peak").innerHTML = "+" + diff_peak + "%"
-                    document.getElementById("icon-peak").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
+                    document.getElementById("icon-peak").innerHTML = "<img src=\"static/img/arrow-increase-red.png\"></img>"
                 } else {
                     document.getElementById("sub-stats-nbr-you-peak").innerHTML = diff_peak + "%"
-                    document.getElementById("icon-peak").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
+                    document.getElementById("icon-peak").innerHTML = "<img src=\"static/img/arrow-decrease-green.png\"></img>"
                 }
 
                 if (diff_share >= 0) {
                     document.getElementById("sub-stats-nbr-you-share").innerHTML = "+" + diff_share + "%"
-                    document.getElementById("icon-share").innerHTML = "<img src=\"static/img/arrow-increase.png\"></img>"
+                    document.getElementById("icon-share").innerHTML = "<img src=\"static/img/arrow-increase-green.png\"></img>"
                 } else {
                     document.getElementById("sub-stats-nbr-you-share").innerHTML = diff_share + "%"
-                    document.getElementById("icon-share").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
+                    document.getElementById("icon-share").innerHTML = "<img src=\"static/img/arrow-decrease-red.png\"></img>"
                 }
 
                 //display changes and hide loader
