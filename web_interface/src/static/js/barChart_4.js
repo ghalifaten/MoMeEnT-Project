@@ -343,17 +343,14 @@ d3.select("#stats-btn").on("click", function(d){
                     document.getElementsByClassName("stats-txt")[i].style.visibility = "visible"; 
                     document.getElementsByClassName("stats-nbr")[i].style.display = "block";  
                     document.getElementsByClassName("stats-icon")[i].style.display = "block";  
-                } 
-
-                //update tooltip text of the [See Statistics] button
-                document.getElementById("stats-btn").title = response.n_trials + " trials left"                
+                }                
             },
             error: function (response) {
             document.getElementById("link-to-quests").disabled = false;
             for(let i=0; i<3; i++) {
                 document.getElementsByClassName("loader")[i].style.display = "none";  
             } 
-            alert("You have exceeded the limit of 3 trials for this scenario!")
+            alert("Error!")
             }
         });
     }

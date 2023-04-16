@@ -250,14 +250,11 @@ d3.select("#stats-btn").on("click", function(d){
                     document.getElementById("sub-stats-nbr-you").innerText = diff_peak + " %"
                     document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-decrease.png\"></img>"
                 }
-
-                //update tooltip text of the [See Statistics] button
-                document.getElementById("stats-btn").title = response.n_trials + " trials left"
             },
             error: function (response) {
                 document.getElementById("link-to-quests").disabled = false;
                 document.getElementById("loader").style.display = "none"
-                alert("You have exceeded the limit of 3 trials for this scenario!")
+                alert("Error!")
             }
         });
     }
