@@ -236,10 +236,6 @@ def questions_0():
     file_path = "questions/{app}/questions_0.html".format(app=appliance)
     return render_template(file_path)
 
-@app.route('/tutorial')
-def tutorial():
-    return render_template("tutorial.html")
-
 @app.route('/experiment_1')
 def experiment_1():
     #retrieve answers to questions_0 here
@@ -404,22 +400,6 @@ def experiment_4():
 
     return render_template("experiments/experiment_4.html", data=data)
 
-"""
-@app.route('/questions_4a', methods=['GET','POST'])
-def questions_4a():
-    appliance = session["appliance"]
-    file_path = "questions/{app}/questions_4a.html".format(app=appliance)
-    return render_template(file_path)
-
-@app.route('/questions_4b', methods=['GET','POST'])
-def questions_4b():    
-    q4a_answers = request.args
-    session["q4a_answers"] = q4a_answers.to_dict()
-    appliance = session["appliance"]
-
-    file_path = "questions/{app}/questions_4b.html".format(app=appliance)
-    return render_template(file_path)
-"""
 @app.route('/questions_final_a', methods=['GET','POST'])
 def questions_final_a():  
     appliance = session["appliance"]
@@ -463,8 +443,6 @@ def conclusion():
         "q2b_answers" : session["q2b_answers"],
         "q3a_answers" : session["q3a_answers"],
         "q3b_answers" : session["q3b_answers"],
-        #"q4a_answers" : session["q4a_answers"],
-        #"q4b_answers" : session["q4b_answers"],
         "final_answers_a" : session["final_answers_a"],
         "final_answers_b" : session["final_answers_b"]
     }
