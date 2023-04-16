@@ -53,12 +53,18 @@ var y = d3.scaleLinear()
 // Bars
 // A function that updates the chart when slider is moved
 function updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue) {
-    //TODO optimize this
     data[0].Value = morningValue;
     data[1].Value = middayValue;
     data[2].Value = afternoonValue;
     data[3].Value = eveningValue;
     data[4].Value = nightValue;
+
+    //Disable button if all values are 0
+    if (data.every(d => d.Value == 0 ) ) {
+        document.getElementById("link-to-quests").disabled = true;
+    }else {
+        document.getElementById("link-to-quests").disabled = false;
+    }
 
     svg.selectAll(".new-bar").remove();
     
@@ -84,31 +90,26 @@ function updateChart(morningValue, middayValue, afternoonValue, eveningValue, ni
 //morning
 d3.select("#morningSlider").on("change", function(d){
     morningValue = this.value
-    document.getElementById("link-to-quests").disabled = false;
     current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
 })
 //midday
 d3.select("#middaySlider").on("change", function(d){
     middayValue = this.value
-    document.getElementById("link-to-quests").disabled = false;
     current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
 })
 //afternoon
 d3.select("#afternoonSlider").on("change", function(d){
     afternoonValue = this.value
-    document.getElementById("link-to-quests").disabled = false;
     current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
 })
 //evening
 d3.select("#eveningSlider").on("change", function(d){
     eveningValue = this.value
-    document.getElementById("link-to-quests").disabled = false;
     current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
 })
 //night
 d3.select("#nightSlider").on("change", function(d){
     nightValue = this.value
-    document.getElementById("link-to-quests").disabled = false;
     current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
 })
 
@@ -152,7 +153,6 @@ d3.select(".link-btn").on("click", function(d){
         contentType: "application/json",
         dataType: "json",
         success: function (response) {
-            console.log(response)
             window.location.assign("questions_0");
         },
         error: function (response) {

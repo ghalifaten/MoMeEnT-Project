@@ -166,6 +166,15 @@ function updateChart(morningValue, middayValue, afternoonValue, eveningValue, ni
     data[3].Value = eveningValue;
     data[4].Value = nightValue;
 
+    //Disable button if all values are 0
+    if (data.every(d => d.Value == 0 ) ) {
+        document.getElementById("link-to-quests").disabled = true;
+        document.getElementById("stats-btn").disabled = true;
+    }else {
+        document.getElementById("link-to-quests").disabled = false;
+        document.getElementById("stats-btn").disabled = false;
+    }
+
     svg.selectAll(".new-bar").remove();
     
     svg.selectAll("bar")
@@ -271,7 +280,7 @@ d3.select("#stats-btn").on("click", function(d){
 
         //disable buttons
         document.getElementById("stats-btn").disabled = true;
-        document.getElementById("link-to-exp2").disabled = true;
+        document.getElementById("link-to-quests").disabled = true;
 
         //send data to flask
         const baseline_data = JSON.parse(window.localStorage.getItem("baseline_data"))
@@ -296,7 +305,7 @@ d3.select("#stats-btn").on("click", function(d){
 
                 //reactivate buttons
                 document.getElementById("stats-btn").disabled = false;
-                document.getElementById("link-to-exp2").disabled = false;
+                document.getElementById("link-to-quests").disabled = false;
 
                 //update stats
                  document.getElementById("stats-new-val-cost").innerText = cost + " €" 
@@ -340,7 +349,7 @@ d3.select("#stats-btn").on("click", function(d){
                 document.getElementById("stats-btn").title = response.n_trials + " trials left"                
             },
             error: function (response) {
-            document.getElementById("link-to-exp2").disabled = false;
+            document.getElementById("link-to-quests").disabled = false;
             for(let i=0; i<3; i++) {
                 document.getElementsByClassName("loader")[i].style.display = "none";  
             } 
