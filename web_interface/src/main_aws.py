@@ -236,10 +236,6 @@ def questions_0():
     file_path = "questions/{app}/questions_0.html".format(app=appliance)
     return render_template(file_path)
 
-@app.route('/tutorial')
-def tutorial():
-    return render_template("tutorial.html")
-
 @app.route('/experiment_1')
 def experiment_1():
     #retrieve answers to questions_0 here
