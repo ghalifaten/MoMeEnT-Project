@@ -98,7 +98,23 @@ def calculate_params(load):
     peak_load = np.sum(load[14*60:18*60])/np.sum(load)*100
     return (cost, res_share, peak_load)
 
-def get_load(payload):   
+def get_load(data):   
+    n_residents = session["hh_size"]
+    household_type = session["hh_type"]
+    n_households = session["n_households"]
+    appliance = session["appliance"]
+    #generate profile and update usage_patterns
+    values_dict = process_data(data)
+    profile = generate_profile(values_dict) #ndarray(1000,24)
+    usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
+    #invoke lambda function to calculate load
+    payload = {
+        "n_residents": n_residents, 
+        "household_type": household_type, 
+        "usage_patterns": usage_patterns, 
+        "appliance": appliance,
+        "n_households": n_households,
+        }
     result = client.invoke(
                 FunctionName=conf.lambda_function_name,
                 InvocationType='RequestResponse',                                      
@@ -132,33 +148,13 @@ def min_profile_from_val_period(period_dict):
 
 @app.route('/get-baseline-values', methods=['POST'])
 def get_baseline_values():
-    n_residents = session["hh_size"]
-    household_type = session["hh_type"]
-    n_households = session["n_households"]
-    appliance = session["appliance"]
-
-    #generate profile from baseline values and update usage_patterns
-    data = request.get_json()['baseline_data']
-    values_dict = process_data(data)
-    profile = generate_profile(values_dict) #ndarray(1000,24)
-    usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
-
-    #invoke lambda function to calculate load
-    payload = {
-        "n_residents": n_residents, 
-        "household_type": household_type, 
-        "usage_patterns":usage_patterns, 
-        "appliance":appliance,
-        "n_households":n_households}
-    load = get_load(payload) 
-
+    data = request.get_json()['data']
+    load = get_load(data) 
     #claculate (baseline) cost, share, and peak
     (cost, res_share, peak_load) = calculate_params(load)
-
     session["baseline_cost"] = cost
     session["baseline_peak_load"] = peak_load
     session["baseline_res_share"] = res_share
-
     #TODO Remove response, return code 200 instead
     response = {
         "b_cost":cost,
@@ -168,27 +164,10 @@ def get_baseline_values():
     return jsonify(response)
 
 
-
 @app.route('/get-cost', methods=['POST'])
 def get_cost():
-    n_residents = session["hh_size"]
-    household_type = session["hh_type"]
-    n_households = session["n_households"]
-    appliance = session["appliance"]
-    #generate profile from current scenario values and update usage_patterns
     data = request.get_json()['data']
-    values_dict = process_data(data)
-    profile = generate_profile(values_dict) #ndarray(1000,24)
-    usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
-    #invoke lambda function to calculate load
-    payload = {
-        "n_residents": n_residents, 
-        "household_type": household_type, 
-        "usage_patterns": usage_patterns, 
-        "appliance": appliance,
-        "n_households": n_households,
-        }
-    load = get_load(payload) 
+    load = get_load(data) 
     #claculate cost
     price = min_profile_from_val_period(price_dict)
     unit_conv = 1 / 60 / 1000 * 365.25 
@@ -202,27 +181,10 @@ def get_cost():
     return jsonify(response)
 
 
-
 @app.route('/get-peak-load', methods=['POST'])
 def get_peak_load():
-    n_residents = session["hh_size"]
-    household_type = session["hh_type"]
-    n_households = session["n_households"]
-    appliance = session["appliance"]
-    #generate profile from current scenario values and update usage_patterns
     data = request.get_json()['data']
-    values_dict = process_data(data)
-    profile = generate_profile(values_dict) #ndarray(1000,24)
-    usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
-    #invoke lambda function to calculate load
-    payload = {
-        "n_residents": n_residents, 
-        "household_type": household_type, 
-        "usage_patterns": usage_patterns, 
-        "appliance": appliance,
-        "n_households": n_households,
-        }
-    load = get_load(payload) 
+    load = get_load(data) 
     #claculate peak load
     peak_load = np.sum(load[14*60:18*60])/np.sum(load)*100
     #send baseline peak load along with new cost
@@ -234,27 +196,10 @@ def get_peak_load():
     return jsonify(response)
 
 
-
 @app.route('/get-res-share', methods=['POST'])
 def get_res_share():
-    n_residents = session["hh_size"]
-    household_type = session["hh_type"]
-    n_households = session["n_households"]
-    appliance = session["appliance"]
-    #generate profile from current scenario values and update usage_patterns
     data = request.get_json()['data']
-    values_dict = process_data(data)
-    profile = generate_profile(values_dict) #ndarray(1000,24)
-    usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
-    #invoke lambda function to calculate load
-    payload = {
-        "n_residents": n_residents, 
-        "household_type": household_type, 
-        "usage_patterns": usage_patterns, 
-        "appliance": appliance,
-        "n_households": n_households,
-        }
-    load = get_load(payload) 
+    load = get_load(data) 
     #claculate peak load
     local_generation = min_profile_from_val_period(RES_dict)
     res_share = np.sum(load * local_generation / np.sum(load))
@@ -266,26 +211,11 @@ def get_res_share():
         }
     return jsonify(response)
 
+
 @app.route('/get-3-values', methods=['POST'])
 def get_3_values():
-    n_residents = session["hh_size"]
-    household_type = session["hh_type"]
-    n_households = session["n_households"]
-    appliance = session["appliance"]
-    #generate profile from baseline values and update usage_patterns
     data = request.get_json()['data']
-    values_dict = process_data(data)
-    profile = generate_profile(values_dict) #ndarray(1000,24)
-    usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
-    #invoke lambda function to calculate load
-    payload = {
-        "n_residents": n_residents, 
-        "household_type": household_type, 
-        "usage_patterns": usage_patterns, 
-        "appliance": appliance,
-        "n_households": n_households,
-        }
-    load = get_load(payload) 
+    load = get_load(data) 
     #claculate cost, share, and peak
     (cost, res_share, peak_load) = calculate_params(load)
     #send baseline values along with new values

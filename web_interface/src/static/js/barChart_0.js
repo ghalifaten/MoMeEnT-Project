@@ -148,7 +148,7 @@ d3.select(".link-btn").on("click", function(d){
         url: location.origin + "/get-baseline-values",
         type: 'POST',
         data: JSON.stringify({
-            "baseline_data": data
+            "data": data
         }),
         contentType: "application/json",
         dataType: "json",
