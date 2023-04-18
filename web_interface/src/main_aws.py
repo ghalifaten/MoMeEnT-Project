@@ -359,17 +359,29 @@ def index(qualtrics_data):
         ID = request.args.get('ID')
         hh_size = int(request.args.get('hh_size'))
         hh_type = int(request.args.get('hh_type'))
+        # TODO to be updated weekly_freq for dishwashing or laundry
         weekly_freq = int(request.args.get('frequency'))   
         program30 = int(request.args.get('program30'))
         program40 = int(request.args.get('program40'))
         program60 = int(request.args.get('program60'))
         program90 = int(request.args.get('program90'))
+        # TODO to include dishwashing programs
     except:
         return 'Error in extracting arguments from URL. Either missing or data type not correct.'
 
     year_freq = weekly_freq * 52 
     usage_patterns['target_cycles'][appliance] = year_freq
-    #usage_patterns['energy_cycle'][appliance] = some_function(program30, program40, program60, program90)
+
+    if appliance == "WASHING_MACHINE":
+        avg_temp = (program30 * 30 + program40 * 40 + program60 * 55 + program90 * 90) /\
+                   (program30 + program40 + program60 + program90)
+        energy_cycle = 0.95 + 0.02 * (avg_temp - 60)
+    elif appliance == "DISH_WASHER":
+        energy_cycle = (programECO * 0.9 + programNormal * 1.1 + programIntensive * 1.44 + programAuto * 0.93 +\
+                       programGentle * 0.65 + programQuickLow * 0.8 + programQuickHigh * 1.3 ) /\
+                       (programECO + programNormal + programIntensive + programAuto + programGentle * + programQuickLow + programQuickHigh)
+        
+    usage_patterns['energy_cycle'][appliance] = energy_cycle
     
     record = df.loc[(df['appliance'] == appliance) & (df['n_residents'] == hh_size) & (df['household_type'] == hh_type)]
     avg_cost = record['cost'].values[0]
