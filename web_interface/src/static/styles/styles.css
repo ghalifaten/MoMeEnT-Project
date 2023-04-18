@@ -3,6 +3,7 @@
 :root {
     --box-height: 230px;
     --gray: #555;
+    --orange: rgba(255, 77, 0, 0.435);
   }
   
   /*
@@ -292,7 +293,7 @@
     .sub-stats-upper-txt-cost {
         border: solid 1px var(--gray);
         border-radius: 6px;
-        background-color: rgba(255, 77, 0, 0.435);
+        background-color: var(--orange);
         color: var(--gray);
         font-size: 22px;
     }
@@ -322,7 +323,7 @@
     .sub-stats-grid {
         display: grid;
         grid-template-columns: [vline1] 30% [vline2] auto [vline-end];
-        grid-template-rows: [hline1] 60% [hline2] auto [hline-end];
+        grid-template-rows: [hline1] 40% [hline2] auto [hline-end];
     }
     
     .sub-stats-item {
@@ -332,22 +333,22 @@
     .sub-stats-item .stats-icon {
         grid-column-start: vline1;
         grid-column-end: vline2;
-        grid-row-start: hline1;
-        grid-row-end: hline2;
+        grid-row-start: hline2;
+        grid-row-end: hline-end;
     }
 
     .sub-stats-item .stats-nbr {
         grid-column-start: vline2;
         grid-column-end: vline-end;
-        grid-row-start: hline1;
-        grid-row-end: hline2;
+        grid-row-start: hline2;
+        grid-row-end: hline-end;
     }
 
     .sub-stats-item.stats-txt {
         grid-column-start: vline1;
         grid-column-end: vline-end;
-        grid-row-start: hline2;
-        grid-row-end: hline-end;
+        grid-row-start: hline1;
+        grid-row-end: hline2;
     }
 
     .stats-txt {
@@ -388,9 +389,9 @@
     }
 
     .stats-txt {
-        font-size: 20px;
+        font-size: 22px;
         color: var(--gray);
-        padding: 15px;
+        /*padding: 15px;*/
     }
 
     #stats-btn {
@@ -589,10 +590,10 @@
     img {
         display: block;
         margin: auto;
-        margin-top: 20px;
+        /*margin-top: 20px;*/
         margin-bottom: 20px;
         padding: auto;
-        width: 80%;
+        width: 70%;
     }
 
     /*tutorial image*/

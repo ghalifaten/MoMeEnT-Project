@@ -29,8 +29,12 @@
         <style>
             .change {
                 font-size:22px; 
-                padding-bottom: 20px;
+                padding-bottom: 10px;
+                /*color: rgb(129, 128, 128);*/
             }
+            /*span {
+                color: rgb(129, 128, 128);
+            }*/
         </style>
 </head>
 
@@ -108,7 +112,7 @@
 
 
                         <div class="visualization-column2">
-                            <button id="stats-btn">See statistics</button> 
+                            <button id="stats-btn" onclick="show_avg()">See statistics</button> 
                         </div>
 
 
@@ -121,6 +125,11 @@
                             </div>
 
                             <div class="sub-stats-container sub-stats-grid" id="stats-average">
+                                <div class="sub-stats-item stats-txt" id="stats-txt-you" >
+                                    <div class="stats-old-val" id="stats-old-val"><strong><span>Old cost</span><br>{{data.old_cost}} €</strong></div>
+                                    <div class="stats-new-val" id="stats-new-val"><strong><span>New cost</span><br>? €</strong></div>
+                                </div>
+
                                 <div class="sub-stats-item stats-icon" id="stats-icon-you">
                                     <!--Default icon-->
                                     <img src="static/img/arrow-decrease-green.png"></img>
@@ -129,11 +138,7 @@
                                     <!--Default value-->
                                     <div class="change">Change</div> <div id="sub-stats-nbr-you">?</div>
                                 </div>
-                                <div class="sub-stats-item stats-txt" id="stats-txt-you" >
-                                    <div class="stats-old-val" id="stats-old-val"><strong>Old cost<br>{{data.old_cost}} €</strong></div>
-                                    <div class="stats-new-val" id="stats-new-val"><strong>New cost<br>? €</strong></div>
-                                </div>
-
+                                
                                 <!--Loading Spinner-->
                                 <div class="loader" id="loader" style="display: none;"></div>
                                  
@@ -144,8 +149,8 @@
                                     For an average household
                                 </div>
 
-                                <div class="sub-stats-container stats-nbr" id="stats-nbr-avg">
-                                        ?
+                                <div class="sub-stats-container stats-nbr" id="stats-nbr-avg"> 
+                                    ?
                                 </div>
                             </div>
                             
@@ -173,5 +178,17 @@
         }else if(group == "FALSE") {
             element.style.display = 'none'; 
         }
+
+        function show_avg() {
+            var avg_cost = {{data.avg_cost|tojson}}
+            let counts=setInterval(updated);
+            let upto=0;
+            function updated(){
+                var count= document.getElementById("stats-nbr-avg");
+                count.innerHTML=++upto;
+                if(upto===Math.abs(Math.ceil(avg_cost))){ clearInterval(counts); }
+                count.innerHTML+= " €"
+            }
+        }        
     </script>
 </body>

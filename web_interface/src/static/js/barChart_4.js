@@ -355,43 +355,6 @@ d3.select("#stats-btn").on("click", function(d){
         });
     }
     getCost()
-
-    const avg_cost = 83
-    if (avg_cost != 0) {
-        let counts=setInterval(updated);
-        let upto=0;
-        function updated(){
-            var count= document.getElementById("stats-nbr-avg-cost");
-            count.innerHTML=++upto;
-            if(upto===Math.abs(Math.ceil(avg_cost))){ clearInterval(counts); }
-            count.innerHTML+= "€"
-        }
-    }
-
-    const avg_peak = 58
-    if (avg_peak != 0) {
-        let counts=setInterval(updated);
-        let upto=0;
-        function updated(){
-            var count= document.getElementById("stats-nbr-avg-peak");
-            count.innerHTML=++upto;
-            if(upto===Math.abs(Math.ceil(avg_peak))){ clearInterval(counts); }
-            count.innerHTML+= "%"
-        }
-    }
-
-    const avg_share = 31
-    if (avg_share != 0) {
-        let counts=setInterval(updated);
-        let upto=0;
-        function updated(){
-            var count= document.getElementById("stats-nbr-avg-share");
-            count.innerHTML=++upto;
-            if(upto===Math.abs(Math.ceil(avg_share))){ clearInterval(counts); }
-            count.innerHTML+= "%"
-        }
-    }
-    
 })
 
 

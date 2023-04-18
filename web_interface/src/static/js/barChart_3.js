@@ -274,19 +274,6 @@ d3.select("#stats-btn").on("click", function(d){
         });
     }
     getDiff()
-    
-    const avg_share = 15
-    if (avg_share != 0) {
-        let counts=setInterval(updated);
-        let upto=0;
-        function updated(){
-            var count= document.getElementById("stats-nbr-avg");
-            count.innerHTML=++upto;
-            if(upto===Math.abs(Math.ceil(avg_share))){ clearInterval(counts); }
-            count.innerHTML+= " %"
-        }
-    }
-
 })
 
 
