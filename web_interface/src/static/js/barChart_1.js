@@ -268,7 +268,7 @@ d3.select("#stats-btn").on("click", function(d){
                 const cost = response.cost;
 
                 //update stats-you 
-                document.getElementById("stats-new-val").innerHTML = "<strong>New cost<br>" + cost + " €</strong>" 
+                document.getElementById("stats-new-val").innerHTML = "<strong><span>New cost</span><br>" + cost + " €</strong>" 
                 document.getElementById("stats-old-val").hidden = false; 
                 document.getElementById("stats-new-val").hidden = false;
 

@@ -29,8 +29,12 @@
         <style>
             .change {
                 font-size:22px; 
-                padding-bottom: 20px;
+                padding-bottom: 10px;
+                /*color: rgb(129, 128, 128);*/
             }
+            /*span {
+                color: rgb(129, 128, 128);
+            }*/
         </style>
 </head>
 
@@ -119,6 +123,11 @@
                             </div>
 
                             <div class="sub-stats-container sub-stats-grid" id="stats-average">
+                                <div class="sub-stats-item stats-txt" id="stats-txt-you" >
+                                    <div class="stats-old-val" id="stats-old-val"><strong><span>Old cost</span><br>{{data.old_cost}} €</strong></div>
+                                    <div class="stats-new-val" id="stats-new-val"><strong><span>New cost</span><br>? €</strong></div>
+                                </div>
+
                                 <div class="sub-stats-item stats-icon" id="stats-icon-you">
                                     <!--Default icon-->
                                     <img src="static/img/arrow-decrease-green.png"></img>
@@ -127,11 +136,7 @@
                                     <!--Default value-->
                                     <div class="change">Change</div> <div id="sub-stats-nbr-you">?</div>
                                 </div>
-                                <div class="sub-stats-item stats-txt" id="stats-txt-you" >
-                                    <div class="stats-old-val" id="stats-old-val"><strong>Old cost<br>{{data.old_cost}} €</strong></div>
-                                    <div class="stats-new-val" id="stats-new-val"><strong>New cost<br>? €</strong></div>
-                                </div>
-
+                                
                                 <!--Loading Spinner-->
                                 <div class="loader" id="loader" style="display: none;"></div>
                                  
