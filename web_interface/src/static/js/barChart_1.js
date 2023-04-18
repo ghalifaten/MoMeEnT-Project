@@ -149,6 +149,7 @@ function (data) {
                     .curve(d3.curveStep))
         .attr("class", "price-line");
 
+        
         svg.selectAll(null)
         .data(data)
         .enter()
@@ -161,6 +162,7 @@ function (data) {
         .attr("font-weight", "bold")
         .text((d) => d.Text)
         .attr("class", "price-line");
+        
 });
 
 
