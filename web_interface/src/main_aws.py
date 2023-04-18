@@ -178,6 +178,11 @@ def get_cost():
         "baseline_cost": math.trunc(baseline_cost), 
         "cost": math.trunc(cost)
         }
+    #Save last trial in session upon clicking on next page, to then save it in DB
+    #Note that the cost for final trial is based on the very last changes before clicking on "Next page"
+    #even if the user doesn't visualize statistics of those changes
+    if (request.get_json()["trial"] == "FINAL"):
+        session["sc1_cost_final"] = cost
     return jsonify(response)
 
 
@@ -193,6 +198,9 @@ def get_peak_load():
         "baseline_peak_load": math.trunc(baseline_peak_load), 
         "peak_load": math.trunc(peak_load)
         }
+    #Save last trial in session upon clicking on next page, to then save it in DB
+    if (request.get_json()["trial"] == "FINAL"):
+        session["sc2_peak_load_final"] = peak_load
     return jsonify(response)
 
 
@@ -209,6 +217,9 @@ def get_res_share():
         "baseline_res_share": math.trunc(baseline_res_share), 
         "res_share": math.trunc(res_share)
         }
+    #Save last trial in session upon clicking on next page, to then save it in DB
+    if (request.get_json()["trial"] == "FINAL"):
+        session["sc3_res_share_final"] = res_share
     return jsonify(response)
 
 
@@ -514,6 +525,11 @@ def conclusion():
         "baseline_cost": session["baseline_cost"],
         "baseline_peak_load": session["baseline_peak_load"],
         "baseline_res_share": session["baseline_res_share"],
+
+        "sc1_cost_final": session["sc1_cost_final"],
+        "sc2_peak_load_final": session["sc2_peak_load_final"],
+        "sc3_res_share_final": session["sc3_res_share_final"],
+
         "q0_answers" : session["q0_answers"],
         "q1a_answers" : session["q1a_answers"],
         "q1b_answers" : session["q1b_answers"],

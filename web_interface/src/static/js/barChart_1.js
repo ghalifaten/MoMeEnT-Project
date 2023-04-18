@@ -233,7 +233,33 @@ d3.select("#nightSlider").on("change", function(d){
     current_data = updateChart(morningValue, middayValue, afternoonValue, eveningValue, nightValue)
 })
 
+//For long x-axis labels to be written on two lines
+function wrap(text, width) {
+    text.each(function() {
+      var text = d3.select(this),
+          words = text.text().split(/\s+/).reverse(),
+          word,
+          line = [],
+          lineNumber = 0,
+          lineHeight = 1.1, // ems
+          y = text.attr("y"),
+          dy = parseFloat(text.attr("dy")),
+          tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em")
+      while (word = words.pop()) {
+        line.push(word)
+        tspan.text(line.join(" "))
+        if (tspan.node().getComputedTextLength() > width) {
+          line.pop()
+          tspan.text(line.join(" "))
+          line = [word]
+          tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", `${++lineNumber * lineHeight + dy}em`).text(word)
+        }
+      }
+    })
+}
 
+
+//Update statistics
 d3.select("#stats-btn").on("click", function(d){   
     function getDiff() {
         //hide stats, show loader and disable buttons
@@ -252,6 +278,7 @@ d3.select("#stats-btn").on("click", function(d){
             type: 'POST',
             data: JSON.stringify({
                 "data": current_data,
+                "trial": ""
             }),
             contentType: "application/json",
             dataType: "json",
@@ -280,7 +307,8 @@ d3.select("#stats-btn").on("click", function(d){
                 } else {
                     document.getElementById("sub-stats-nbr-you").innerText = diff_cost + " €"
                     document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-decrease-green.png\"></img>"
-                }              
+                }      
+
             },
             error: function (response) {
                 document.getElementById("link-to-quests").disabled = false;
@@ -290,31 +318,25 @@ d3.select("#stats-btn").on("click", function(d){
         });
     }
     getDiff()
-
 })
 
-
-//For long x-axis labels to be written on two lines
-function wrap(text, width) {
-    text.each(function() {
-      var text = d3.select(this),
-          words = text.text().split(/\s+/).reverse(),
-          word,
-          line = [],
-          lineNumber = 0,
-          lineHeight = 1.1, // ems
-          y = text.attr("y"),
-          dy = parseFloat(text.attr("dy")),
-          tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em")
-      while (word = words.pop()) {
-        line.push(word)
-        tspan.text(line.join(" "))
-        if (tspan.node().getComputedTextLength() > width) {
-          line.pop()
-          tspan.text(line.join(" "))
-          line = [word]
-          tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", `${++lineNumber * lineHeight + dy}em`).text(word)
+//Send last trial's values to DB
+d3.select(".link-btn").on("click", function(d){  
+    $.ajax({
+        url: location.origin + "/get-cost",
+        type: 'POST',
+        data: JSON.stringify({
+            "data": current_data,
+            "trial": "FINAL",
+        }),
+        contentType: "application/json",
+        dataType: "json",
+        success: function (response) {
+            window.location.assign("questions_1a");
+        },
+        error: function (response) {
+            alert("Error!")
         }
-      }
-    })
-}
+    });
+})
+

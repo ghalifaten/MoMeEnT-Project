@@ -215,6 +215,33 @@ function difference(baseline_data, current_data) {
     return [current_sum - baseline_sum, current_avg - baseline_avg];
 }
 
+
+//For long x-axis labels to be written on two lines
+function wrap(text, width) {
+    text.each(function() {
+      var text = d3.select(this),
+          words = text.text().split(/\s+/).reverse(),
+          word,
+          line = [],
+          lineNumber = 0,
+          lineHeight = 1.1, // ems
+          y = text.attr("y"),
+          dy = parseFloat(text.attr("dy")),
+          tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em")
+      while (word = words.pop()) {
+        line.push(word)
+        tspan.text(line.join(" "))
+        if (tspan.node().getComputedTextLength() > width) {
+          line.pop()
+          tspan.text(line.join(" "))
+          line = [word]
+          tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", `${++lineNumber * lineHeight + dy}em`).text(word)
+        }
+      }
+    })
+}
+
+
 d3.select("#stats-btn").on("click", function(d){    
     /* RUN DEMOD */
     function getDiff() {
@@ -235,6 +262,7 @@ d3.select("#stats-btn").on("click", function(d){
             type: 'POST',
             data: JSON.stringify({
                 "data": current_data,
+                "trial": "",
             }),
             contentType: "application/json",
             dataType: "json",
@@ -275,28 +303,22 @@ d3.select("#stats-btn").on("click", function(d){
 })
 
 
-//For long x-axis labels to be written on two lines
-function wrap(text, width) {
-    text.each(function() {
-      var text = d3.select(this),
-          words = text.text().split(/\s+/).reverse(),
-          word,
-          line = [],
-          lineNumber = 0,
-          lineHeight = 1.1, // ems
-          y = text.attr("y"),
-          dy = parseFloat(text.attr("dy")),
-          tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em")
-      while (word = words.pop()) {
-        line.push(word)
-        tspan.text(line.join(" "))
-        if (tspan.node().getComputedTextLength() > width) {
-          line.pop()
-          tspan.text(line.join(" "))
-          line = [word]
-          tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", `${++lineNumber * lineHeight + dy}em`).text(word)
+//Send last trial's values to DB
+d3.select(".link-btn").on("click", function(d){  
+    $.ajax({
+        url: location.origin + "/get-res-share",
+        type: 'POST',
+        data: JSON.stringify({
+            "data": current_data,
+            "trial": "FINAL",
+        }),
+        contentType: "application/json",
+        dataType: "json",
+        success: function (response) {
+            window.location.assign("questions_3a");
+        },
+        error: function (response) {
+            alert("Error!")
         }
-      }
-    })
-}
-
+    });
+})
