@@ -248,11 +248,10 @@ d3.select("#stats-btn").on("click", function(d){
         //send data to flask
         const current_data = JSON.parse(window.localStorage.getItem("current_data"))
         $.ajax({
-            url: location.origin + "/get-diff",
+            url: location.origin + "/get-cost",
             type: 'POST',
             data: JSON.stringify({
                 "data": current_data,
-                "scenario": "sc1",
             }),
             contentType: "application/json",
             dataType: "json",
@@ -265,8 +264,8 @@ d3.select("#stats-btn").on("click", function(d){
                 document.getElementById("link-to-quests").disabled = false;
 
 
-                const diff_cost = response.diff_cost;
                 const cost = response.cost;
+                const diff_cost = cost - response.baseline_cost;
 
                 //update stats-you 
                 document.getElementById("stats-new-val").innerHTML = "<strong><span>New cost</span><br>" + cost + " €</strong>" 

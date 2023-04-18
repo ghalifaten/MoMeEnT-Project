@@ -18,6 +18,7 @@ import pandas as pd
 #---- SET UP PATH ----#
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
+
 #---- SET UP CONNECTIONS ----#
 client = boto3.client('lambda',
                         region_name= conf.region,
@@ -33,6 +34,7 @@ dynamodb = boto3.resource('dynamodb',
 secret = "something fixed"
 app = Flask(__name__, template_folder='templates')
 app.secret_key = secret
+
 
 #---- INITIALIZE VARIABLES ----#
 n_households = 1000
@@ -63,15 +65,239 @@ RES_dict = {'morning':47.8,
               'night':0
               }
 
-#---- FLASK ROUTES ----#
 
+#---- FUNCTIONS AND POST METHODS----#
+def process_data(data):
+    values_dict = {}
+    for d in data:
+        key = d["Period"].split()[0] #remove the additional information of time between ()
+        value = d["Value"]
+        values_dict[key] = int(value) #values_dict has the format: {'morning': 0, 'midday': 1, 'afternoon': 2, 'evening': 3, 'night': 4}
+    return values_dict
+
+def calculate_params(load):
+    price = min_profile_from_val_period(price_dict)
+    unit_conv = 1 / 60 / 1000 * 365.25 
+    cost = np.sum(load * price * unit_conv)
+    local_generation = min_profile_from_val_period(RES_dict)
+    res_share = np.sum(load * local_generation / np.sum(load))
+    peak_load = np.sum(load[14*60:18*60])/np.sum(load)*100
+    return (cost, res_share, peak_load)
+
+def get_load(payload):   
+    result = client.invoke(
+                FunctionName=conf.lambda_function_name,
+                InvocationType='RequestResponse',                                      
+                Payload=json.dumps(payload)
+                )
+    range = result['Payload'].read()
+    response = json.loads(range) 
+    return response['load']
+
+def generate_profile(values_dict):
+    raw_profile = np.asarray([values_dict['night']] * 6 * 6 + \
+                             [values_dict['morning']] * 4 * 6 + \
+                             [values_dict['midday']] * 4 * 6 + \
+                             [values_dict['afternoon']] * 4 * 6 + \
+                             [values_dict['evening']] * 4 * 6 + \
+                             [values_dict['night']] * 2 * 6
+                            )
+    return raw_profile 
+
+def min_profile_from_val_period(period_dict):
+    profile = np.asarray([period_dict['night']] * 6 * 60 + \
+                        [period_dict['morning']] * 4 * 60 + \
+                        [period_dict['midday']] * 4 * 60+ \
+                        [period_dict['afternoon']] * 4 * 60+ \
+                        [period_dict['evening']] * 4 * 60+ \
+                        [period_dict['night']] * 2 * 60
+                        )
+    return profile
+
+
+
+@app.route('/get-baseline-values', methods=['POST'])
+def get_baseline_values():
+    n_residents = session["hh_size"]
+    household_type = session["hh_type"]
+    n_households = session["n_households"]
+    appliance = session["appliance"]
+
+    #generate profile from baseline values and update usage_patterns
+    data = request.get_json()['baseline_data']
+    values_dict = process_data(data)
+    profile = generate_profile(values_dict) #ndarray(1000,24)
+    usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
+
+    #invoke lambda function to calculate load
+    payload = {
+        "n_residents": n_residents, 
+        "household_type": household_type, 
+        "usage_patterns":usage_patterns, 
+        "appliance":appliance,
+        "n_households":n_households}
+    load = get_load(payload) 
+
+    #claculate (baseline) cost, share, and peak
+    (cost, res_share, peak_load) = calculate_params(load)
+
+    session["baseline_cost"] = cost
+    session["baseline_peak_load"] = peak_load
+    session["baseline_res_share"] = res_share
+
+    #TODO Remove response, return code 200 instead
+    response = {
+        "b_cost":cost,
+        "b_peak":peak_load,
+        "b_share":res_share
+    }
+    return jsonify(response)
+
+
+
+@app.route('/get-cost', methods=['POST'])
+def get_cost():
+    n_residents = session["hh_size"]
+    household_type = session["hh_type"]
+    n_households = session["n_households"]
+    appliance = session["appliance"]
+    #generate profile from current scenario values and update usage_patterns
+    data = request.get_json()['data']
+    values_dict = process_data(data)
+    profile = generate_profile(values_dict) #ndarray(1000,24)
+    usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
+    #invoke lambda function to calculate load
+    payload = {
+        "n_residents": n_residents, 
+        "household_type": household_type, 
+        "usage_patterns": usage_patterns, 
+        "appliance": appliance,
+        "n_households": n_households,
+        }
+    load = get_load(payload) 
+    #claculate cost
+    price = min_profile_from_val_period(price_dict)
+    unit_conv = 1 / 60 / 1000 * 365.25 
+    cost = np.sum(load * price * unit_conv)
+    #send baseline cost along with new cost
+    baseline_cost = session["baseline_cost"]
+    response = {
+        "baseline_cost": math.trunc(baseline_cost), 
+        "cost": math.trunc(cost)
+        }
+    return jsonify(response)
+
+
+
+@app.route('/get-peak-load', methods=['POST'])
+def get_peak_load():
+    n_residents = session["hh_size"]
+    household_type = session["hh_type"]
+    n_households = session["n_households"]
+    appliance = session["appliance"]
+    #generate profile from current scenario values and update usage_patterns
+    data = request.get_json()['data']
+    values_dict = process_data(data)
+    profile = generate_profile(values_dict) #ndarray(1000,24)
+    usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
+    #invoke lambda function to calculate load
+    payload = {
+        "n_residents": n_residents, 
+        "household_type": household_type, 
+        "usage_patterns": usage_patterns, 
+        "appliance": appliance,
+        "n_households": n_households,
+        }
+    load = get_load(payload) 
+    #claculate peak load
+    peak_load = np.sum(load[14*60:18*60])/np.sum(load)*100
+    #send baseline peak load along with new cost
+    baseline_peak_load = session["baseline_peak_load"]
+    response = {
+        "baseline_peak_load": math.trunc(baseline_peak_load), 
+        "peak_load": math.trunc(peak_load)
+        }
+    return jsonify(response)
+
+
+
+@app.route('/get-res-share', methods=['POST'])
+def get_res_share():
+    n_residents = session["hh_size"]
+    household_type = session["hh_type"]
+    n_households = session["n_households"]
+    appliance = session["appliance"]
+    #generate profile from current scenario values and update usage_patterns
+    data = request.get_json()['data']
+    values_dict = process_data(data)
+    profile = generate_profile(values_dict) #ndarray(1000,24)
+    usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
+    #invoke lambda function to calculate load
+    payload = {
+        "n_residents": n_residents, 
+        "household_type": household_type, 
+        "usage_patterns": usage_patterns, 
+        "appliance": appliance,
+        "n_households": n_households,
+        }
+    load = get_load(payload) 
+    #claculate peak load
+    local_generation = min_profile_from_val_period(RES_dict)
+    res_share = np.sum(load * local_generation / np.sum(load))
+    #send baseline peak load along with new cost
+    baseline_res_share = session["baseline_res_share"]
+    response = {
+        "baseline_res_share": math.trunc(baseline_res_share), 
+        "res_share": math.trunc(res_share)
+        }
+    return jsonify(response)
+
+@app.route('/get-3-values', methods=['POST'])
+def get_3_values():
+    n_residents = session["hh_size"]
+    household_type = session["hh_type"]
+    n_households = session["n_households"]
+    appliance = session["appliance"]
+    #generate profile from baseline values and update usage_patterns
+    data = request.get_json()['data']
+    values_dict = process_data(data)
+    profile = generate_profile(values_dict) #ndarray(1000,24)
+    usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
+    #invoke lambda function to calculate load
+    payload = {
+        "n_residents": n_residents, 
+        "household_type": household_type, 
+        "usage_patterns": usage_patterns, 
+        "appliance": appliance,
+        "n_households": n_households,
+        }
+    load = get_load(payload) 
+    #claculate cost, share, and peak
+    (cost, res_share, peak_load) = calculate_params(load)
+    #send baseline values along with new values
+    baseline_cost = session["baseline_cost"]
+    baseline_peak_load = session["baseline_peak_load"]
+    baseline_res_share = session["baseline_res_share"]
+    response = {
+        "baseline_cost": math.trunc(baseline_cost), 
+        "baseline_peak_load": math.trunc(baseline_peak_load),
+        "baseline_res_share": math.trunc(baseline_res_share),
+        "cost": math.trunc(cost),
+        "peak_load": math.trunc(peak_load),
+        "res_share": math.trunc(res_share),
+        }
+
+    return jsonify(response)
+
+
+#---- ROUTES ----#
 def format_app(appliance):
     if appliance == "WASHING_MACHINE":
         return "washing machine"
     elif appliance == "DISH_WASHER":
         return "dish washer"
 
-#---- TEMPORARY MAIN
+###---- TEMPORARY MAIN
 @app.route('/') 
 def _index():
     #Default args
@@ -156,92 +382,6 @@ def experiment_0():
     appliance = session["appliance"]
     return render_template("experiments/experiment_0.html", appliance=format_app(appliance))
 
-def process_data(data):
-    values_dict = {}
-    for d in data:
-        key = d["Period"].split()[0] #remove the additional information of time between ()
-        value = d["Value"]
-        values_dict[key] = int(value) #values_dict has the format: {'morning': 0, 'midday': 1, 'afternoon': 2, 'evening': 3, 'night': 4}
-    return values_dict
-
-def calculate_params(load):
-    price = min_profile_from_val_period(price_dict)
-    unit_conv = 1 / 60 / 1000 * 365.25 
-    cost = np.sum(load * price * unit_conv)
-    local_generation = min_profile_from_val_period(RES_dict)
-    res_share = np.sum(load * local_generation / np.sum(load))
-    peak_load = np.sum(load[14*60:18*60])/np.sum(load)*100
-    return (cost, res_share, peak_load)
-
-@app.route('/get-baseline-values', methods=['POST'])
-def get_baseline_values():
-    n_residents = session["hh_size"]
-    household_type = session["hh_type"]
-    n_households = session["n_households"]
-    appliance = session["appliance"]
-
-    #generate profile from baseline values and update usage_patterns
-    data = request.get_json()['baseline_data']
-    values_dict = process_data(data)
-    profile = generate_profile(values_dict) #ndarray(1000,24)
-    usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
-
-    #invoke lambda function to calculate load
-    payload = {
-        "n_residents": n_residents, 
-        "household_type": household_type, 
-        "usage_patterns":usage_patterns, 
-        "appliance":appliance,
-        "n_households":n_households}
-    load = get_load(payload) 
-
-    #claculate (baseline) cost, share, and peak
-    (cost, res_share, peak_load) = calculate_params(load)
-
-    session["baseline_cost"] = cost
-    session["baseline_peak_load"] = peak_load
-    session["baseline_res_share"] = res_share
-
-    response = {
-        "b_cost":cost,
-        "b_peak":peak_load,
-        "b_share":res_share
-    }
-    return jsonify(response)
-
-def get_load(payload):   
-    result = client.invoke(
-                FunctionName=conf.lambda_function_name,
-                InvocationType='RequestResponse',                                      
-                Payload=json.dumps(payload)
-                )
-    range = result['Payload'].read()
-    response = json.loads(range) 
-    return response['load']
-
-def movingaverage(interval, window_size):
-    window = np.ones(int(window_size))/float(window_size)
-    return np.convolve(interval, window, 'same')
-
-def generate_profile(values_dict):
-    raw_profile = np.asarray([values_dict['night']] * 6 * 6 + \
-                             [values_dict['morning']] * 4 * 6 + \
-                             [values_dict['midday']] * 4 * 6 + \
-                             [values_dict['afternoon']] * 4 * 6 + \
-                             [values_dict['evening']] * 4 * 6 + \
-                             [values_dict['night']] * 2 * 6
-                            )
-    return raw_profile 
-
-def min_profile_from_val_period(period_dict):
-    profile = np.asarray([period_dict['night']] * 6 * 60 + \
-                        [period_dict['morning']] * 4 * 60 + \
-                        [period_dict['midday']] * 4 * 60+ \
-                        [period_dict['afternoon']] * 4 * 60+ \
-                        [period_dict['evening']] * 4 * 60+ \
-                        [period_dict['night']] * 2 * 60
-                        )
-    return profile
 
 @app.route('/questions_0', methods=['GET','POST'])
 def questions_0():
@@ -249,9 +389,11 @@ def questions_0():
     file_path = "questions/{app}/questions_0.html".format(app=appliance)
     return render_template(file_path)
 
+
 @app.route('/tutorial')
 def tutorial():
     return render_template("tutorial.html")
+
 
 @app.route('/experiment_1')
 def experiment_1():
@@ -273,57 +415,13 @@ def experiment_1():
     }
     return render_template("experiments/experiment_1.html", data=data)
 
-@app.route('/get-diff', methods=['POST'])
-def get_diff():
-    n_residents = session["hh_size"]
-    household_type = session["hh_type"]
-    n_households = session["n_households"]
-    appliance = session["appliance"]
-
-    #generate profile from baseline values and update usage_patterns
-    data = request.get_json()['data']
-    values_dict = process_data(data)
-    profile = generate_profile(values_dict) #ndarray(1000,24)
-    usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
-
-    #invoke lambda function to calculate load
-    payload = {
-        "n_residents": n_residents, 
-        "household_type": household_type, 
-        "usage_patterns": usage_patterns, 
-        "appliance": appliance,
-        "n_households": n_households,
-        }
-    load = get_load(payload) 
-
-    #claculate cost, share, and peak
-    (cost, res_share, peak_load) = calculate_params(load)
-
-    baseline_cost = session["baseline_cost"]
-    baseline_peak = session["baseline_peak_load"]
-    baseline_share = session["baseline_res_share"]
-
-    #Compute the % of in-decrease
-    diff_cost = cost - baseline_cost
-    diff_share = res_share - baseline_share
-    diff_peak = peak_load - baseline_peak
-
-    response = {
-        "diff_cost": math.trunc(diff_cost), 
-        "cost": math.trunc(cost),
-        "diff_peak": math.trunc(diff_peak),
-        "peak_load": math.trunc(peak_load),
-        "res_share": math.trunc(res_share),
-        "diff_share": math.trunc(diff_share)
-        }
-
-    return jsonify(response)
 
 @app.route('/questions_1a', methods=['GET','POST'])
 def questions_1a():
     appliance = session["appliance"]
     file_path = "questions/{app}/questions_1a.html".format(app=appliance)
     return render_template(file_path)
+
 
 @app.route('/questions_1b', methods=['GET','POST'])
 def questions_1b():
@@ -333,14 +431,13 @@ def questions_1b():
     file_path = "questions/{app}/questions_1b.html".format(app=appliance)
     return render_template(file_path)
 
+
 @app.route('/experiment_2')
 def experiment_2():
     q1b_answers = request.args
     session["q1b_answers"] = q1b_answers.to_dict()
-
     peer = session["peer"]
     appliance = session["appliance"]
-
     baseline_peak = session["baseline_peak_load"]
     avg_peak = session["avg_peak"]
     data = {
@@ -352,31 +449,31 @@ def experiment_2():
 
     return render_template("experiments/experiment_2.html", data=data)
 
+
 @app.route('/questions_2a', methods=['GET','POST'])
 def questions_2a():
     appliance = session["appliance"]
     file_path = "questions/{app}/questions_2a.html".format(app=appliance)
     return render_template(file_path)
 
+
 @app.route('/questions_2b', methods=['GET','POST'])
 def questions_2b():
     q2a_answers = request.args
     session["q2a_answers"] = q2a_answers.to_dict()
     appliance = session["appliance"]
-
     file_path = "questions/{app}/questions_2b.html".format(app=appliance)
     return render_template(file_path)
+
 
 @app.route('/experiment_3')
 def experiment_3():
     q2b_answers = request.args
     session["q2b_answers"] = q2b_answers.to_dict()
-
     appliance = session["appliance"] 
     peer = session["peer"]
     baseline_share = session['baseline_res_share']
     avg_res = session["avg_res"]
-
     data = {
         "appliance": format_app(appliance), 
         "group": peer, 
@@ -385,37 +482,35 @@ def experiment_3():
     }
     return render_template("experiments/experiment_3.html", data=data)
 
+
 @app.route('/questions_3a', methods=['GET','POST'])
 def questions_3a():
     appliance = session["appliance"]
     file_path = "questions/{app}/questions_3a.html".format(app=appliance)
     return render_template(file_path)
 
+
 @app.route('/questions_3b', methods=['GET','POST'])
 def questions_3b():
     q3a_answers = request.args
     session["q3a_answers"] = q3a_answers.to_dict()
     appliance = session["appliance"]
-
     file_path = "questions/{app}/questions_3b.html".format(app=appliance)
     return render_template(file_path)
 
+
 @app.route('/experiment_4')
 def experiment_4():    
-    appliance = session["appliance"]
-
     q3b_answers = request.args
     session["q3b_answers"] = q3b_answers.to_dict()
-    
+    appliance = session["appliance"]
     peer = session["peer"]
-
     baseline_cost = session["baseline_cost"]
     baseline_peak = session["baseline_peak_load"]
     baseline_share = session["baseline_res_share"]
     avg_cost = session["avg_cost"]
     avg_peak = session["avg_peak"]
     avg_res = session["avg_res"]
-
     data = {
         "appliance": format_app(appliance), 
         "group": peer, 
@@ -426,8 +521,8 @@ def experiment_4():
         "avg_peak": avg_peak,
         "avg_res": avg_res
     }
-
     return render_template("experiments/experiment_4.html", data=data)
+
 
 @app.route('/questions_final_a', methods=['GET','POST'])
 def questions_final_a():  
@@ -435,26 +530,24 @@ def questions_final_a():
     file_path = "questions/{app}/questions_final_a.html".format(app=appliance)
     return render_template(file_path)
 
+
 @app.route('/questions_final_b', methods=['GET','POST'])
 def questions_final_b():    
     final_answers_a = request.args
     session["final_answers_a"] = final_answers_a.to_dict()
     appliance = session["appliance"]
-
     file_path = "questions/{app}/questions_final_b.html".format(app=appliance)
     return render_template(file_path)
+
 
 @app.route('/conclusion')
 def conclusion():
     final_answers_b = request.args
     session["final_answers_b"] = final_answers_b.to_dict()
-
     m_field = session["m_field"]
     appliance = session["appliance"]
-    
     #choose table depending on appliance
     table = dynamodb.Table("MomeentData-"+appliance) 
-
     #Save inputs in DB
     item = {
         "m": m_field,
@@ -475,10 +568,8 @@ def conclusion():
         "final_answers_a" : session["final_answers_a"],
         "final_answers_b" : session["final_answers_b"]
     }
-
     item = json.loads(json.dumps(item), parse_float=Decimal)
     table.put_item(Item=item)
-
     return render_template("conclusion.html", appliance=format_app(appliance), m_field=m_field)
 
 
