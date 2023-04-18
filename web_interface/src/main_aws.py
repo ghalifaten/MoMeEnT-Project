@@ -49,11 +49,25 @@ df = pd.read_csv(dir_path+"/static/data/vals_peer_comparison.csv")
 #TODO should be read from the csv file 
 #map the values to the [0-4] range (?)         
 #or add another axis on the bar_chart     
+# TODO to be removed generic price_dict
 price_dict = {'morning':0.467,
               'midday':0.334, 
               'afternoon':0.346, 
               'evening':0.512,
               'night':0.375
+              }
+
+price_dict_DE = {'morning':0.467,
+              'midday':0.334, 
+              'afternoon':0.346, 
+              'evening':0.512,
+              'night':0.375
+              }
+price_dict_CH = {'morning':0.310,
+              'midday':0.222, 
+              'afternoon':0.229, 
+              'evening':0.340,
+              'night':0.249
               }
 
 RES_dict = {'morning':47.8,
