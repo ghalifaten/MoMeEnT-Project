@@ -143,7 +143,7 @@
                         <div class="combined-stats visualization-column3"> <!--combined-stats: grid, column3 for position-->
                             <!--yearly cost-->
                             <div class="upper-text-1 sub-stats-upper-txt-cost">
-                            <strong>Yearly energy cost</strong>
+                            <strong>Yearly energy cost for running the {{data.appliance}}:</strong>
                             </div>
 
                             <div class="stats-you-1 sub-stats-container sub-stats-grid"> <!--stats-you-1 for grid, sub-stats-container for border sub-stats-grid for old/new val-->
@@ -153,27 +153,27 @@
                                 </div>
                                 <div class="sub-stats-item stats-nbr" id="stats-nbr-you-cost">
                                     <!--Default value-->
-                                    <div class="change smaller">Your change</div> <div id="sub-stats-nbr-you-cost">?</div>
+                                    <div class="change smaller">Change</div> <div id="sub-stats-nbr-you-cost">?</div>
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you-cost">
-                                    <div class="stats-old-val smaller" >Old cost<div id="stats-old-val-cost">{{data.old_cost}} €</div></div>
-                                    <div class="stats-new-val smaller" >New cost<div id="stats-new-val-cost">?</div></div>
+                                    <div class="stats-old-val smaller" >Old value<div id="stats-old-val-cost">{{data.old_cost}} €</div></div>
+                                    <div class="stats-new-val smaller" >New value<div id="stats-new-val-cost">?</div></div>
                                 </div>
                                 <!--Loading Spinner-->
                                 <div class="loader" id="loader"></div>
                             </div>
 
                             <div class="stats-avg-1 sub-stats-container">
-                                <div class="smaller" style="margin-top: 12px;">Average household</div>
+                                <div class="smaller" style="margin-top: 12px;">For an average household</div>
                                 <div class="combined-stats-nbr-avg" id="stats-nbr-avg-cost">  
                                     ? 
                                 </div>
-                                <div class="small-txt">Average yearly energy cost</div>
+                                <div class="small-txt"></div>
                             </div>
 
                             <!--peak hours-->
                             <div class="upper-text-2 sub-stats-upper-txt-peak">
-                            <strong>Share energy consumed during peak hours</strong>
+                            <strong>Percentage of energy consumed during peak hours:</strong>
                             </div>
 
                             <div class="stats-you-2 sub-stats-container sub-stats-grid">
@@ -183,11 +183,11 @@
                                 </div>
                                 <div class="sub-stats-item stats-nbr" id="stats-nbr-you-peak">
                                     <!--Default value-->
-                                    <div class="change smaller">Your change</div> <div id="sub-stats-nbr-you-peak">?</div>
+                                    <div class="change smaller">Change</div> <div id="sub-stats-nbr-you-peak">?</div>
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you-peak">
-                                    <div class="stats-old-val smaller" >Old share<div id="stats-old-val-peak">{{data.old_peak}} %</div></div>
-                                    <div class="stats-new-val smaller" >New share<div id="stats-new-val-peak">?</div></div>
+                                    <div class="stats-old-val smaller" >Old value<div id="stats-old-val-peak">{{data.old_peak}} %</div></div>
+                                    <div class="stats-new-val smaller" >New value<div id="stats-new-val-peak">?</div></div>
                                 </div>
                                 <!--Loading Spinner-->
                                 <div class="loader" id="loader"></div>
@@ -198,12 +198,12 @@
                                 <div class="combined-stats-nbr-avg" id="stats-nbr-avg-peak">  
                                     ? 
                                 </div>
-                                <div class="small-txt">Average share energy consumed during peak</div>
+                                <div class="small-txt"></div>
                             </div>
 
                             <!--res share-->
                             <div class="upper-text-3 sub-stats-upper-txt-pv">
-                                <strong>Share energy from PV</strong>
+                                <strong>Percentage of energy consumed from PV:</strong>
                             </div>
 
                             <div class="stats-you-3 sub-stats-container sub-stats-grid">
@@ -213,22 +213,22 @@
                                 </div>
                                 <div class="sub-stats-item stats-nbr" id="stats-nbr-you-share">
                                     <!--Default value-->
-                                    <div class="change smaller">Your change</div> <div id="sub-stats-nbr-you-share">?</div>
+                                    <div class="change smaller">Change</div> <div id="sub-stats-nbr-you-share">?</div>
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you-share">
-                                    <div class="stats-old-val smaller" >Old share<div id="stats-old-val-share">{{data.old_share}} %</div></div>
-                                    <div class="stats-new-val smaller" >New share<div id="stats-new-val-share">?</div></div>
+                                    <div class="stats-old-val smaller" >Old value<div id="stats-old-val-share">{{data.old_share}} %</div></div>
+                                    <div class="stats-new-val smaller" >New value<div id="stats-new-val-share">?</div></div>
                                 </div>
                                 <!--Loading Spinner-->
                                 <div class="loader" id="loader"></div>
                             </div>
 
                             <div class="stats-avg-3 sub-stats-container">
-                                <div class="smaller" style="margin-top: 12px;">Average household</div>
+                                <div class="smaller" style="margin-top: 12px;">For an average household</div>
                                 <div class="combined-stats-nbr-avg" id="stats-nbr-avg-share">  
                                     ? 
                                 </div>
-                                <div class="small-txt">Average share energy consumed from PV</div>
+                                <div class="small-txt"></div>
                             </div>
                         </div>
                     </div>

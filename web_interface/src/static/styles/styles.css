@@ -295,7 +295,7 @@
         border-radius: 6px;
         background-color: var(--orange);
         color: var(--gray);
-        font-size: 22px;
+        font-size: 20px;
     }
 
     .sub-stats-upper-txt-peak {
@@ -303,7 +303,7 @@
         border-radius: 6px;
         background-color: #f9d4da;
         color: var(--gray);
-        font-size: 22px;
+        font-size: 20px;
     }
 
     .sub-stats-upper-txt-pv {
@@ -311,7 +311,7 @@
         border-radius: 6px;
         background-color: #d2f8d2;
         color: var(--gray);
-        font-size: 22px;
+        font-size: 20px;
     }
 
     .sub-stats-container {
