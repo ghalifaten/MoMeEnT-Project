@@ -135,7 +135,6 @@ var legend_data = [ { Text: "Habitual washing behavior", Color: "#D3D3D3" },
 var legend = d3.select('#bar-chart-legend')
                 .append('svg')
                 .append('g')
-                .attr("transform", "translate(-150,0)")
                 .selectAll(".legendItem")
                 .data(legend_data);
 

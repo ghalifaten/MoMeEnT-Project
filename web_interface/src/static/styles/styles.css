@@ -212,7 +212,7 @@
         height: 400px;
         width: 900px;
         float: left;
-        padding-top: 20px;
+        margin-top: 80px;
     }
 
     svg {
@@ -285,7 +285,7 @@
         height: 630px;
         text-align: center;
         padding-right: 0;
-        margin-left: 100px;
+        margin-left: 50px;
         position: relative;
         float: right;
     }
@@ -395,8 +395,8 @@
     }
 
     #stats-btn {
-        margin-top: 300px;
-        margin-left: 30px;
+        margin-top: 360px;
+        margin-left: 50px;
         
         padding: auto;
     }
