@@ -217,11 +217,10 @@ d3.select("#stats-btn").on("click", function(d){
         //send data to flask
         const current_data = JSON.parse(window.localStorage.getItem("current_data"))
         $.ajax({
-            url: location.origin + "/get-diff",
+            url: location.origin + "/get-peak-load",
             type: 'POST',
             data: JSON.stringify({
                 "data": current_data,
-                "scenario": "sc2",
             }),
             contentType: "application/json",
             dataType: "json",
@@ -233,8 +232,8 @@ d3.select("#stats-btn").on("click", function(d){
                 document.getElementById("stats-btn").disabled = false;
                 document.getElementById("link-to-quests").disabled = false;
 
-                const diff_peak = response.diff_peak;
                 const peak = response.peak_load;
+                const diff_peak = peak - response.baseline_peak_load;
             
                 //update stats-you 
                 document.getElementById("stats-new-val").innerHTML = "<strong>New share <br>" + peak + " %</strong>" 

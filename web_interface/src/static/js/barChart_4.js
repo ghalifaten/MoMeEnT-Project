@@ -285,22 +285,20 @@ d3.select("#stats-btn").on("click", function(d){
         const baseline_data = JSON.parse(window.localStorage.getItem("baseline_data"))
         const current_data = JSON.parse(window.localStorage.getItem("current_data"))
         $.ajax({
-            url: location.origin + "/get-diff",
+            url: location.origin + "/get-3-values",
             type: 'POST',
             data: JSON.stringify({
                 "data": current_data,
-                "scenario": "sc4",
             }),
             contentType: "application/json",
             dataType: "json",
             success: function (response) {
-                const diff_cost = response.diff_cost;
-                const diff_peak = response.diff_peak;
-                const diff_share = response.diff_share;
-
                 const cost = response.cost;
                 const peak_load = response.peak_load;
                 const res_share = response.res_share;
+                const diff_cost = cost - response.baseline_cost;
+                const diff_peak = peak_load - response.baseline_peak_load;
+                const diff_share = res_share - response.baseline_res_share;
 
                 //reactivate buttons
                 document.getElementById("stats-btn").disabled = false;

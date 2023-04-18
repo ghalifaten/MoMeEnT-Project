@@ -231,11 +231,10 @@ d3.select("#stats-btn").on("click", function(d){
         const baseline_data = JSON.parse(window.localStorage.getItem("baseline_data"))
         const current_data = JSON.parse(window.localStorage.getItem("current_data"))
         $.ajax({
-            url: location.origin + "/get-diff",
+            url: location.origin + "/get-res-share",
             type: 'POST',
             data: JSON.stringify({
                 "data": current_data,
-                "scenario": "sc3",
             }),
             contentType: "application/json",
             dataType: "json",
@@ -247,8 +246,8 @@ d3.select("#stats-btn").on("click", function(d){
                 document.getElementById("stats-btn").disabled = false;
                 document.getElementById("link-to-quests").disabled = false;
 
-                const diff_share = response.diff_share;
                 const res_share = response.res_share;
+                const diff_share = res_share - response.baseline_res_share;
             
                 //update stats-you 
                 document.getElementById("stats-new-val").innerHTML = "<strong>New share<br>" + res_share + " %</strong>" 
