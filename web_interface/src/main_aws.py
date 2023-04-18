@@ -79,7 +79,6 @@ RES_dict = {'morning':47.8,
               'night':0
               }
 
-
 #---- FUNCTIONS AND POST METHODS----#
 def process_data(data):
     values_dict = {}
@@ -178,6 +177,11 @@ def get_cost():
         "baseline_cost": math.trunc(baseline_cost), 
         "cost": math.trunc(cost)
         }
+    #save first trial
+    if (session["trial"] == 0):
+        session["sc1_cost_first"] = cost
+        session["trial"] += 1
+    
     #Save last trial in session upon clicking on next page, to then save it in DB
     #Note that the cost for final trial is based on the very last changes before clicking on "Next page"
     #even if the user doesn't visualize statistics of those changes
@@ -198,6 +202,10 @@ def get_peak_load():
         "baseline_peak_load": math.trunc(baseline_peak_load), 
         "peak_load": math.trunc(peak_load)
         }
+    #save first trial
+    if (session["trial"] == 0):
+        session["sc2_peak_load_first"] = peak_load
+        session["trial"] += 1
     #Save last trial in session upon clicking on next page, to then save it in DB
     if (request.get_json()["trial"] == "FINAL"):
         session["sc2_peak_load_final"] = peak_load
@@ -217,6 +225,10 @@ def get_res_share():
         "baseline_res_share": math.trunc(baseline_res_share), 
         "res_share": math.trunc(res_share)
         }
+    #save first trial
+    if (session["trial"] == 0):
+        session["sc3_res_share_first"] = res_share
+        session["trial"] += 1
     #Save last trial in session upon clicking on next page, to then save it in DB
     if (request.get_json()["trial"] == "FINAL"):
         session["sc3_res_share_final"] = res_share
@@ -364,6 +376,7 @@ def tutorial():
 
 @app.route('/experiment_1')
 def experiment_1():
+    session["trial"] = 0
     #retrieve answers to questions_0 here
     q0_answers = request.args
     session["q0_answers"] = q0_answers.to_dict()
@@ -401,6 +414,7 @@ def questions_1b():
 
 @app.route('/experiment_2')
 def experiment_2():
+    session["trial"] = 0
     q1b_answers = request.args
     session["q1b_answers"] = q1b_answers.to_dict()
     peer = session["peer"]
@@ -435,6 +449,7 @@ def questions_2b():
 
 @app.route('/experiment_3')
 def experiment_3():
+    session["trial"] = 0
     q2b_answers = request.args
     session["q2b_answers"] = q2b_answers.to_dict()
     appliance = session["appliance"] 
@@ -467,7 +482,8 @@ def questions_3b():
 
 
 @app.route('/experiment_4')
-def experiment_4():    
+def experiment_4():       
+    session["trial"] = 0 
     q3b_answers = request.args
     session["q3b_answers"] = q3b_answers.to_dict()
     appliance = session["appliance"]
@@ -525,6 +541,10 @@ def conclusion():
         "baseline_cost": session["baseline_cost"],
         "baseline_peak_load": session["baseline_peak_load"],
         "baseline_res_share": session["baseline_res_share"],
+
+        "sc1_cost_first": session["sc1_cost_first"],
+        "sc2_peak_load_first": session["sc2_peak_load_first"],
+        "sc3_res_share_first": session["sc3_res_share_first"],
 
         "sc1_cost_final": session["sc1_cost_final"],
         "sc2_peak_load_final": session["sc2_peak_load_final"],
