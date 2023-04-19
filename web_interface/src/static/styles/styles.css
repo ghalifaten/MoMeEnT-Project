@@ -380,7 +380,7 @@
 
     .stats-nbr {
         font-weight: bold;
-        font-size: 50px;
+        font-size: 43px;
         color: var(--gray);
     }
 
@@ -479,7 +479,7 @@
 
     .combined-stats-nbr-avg {
         font-weight: bold;
-        font-size: 65px;
+        font-size: 50px;
         color: var(--gray);
         line-height: calc(var(--box-height) - 130px);
     }
