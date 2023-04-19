@@ -156,7 +156,7 @@
                                     <div class="change smaller">Change</div> <div id="sub-stats-nbr-you-cost">?</div>
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you-cost">
-                                    <div class="stats-old-val smaller" >Old value<div id="stats-old-val-cost">{{data.old_cost}} €</div></div>
+                                    <div class="stats-old-val smaller" >Old value<div id="stats-old-val-cost">{{data.old_cost}} {{data.currency}}</div></div>
                                     <div class="stats-new-val smaller" >New value<div id="stats-new-val-cost">?</div></div>
                                 </div>
                                 <!--Loading Spinner-->
@@ -249,7 +249,7 @@
 
     <script>
         function show_avg() {
-            document.getElementById("stats-nbr-avg-cost").innerText = Math.ceil({{data.avg_cost|tojson}}) + " €";
+            document.getElementById("stats-nbr-avg-cost").innerText = Math.ceil({{data.avg_cost|tojson}}) + " " + {{data.currency|tojson}};
             document.getElementById("stats-nbr-avg-peak").innerText = Math.ceil({{data.avg_peak|tojson}}) + " %";
             document.getElementById("stats-nbr-avg-share").innerText = Math.ceil({{data.avg_res|tojson}}) + " %";
         }  

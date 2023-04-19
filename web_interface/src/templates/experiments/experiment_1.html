@@ -30,11 +30,7 @@
             .change {
                 font-size:22px; 
                 padding-bottom: 10px;
-                /*color: rgb(129, 128, 128);*/
             }
-            /*span {
-                color: rgb(129, 128, 128);
-            }*/
         </style>
 </head>
 
@@ -126,8 +122,8 @@
 
                             <div class="sub-stats-container sub-stats-grid" id="stats-average">
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you" >
-                                    <div class="stats-old-val" id="stats-old-val"><strong><span>Old value</span><br>{{data.old_cost}} €</strong></div>
-                                    <div class="stats-new-val" id="stats-new-val"><strong><span>New value</span><br>? €</strong></div>
+                                    <div class="stats-old-val" id="stats-old-val"><strong><span>Old value</span><br>{{data.old_cost}} {{data.currency}}</strong></div>
+                                    <div class="stats-new-val" id="stats-new-val"><strong><span>New value</span><br>?</strong></div>
                                 </div>
 
                                 <div class="sub-stats-item stats-icon" id="stats-icon-you">
@@ -187,7 +183,7 @@
                 var count= document.getElementById("stats-nbr-avg");
                 count.innerHTML=++upto;
                 if(upto===Math.abs(Math.ceil(avg_cost))){ clearInterval(counts); }
-                count.innerHTML+= " €"
+                count.innerHTML+= " " + {{data.currency|tojson}}
             }
         }        
     </script>

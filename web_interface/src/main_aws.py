@@ -171,7 +171,8 @@ def get_cost():
     baseline_cost = session["baseline_cost"]
     response = {
         "baseline_cost": math.trunc(baseline_cost), 
-        "cost": math.trunc(cost)
+        "cost": math.trunc(cost),
+        "currency": session["currency"]
         }
     #save first trial
     if (session["trial"] == 0):
@@ -248,6 +249,7 @@ def get_3_values():
         "cost": math.trunc(cost),
         "peak_load": math.trunc(peak_load),
         "res_share": math.trunc(res_share),
+        "currency": session["currency"]
         }
     #save first trial
     if (session["trial"] == 0):
@@ -262,14 +264,13 @@ def get_3_values():
                                 "res_share": res_share}
     return jsonify(response)
 
-
-#---- ROUTES ----#
 def format_app(appliance):
     if appliance == "WASHING_MACHINE":
         return "washing machine"
     elif appliance == "DISH_WASHER":
         return "dish washer"
 
+#---- ROUTES ----#
 ###---- TEMPORARY MAIN
 @app.route('/') 
 def _index():
@@ -280,13 +281,15 @@ def _index():
     hh_type = 1
     weekly_freq = 2
     appliance = "DISH_WASHER"
-    country = "DE"
+    country = "CH"
 
     #Choose the price_dict
     if (country == "DE"):
         session["price_dict"] = price_dict_DE
+        session["currency"] = "€"
     elif (country == "CH"):
         session["price_dict"] = price_dict_CH
+        session["currency"] = "CHF"
 
     record = df.loc[(df['appliance'] == appliance) & (df['n_residents'] == hh_size) & (df['household_type'] == hh_type)]
     avg_cost = record['cost'].values[0]
@@ -422,12 +425,14 @@ def experiment_1():
 
     baseline_cost = session["baseline_cost"]
     avg_cost = session["avg_cost"]
+    currency = session["currency"]
 
     data = {
         "appliance": format_app(appliance), 
         "group": peer, 
         "old_cost": math.trunc(baseline_cost),
         "avg_cost": avg_cost,
+        "currency": currency
     }
     return render_template("experiments/experiment_1.html", data=data)
 
@@ -496,7 +501,7 @@ def experiment_3():
         "appliance": format_app(appliance), 
         "group": peer, 
         "old_share": math.trunc(baseline_share),
-        "avg_res": avg_res
+        "avg_res": avg_res,
     }
     return render_template("experiments/experiment_3.html", data=data)
 
@@ -530,6 +535,7 @@ def experiment_4():
     avg_cost = session["avg_cost"]
     avg_peak = session["avg_peak"]
     avg_res = session["avg_res"]
+    currency = session["currency"]
     data = {
         "appliance": format_app(appliance), 
         "group": peer, 
@@ -538,7 +544,8 @@ def experiment_4():
         "old_share": math.trunc(baseline_share),
         "avg_cost": avg_cost,
         "avg_peak": avg_peak,
-        "avg_res": avg_res
+        "avg_res": avg_res,
+        "currency": currency
     }
     return render_template("experiments/experiment_4.html", data=data)
 
