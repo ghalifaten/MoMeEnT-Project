@@ -410,6 +410,13 @@
 
     }
 
+    .combined-stats-false {
+        display: grid;
+        grid-template-columns: [v0] 320px [v1] 0px [v2];
+        grid-template-rows: [h0] auto [h1] var(--box-height) [h2] auto [h3] var(--box-height) [h4] auto [h5] var(--box-height) [h6];
+        row-gap: 5px;
+    }
+
     /**************/
     .upper-text-1 {
         grid-column-start: v0;
@@ -491,6 +498,11 @@
     .combined-stats {
         text-align: center;
         margin-left: 15px;
+    }
+
+    .combined-stats-false {
+        text-align: center;
+        margin-left: 50px;
     }
 
     /***********************************************************************************************/

@@ -282,6 +282,7 @@ def _index():
     weekly_freq = 2
     appliance = "DISH_WASHER"
     country = "CH"
+    peer = "FALSE"
 
     #Choose the price_dict
     if (country == "DE"):
@@ -305,7 +306,7 @@ def _index():
     session["hh_type"] = hh_type
     session["n_households"] = n_households
     session["appliance"] = appliance
-    session["peer"] = "TRUE"
+    session["peer"] = peer
     session["weekly_freq"] = weekly_freq
     session["avg_cost"] = avg_cost
     session["avg_peak"] = avg_peak
