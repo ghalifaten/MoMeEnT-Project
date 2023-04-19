@@ -322,6 +322,19 @@ def index(qualtrics_data):
     except:
         return 'Error in extracting arguments from URL. Either missing or data type not correct.'
 
+    # TODO move it in the right position
+    if hh_size > 5:
+        hh_size = 5
+    hh_type_dict = {1:1,  # single person
+                    2:2,  # couple without children
+                    3:4,  # couple with children
+                    4:3,   # single with children
+                    5:5,   # extended family
+                    6:5,   # shared household
+                    7:5,}  # other
+    hh_type = hh_type_dict[hh_type]
+
+
     year_freq = weekly_freq * 52 
     usage_patterns['target_cycles'][appliance] = year_freq
 
