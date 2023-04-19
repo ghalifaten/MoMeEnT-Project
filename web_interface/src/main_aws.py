@@ -249,7 +249,17 @@ def get_3_values():
         "peak_load": math.trunc(peak_load),
         "res_share": math.trunc(res_share),
         }
-
+    #save first trial
+    if (session["trial"] == 0):
+        session["sc4_first"] = {"cost": cost,
+                                "peak_load": peak_load,
+                                "res_share": res_share}
+        session["trial"] += 1
+    #Save last trial in session upon clicking on next page, to then save it in DB
+    if (request.get_json()["trial"] == "FINAL"):
+        session["sc4_final"] = {"cost": cost,
+                                "peak_load": peak_load,
+                                "res_share": res_share}
     return jsonify(response)
 
 
@@ -265,7 +275,7 @@ def format_app(appliance):
 def _index():
     #Default args
     m = "1"
-    ID = "test"
+    ID = "__test"
     hh_size = 1
     hh_type = 1
     weekly_freq = 2
@@ -287,6 +297,7 @@ def _index():
 
     session["ID"] = ID
     session["m_field"] = m
+    session["country"] = country
     session["hh_size"] = hh_size
     session["hh_type"] = hh_type
     session["n_households"] = n_households
@@ -571,10 +582,12 @@ def conclusion():
         "sc1_cost_first": session["sc1_cost_first"],
         "sc2_peak_load_first": session["sc2_peak_load_first"],
         "sc3_res_share_first": session["sc3_res_share_first"],
+        "sc4_first": session["sc4_first"],
 
         "sc1_cost_final": session["sc1_cost_final"],
         "sc2_peak_load_final": session["sc2_peak_load_final"],
         "sc3_res_share_final": session["sc3_res_share_final"],
+        "sc4_final": session["sc4_final"],
 
         "q0_answers" : session["q0_answers"],
         "q1a_answers" : session["q1a_answers"],
