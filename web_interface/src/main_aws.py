@@ -50,6 +50,13 @@ df = pd.read_csv(dir_path+"/static/data/vals_peer_comparison.csv")
 #or add another axis on the bar_chart     
 # TODO to be removed generic price_dict
 
+price_dict = {'morning':0.467,
+              'midday':0.334, 
+              'afternoon':0.346, 
+              'evening':0.512,
+              'night':0.375
+              }
+
 price_dict_DE = {'morning':0.467,
               'midday':0.334, 
               'afternoon':0.346, 
@@ -80,10 +87,7 @@ def process_data(data):
     return values_dict
 
 def calculate_params(load):
-    price_dict = session["price_dict"]
-    print()
-    print(price_dict)
-    print()
+    #price_dict = session["price_dict"]
     price = min_profile_from_val_period(price_dict)
     unit_conv = 1 / 60 / 1000 * 365.25 
     cost = np.sum(load * price * unit_conv)
@@ -163,7 +167,7 @@ def get_cost():
     data = request.get_json()['data']
     load = get_load(data) 
     #claculate cost
-    price_dict = session["price_dict"]
+    #price_dict = session["price_dict"]
     price = min_profile_from_val_period(price_dict)
     unit_conv = 1 / 60 / 1000 * 365.25 
     cost = np.sum(load * price * unit_conv)
@@ -343,11 +347,12 @@ def index(qualtrics_data):
     except:
         return 'Error in extracting arguments from URL. Either missing or data type not correct.'
 
-    #Choose the price_dict
     if (country == "DE"):
         session["price_dict"] = price_dict_DE
+        session["currency"] = "€"
     elif (country == "CH"):
         session["price_dict"] = price_dict_CH
+        session["currency"] = "CHF"
 
     #Adapt hh_size and hh_type to the values available in the csv file
     if hh_size > 5:
