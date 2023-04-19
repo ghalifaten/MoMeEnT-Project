@@ -1,7 +1,4 @@
-#http://127.0.0.1:8080//data?appliance=WASHING_MACHINE&m=mTest&ID=IDTest&hh_size=1&hh_type=1&frequency=2&program30=1&program40=1&program60=1&program90=1
-#http://www.momeent-experiment//data?appliance=WASHING_MACHINE&peer=TRUE&m=${e://Field/m}&ID=${e:/[…]rRecode/3}&program90=${q://QID194/SelectedAnswerRecode/4}
-#Public IP: 35.180.87.158
-#launc: http://35.180.87.158:8080/
+#http://www.momeent-experiment//data?appliance=DISH_WASHING&m=xxxx&ID=xxxxx&country=DE&hh_size=1&hh_type=1&frequency_laundry=3&program30=2&program40=1&program60=0&program90=0&frequency_dishwashing=3&programECO=3&programNormal=2&programIntensive=1&programAuto=2&programGentle=0&programQuickLow=0&programQuickHigh=0
 
 from flask import Flask, request, render_template, jsonify, session, abort
 import os, sys, json
@@ -52,12 +49,6 @@ df = pd.read_csv(dir_path+"/static/data/vals_peer_comparison.csv")
 #map the values to the [0-4] range (?)         
 #or add another axis on the bar_chart     
 # TODO to be removed generic price_dict
-price_dict = {'morning':0.467,
-              'midday':0.334, 
-              'afternoon':0.346, 
-              'evening':0.512,
-              'night':0.375
-              }
 
 price_dict_DE = {'morning':0.467,
               'midday':0.334, 
@@ -89,6 +80,10 @@ def process_data(data):
     return values_dict
 
 def calculate_params(load):
+    price_dict = session["price_dict"]
+    print()
+    print(price_dict)
+    print()
     price = min_profile_from_val_period(price_dict)
     unit_conv = 1 / 60 / 1000 * 365.25 
     cost = np.sum(load * price * unit_conv)
@@ -168,6 +163,7 @@ def get_cost():
     data = request.get_json()['data']
     load = get_load(data) 
     #claculate cost
+    price_dict = session["price_dict"]
     price = min_profile_from_val_period(price_dict)
     unit_conv = 1 / 60 / 1000 * 365.25 
     cost = np.sum(load * price * unit_conv)
@@ -274,11 +270,20 @@ def _index():
     hh_type = 1
     weekly_freq = 2
     appliance = "DISH_WASHER"
+    country = "DE"
+
+    #Choose the price_dict
+    if (country == "DE"):
+        session["price_dict"] = price_dict_DE
+    elif (country == "CH"):
+        session["price_dict"] = price_dict_CH
 
     record = df.loc[(df['appliance'] == appliance) & (df['n_residents'] == hh_size) & (df['household_type'] == hh_type)]
     avg_cost = record['cost'].values[0]
     avg_peak = record['peak'].values[0]
     avg_res = record['RES'].values[0]
+
+    usage_patterns['target_cycles'][appliance] = weekly_freq * 52
 
     session["ID"] = ID
     session["m_field"] = m
@@ -297,32 +302,39 @@ def _index():
 # ORIGINAL MAIN
 @app.route('/<qualtrics_data>')
 def index(qualtrics_data):
-    """
-        appliance:WM = 4 args
-        appliance:DW = 6 or args 
-        ==> read appliance and decide based upon
-        ==> change table DB
-    """
-
     try:
         #All args are of type str, change type here if needed.
         appliance = request.args.get('appliance')
         peer = request.args.get('peer')
         m = request.args.get('m')
         ID = request.args.get('ID')
+        country = request.args.get('country')
         hh_size = int(request.args.get('hh_size'))
         hh_type = int(request.args.get('hh_type'))
-        # TODO to be updated weekly_freq for dishwashing or laundry
-        weekly_freq = int(request.args.get('frequency'))   
+        frequency_laundry = int(request.args.get('frequency_laundry'))   
+        frequency_dishwashing = int(request.args.get('frequency_dishwashing'))   
         program30 = int(request.args.get('program30'))
         program40 = int(request.args.get('program40'))
         program60 = int(request.args.get('program60'))
         program90 = int(request.args.get('program90'))
-        # TODO to include dishwashing programs
+        programECO = int(request.args.get('programECO'))
+        programNormal = int(request.args.get('programNormal'))
+        programIntensive = int(request.args.get('programIntensive'))
+        programAuto = int(request.args.get('programAuto'))
+        programGentle = int(request.args.get('programGentle'))
+        programQuickLow = int(request.args.get('programQuickLow'))
+        programQuickHigh = int(request.args.get('programQuickHigh'))
+
     except:
         return 'Error in extracting arguments from URL. Either missing or data type not correct.'
 
-    # TODO move it in the right position
+    #Choose the price_dict
+    if (country == "DE"):
+        session["price_dict"] = price_dict_DE
+    elif (country == "CH"):
+        session["price_dict"] = price_dict_CH
+
+    #Adapt hh_size and hh_type to the values available in the csv file
     if hh_size > 5:
         hh_size = 5
     hh_type_dict = {1:1,  # single person
@@ -333,35 +345,35 @@ def index(qualtrics_data):
                     6:5,   # shared household
                     7:5,}  # other
     hh_type = hh_type_dict[hh_type]
-
-
-    year_freq = weekly_freq * 52 
-    usage_patterns['target_cycles'][appliance] = year_freq
-
-    if appliance == "WASHING_MACHINE":
-        avg_temp = (program30 * 30 + program40 * 40 + program60 * 55 + program90 * 90) /\
-                   (program30 + program40 + program60 + program90)
-        energy_cycle = 0.95 + 0.02 * (avg_temp - 60)
-    elif appliance == "DISH_WASHER":
-        energy_cycle = (programECO * 0.9 + programNormal * 1.1 + programIntensive * 1.44 + programAuto * 0.93 +\
-                       programGentle * 0.65 + programQuickLow * 0.8 + programQuickHigh * 1.3 ) /\
-                       (programECO + programNormal + programIntensive + programAuto + programGentle * + programQuickLow + programQuickHigh)
-        
-    usage_patterns['energy_cycle'][appliance] = energy_cycle
-    
+    #get the average values from the csv file
     record = df.loc[(df['appliance'] == appliance) & (df['n_residents'] == hh_size) & (df['household_type'] == hh_type)]
     avg_cost = record['cost'].values[0]
     avg_peak = record['peak'].values[0]
     avg_res = record['RES'].values[0]
 
+    #update usage patterns 
+    if appliance == "WASHING_MACHINE":
+        avg_temp = (program30 * 30 + program40 * 40 + program60 * 55 + program90 * 90) /\
+                   (program30 + program40 + program60 + program90)
+        energy_cycle = 0.95 + 0.02 * (avg_temp - 60)
+        weekly_freq = frequency_laundry
+    elif appliance == "DISH_WASHER":
+        energy_cycle = (programECO * 0.9 + programNormal * 1.1 + programIntensive * 1.44 + programAuto * 0.93 +\
+                       programGentle * 0.65 + programQuickLow * 0.8 + programQuickHigh * 1.3 ) /\
+                       (programECO + programNormal + programIntensive + programAuto + programGentle * + programQuickLow + programQuickHigh)
+        weekly_freq = frequency_dishwashing
+    usage_patterns['energy_cycle'][appliance] = energy_cycle
+    usage_patterns['target_cycles'][appliance] = weekly_freq * 52
+
     #save args to session
     session["appliance"] = appliance
     session["peer"] = peer
     session["ID"] = ID
+    session["country"] = country
     session["hh_size"] = hh_size
     session["hh_type"] = hh_type
     session["n_households"] = n_households
-    session["weekly_freq"] = frequency
+    session["weekly_freq"] = weekly_freq
     session["avg_cost"] = avg_cost
     session["avg_peak"] = avg_peak
     session["avg_res"] = avg_res
@@ -548,9 +560,10 @@ def conclusion():
     item = {
         "m": m_field,
         "ResponseID": session["ID"],
+        "country": session["country"],
         "hh_size": session["hh_size"],
         "hh_type": session["hh_type"],
-        "frequency": session["weekly_freq"],
+        "weekly_freq": session["weekly_freq"],
         "baseline_cost": session["baseline_cost"],
         "baseline_peak_load": session["baseline_peak_load"],
         "baseline_res_share": session["baseline_res_share"],
