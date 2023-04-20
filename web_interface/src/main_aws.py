@@ -50,12 +50,7 @@ df = pd.read_csv(dir_path+"/static/data/vals_peer_comparison.csv")
 #or add another axis on the bar_chart     
 # TODO to be removed generic price_dict
 
-price_dict = {'morning':0.467,
-              'midday':0.334, 
-              'afternoon':0.346, 
-              'evening':0.512,
-              'night':0.375
-              }
+price_dict = {}
 
 price_dict_DE = {'morning':0.467,
               'midday':0.334, 
@@ -87,7 +82,7 @@ def process_data(data):
     return values_dict
 
 def calculate_params(load):
-    #price_dict = session["price_dict"]
+    price_dict = session["price_dict"]
     price = min_profile_from_val_period(price_dict)
     unit_conv = 1 / 60 / 1000 * 365.25 
     cost = np.sum(load * price * unit_conv)
@@ -167,7 +162,7 @@ def get_cost():
     data = request.get_json()['data']
     load = get_load(data) 
     #claculate cost
-    #price_dict = session["price_dict"]
+    price_dict = session["price_dict"]
     price = min_profile_from_val_period(price_dict)
     unit_conv = 1 / 60 / 1000 * 365.25 
     cost = np.sum(load * price * unit_conv)
@@ -285,16 +280,18 @@ def _index():
     hh_type = 1
     weekly_freq = 2
     appliance = "DISH_WASHER"
-    country = "CH"
+    country = "DE"
     peer = "FALSE"
 
     #Choose the price_dict
     if (country == "DE"):
-        session["price_dict"] = price_dict_DE
+        price_dict = price_dict_DE
         session["currency"] = "€"
     elif (country == "CH"):
-        session["price_dict"] = price_dict_CH
+        price_dict = price_dict_CH
         session["currency"] = "CHF"
+
+    session["price_dict"] = price_dict
 
     record = df.loc[(df['appliance'] == appliance) & (df['country'] == country) & (df['n_residents'] == hh_size) & (df['household_type'] == hh_type)]
     avg_cost = record['cost'].values[0]
