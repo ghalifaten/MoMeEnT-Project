@@ -296,7 +296,7 @@ def _index():
         session["price_dict"] = price_dict_CH
         session["currency"] = "CHF"
 
-    record = df.loc[(df['appliance'] == appliance) & (df['n_residents'] == hh_size) & (df['household_type'] == hh_type)]
+    record = df.loc[(df['appliance'] == appliance) & (df['country'] == country) & (df['n_residents'] == hh_size) & (df['household_type'] == hh_type)]
     avg_cost = record['cost'].values[0]
     avg_peak = record['peak'].values[0]
     avg_res = record['RES'].values[0]
