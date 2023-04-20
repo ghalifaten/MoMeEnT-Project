@@ -138,9 +138,9 @@
                             <button id="stats-btn"  onclick="show_avg()">See statistics</button> 
                         </div>
 
-                        <!--Statistics grid-->
+                        <!--Statistics grid - PEER == TRUE-->
 
-                        <div class="combined-stats visualization-column3"> <!--combined-stats: grid, column3 for position-->
+                        <div class="combined-stats visualization-column3" id="combined-stats"> <!--combined-stats: grid, column3 for position-->
                             <!--yearly cost-->
                             <div class="upper-text-1 sub-stats-upper-txt-cost">
                             <strong>Yearly energy cost for running the {{data.appliance}}:</strong>
@@ -156,14 +156,14 @@
                                     <div class="change smaller">Change</div> <div id="sub-stats-nbr-you-cost">?</div>
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you-cost">
-                                    <div class="stats-old-val smaller" >Old value<div id="stats-old-val-cost">{{data.old_cost}} €</div></div>
+                                    <div class="stats-old-val smaller" >Old value<div id="stats-old-val-cost">{{data.old_cost}} {{data.currency}}</div></div>
                                     <div class="stats-new-val smaller" >New value<div id="stats-new-val-cost">?</div></div>
                                 </div>
                                 <!--Loading Spinner-->
                                 <div class="loader" id="loader"></div>
                             </div>
 
-                            <div class="stats-avg-1 sub-stats-container">
+                            <div class="stats-avg stats-avg-1 sub-stats-container">
                                 <div class="smaller" style="margin-top: 12px;">For an average household</div>
                                 <div class="combined-stats-nbr-avg" id="stats-nbr-avg-cost">  
                                     ? 
@@ -193,7 +193,7 @@
                                 <div class="loader" id="loader"></div>
                             </div>
 
-                            <div class="stats-avg-2 sub-stats-container">
+                            <div class="stats-avg stats-avg-2 sub-stats-container">
                                 <div class="smaller" style="margin-top: 12px;">Average household</div>
                                 <div class="combined-stats-nbr-avg" id="stats-nbr-avg-peak">  
                                     ? 
@@ -223,7 +223,7 @@
                                 <div class="loader" id="loader"></div>
                             </div>
 
-                            <div class="stats-avg-3 sub-stats-container">
+                            <div class="stats-avg stats-avg-3 sub-stats-container">
                                 <div class="smaller" style="margin-top: 12px;">For an average household</div>
                                 <div class="combined-stats-nbr-avg" id="stats-nbr-avg-share">  
                                     ? 
@@ -231,6 +231,9 @@
                                 <div class="small-txt"></div>
                             </div>
                         </div>
+
+                        
+
                     </div>
                     
                     <div style="clear:both">
@@ -249,18 +252,26 @@
 
     <script>
         function show_avg() {
-            document.getElementById("stats-nbr-avg-cost").innerText = Math.ceil({{data.avg_cost|tojson}}) + " €";
+            document.getElementById("stats-nbr-avg-cost").innerText = Math.ceil({{data.avg_cost|tojson}}) + " " + {{data.currency|tojson}};
             document.getElementById("stats-nbr-avg-peak").innerText = Math.ceil({{data.avg_peak|tojson}}) + " %";
             document.getElementById("stats-nbr-avg-share").innerText = Math.ceil({{data.avg_res|tojson}}) + " %";
         }  
     </script>
-    <!--script>
-        var element = document.getElementById('avg-stats')
+    <script>    
+        var e1 = document.getElementById('combined-stats')
         var group = {{data.group|tojson}}
         if(group == "TRUE") {
-            element.style.display = 'block'; 
+            e1.style.display = 'grid'; 
         }else if(group == "FALSE") {
-            element.style.display = 'none'; 
+            for(let i=0; i<3; i++) { 
+                document.getElementsByClassName("stats-avg")[i].style.visibility = "hidden"; 
+            }
+            e1.style.gridTemplateColumns = "[v0] 320px [v1] 0px [v2]"
+            e1.style.gridGap = "0px"
+            e1.style.rowGap = "5px"
+            e1.style.marginLeft = "60px";
+            document.getElementById("stats-btn").style.marginLeft = "60px";
         }
-    </script-->
+        
+    </script>
 </body>

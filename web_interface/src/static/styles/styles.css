@@ -380,7 +380,7 @@
 
     .stats-nbr {
         font-weight: bold;
-        font-size: 50px;
+        font-size: 43px;
         color: var(--gray);
     }
 
@@ -408,6 +408,13 @@
         grid-template-rows: [h0] auto [h1] var(--box-height) [h2] auto [h3] var(--box-height) [h4] auto [h5] var(--box-height) [h6];
         grid-gap: 5px;
 
+    }
+
+    .combined-stats-false {
+        display: grid;
+        grid-template-columns: [v0] 320px [v1] 0px [v2];
+        grid-template-rows: [h0] auto [h1] var(--box-height) [h2] auto [h3] var(--box-height) [h4] auto [h5] var(--box-height) [h6];
+        row-gap: 5px;
     }
 
     /**************/
@@ -479,7 +486,7 @@
 
     .combined-stats-nbr-avg {
         font-weight: bold;
-        font-size: 65px;
+        font-size: 50px;
         color: var(--gray);
         line-height: calc(var(--box-height) - 130px);
     }
@@ -491,6 +498,11 @@
     .combined-stats {
         text-align: center;
         margin-left: 15px;
+    }
+
+    .combined-stats-false {
+        text-align: center;
+        margin-left: 50px;
     }
 
     /***********************************************************************************************/

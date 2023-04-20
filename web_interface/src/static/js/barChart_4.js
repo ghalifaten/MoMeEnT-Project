@@ -319,6 +319,7 @@ d3.select("#stats-btn").on("click", function(d){
             contentType: "application/json",
             dataType: "json",
             success: function (response) {
+                const currency = response.currency
                 const cost = response.cost;
                 const peak_load = response.peak_load;
                 const res_share = response.res_share;
@@ -331,16 +332,16 @@ d3.select("#stats-btn").on("click", function(d){
                 document.getElementById("link-to-quests").disabled = false;
 
                 //update stats
-                 document.getElementById("stats-new-val-cost").innerText = cost + " €" 
+                 document.getElementById("stats-new-val-cost").innerText = cost + " " + currency 
                  document.getElementById("stats-new-val-peak").innerText = peak_load + " %" 
                  document.getElementById("stats-new-val-share").innerText = res_share + " %" 
  
                  //update icons
                  if (diff_cost >= 0) {
-                    document.getElementById("sub-stats-nbr-you-cost").innerHTML = "+" + diff_cost + "€"
+                    document.getElementById("sub-stats-nbr-you-cost").innerHTML = "+" + diff_cost + " " + currency
                     document.getElementById("icon-cost").innerHTML = "<img src=\"static/img/arrow-increase-red.png\"></img>"
                 } else {
-                    document.getElementById("sub-stats-nbr-you-cost").innerHTML = diff_cost + "€"
+                    document.getElementById("sub-stats-nbr-you-cost").innerHTML = diff_cost + " " + currency
                     document.getElementById("icon-cost").innerHTML = "<img src=\"static/img/arrow-decrease-green.png\"></img>"
                 }
 

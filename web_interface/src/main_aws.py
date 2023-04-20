@@ -50,6 +50,13 @@ df = pd.read_csv(dir_path+"/static/data/vals_peer_comparison.csv")
 #or add another axis on the bar_chart     
 # TODO to be removed generic price_dict
 
+price_dict = {'morning':0.467,
+              'midday':0.334, 
+              'afternoon':0.346, 
+              'evening':0.512,
+              'night':0.375
+              }
+
 price_dict_DE = {'morning':0.467,
               'midday':0.334, 
               'afternoon':0.346, 
@@ -80,10 +87,7 @@ def process_data(data):
     return values_dict
 
 def calculate_params(load):
-    price_dict = session["price_dict"]
-    print()
-    print(price_dict)
-    print()
+    #price_dict = session["price_dict"]
     price = min_profile_from_val_period(price_dict)
     unit_conv = 1 / 60 / 1000 * 365.25 
     cost = np.sum(load * price * unit_conv)
@@ -163,7 +167,7 @@ def get_cost():
     data = request.get_json()['data']
     load = get_load(data) 
     #claculate cost
-    price_dict = session["price_dict"]
+    #price_dict = session["price_dict"]
     price = min_profile_from_val_period(price_dict)
     unit_conv = 1 / 60 / 1000 * 365.25 
     cost = np.sum(load * price * unit_conv)
@@ -171,7 +175,8 @@ def get_cost():
     baseline_cost = session["baseline_cost"]
     response = {
         "baseline_cost": math.trunc(baseline_cost), 
-        "cost": math.trunc(cost)
+        "cost": math.trunc(cost),
+        "currency": session["currency"]
         }
     #save first trial
     if (session["trial"] == 0):
@@ -248,6 +253,7 @@ def get_3_values():
         "cost": math.trunc(cost),
         "peak_load": math.trunc(peak_load),
         "res_share": math.trunc(res_share),
+        "currency": session["currency"]
         }
     #save first trial
     if (session["trial"] == 0):
@@ -262,14 +268,13 @@ def get_3_values():
                                 "res_share": res_share}
     return jsonify(response)
 
-
-#---- ROUTES ----#
 def format_app(appliance):
     if appliance == "WASHING_MACHINE":
         return "washing machine"
     elif appliance == "DISH_WASHER":
         return "dish washer"
 
+#---- ROUTES ----#
 ###---- TEMPORARY MAIN
 @app.route('/') 
 def _index():
@@ -280,13 +285,16 @@ def _index():
     hh_type = 1
     weekly_freq = 2
     appliance = "DISH_WASHER"
-    country = "DE"
+    country = "CH"
+    peer = "FALSE"
 
     #Choose the price_dict
     if (country == "DE"):
         session["price_dict"] = price_dict_DE
+        session["currency"] = "€"
     elif (country == "CH"):
         session["price_dict"] = price_dict_CH
+        session["currency"] = "CHF"
 
     record = df.loc[(df['appliance'] == appliance) & (df['n_residents'] == hh_size) & (df['household_type'] == hh_type)]
     avg_cost = record['cost'].values[0]
@@ -302,7 +310,7 @@ def _index():
     session["hh_type"] = hh_type
     session["n_households"] = n_households
     session["appliance"] = appliance
-    session["peer"] = "TRUE"
+    session["peer"] = peer
     session["weekly_freq"] = weekly_freq
     session["avg_cost"] = avg_cost
     session["avg_peak"] = avg_peak
@@ -339,11 +347,12 @@ def index(qualtrics_data):
     except:
         return 'Error in extracting arguments from URL. Either missing or data type not correct.'
 
-    #Choose the price_dict
     if (country == "DE"):
         session["price_dict"] = price_dict_DE
+        session["currency"] = "€"
     elif (country == "CH"):
         session["price_dict"] = price_dict_CH
+        session["currency"] = "CHF"
 
     #Adapt hh_size and hh_type to the values available in the csv file
     if hh_size > 5:
@@ -422,12 +431,14 @@ def experiment_1():
 
     baseline_cost = session["baseline_cost"]
     avg_cost = session["avg_cost"]
+    currency = session["currency"]
 
     data = {
         "appliance": format_app(appliance), 
         "group": peer, 
         "old_cost": math.trunc(baseline_cost),
         "avg_cost": avg_cost,
+        "currency": currency
     }
     return render_template("experiments/experiment_1.html", data=data)
 
@@ -496,7 +507,7 @@ def experiment_3():
         "appliance": format_app(appliance), 
         "group": peer, 
         "old_share": math.trunc(baseline_share),
-        "avg_res": avg_res
+        "avg_res": avg_res,
     }
     return render_template("experiments/experiment_3.html", data=data)
 
@@ -530,6 +541,7 @@ def experiment_4():
     avg_cost = session["avg_cost"]
     avg_peak = session["avg_peak"]
     avg_res = session["avg_res"]
+    currency = session["currency"]
     data = {
         "appliance": format_app(appliance), 
         "group": peer, 
@@ -538,7 +550,8 @@ def experiment_4():
         "old_share": math.trunc(baseline_share),
         "avg_cost": avg_cost,
         "avg_peak": avg_peak,
-        "avg_res": avg_res
+        "avg_res": avg_res,
+        "currency": currency
     }
     return render_template("experiments/experiment_4.html", data=data)
 

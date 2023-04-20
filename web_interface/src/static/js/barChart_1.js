@@ -290,22 +290,22 @@ d3.select("#stats-btn").on("click", function(d){
                 document.getElementById("stats-btn").disabled = false;
                 document.getElementById("link-to-quests").disabled = false;
 
-
+                const currency = response.currency
                 const cost = response.cost;
                 const diff_cost = cost - response.baseline_cost;
 
                 //update stats-you 
-                document.getElementById("stats-new-val").innerHTML = "<strong><span>New cost</span><br>" + cost + " €</strong>" 
+                document.getElementById("stats-new-val").innerHTML = "<strong><span>New cost</span><br>" + cost + " " + currency + "</strong>" 
                 document.getElementById("stats-old-val").hidden = false; 
                 document.getElementById("stats-new-val").hidden = false;
 
 
                 //update icon
                 if (diff_cost >= 0) {
-                    document.getElementById("sub-stats-nbr-you").innerText = "+" + diff_cost + " €"
+                    document.getElementById("sub-stats-nbr-you").innerText = "+" + diff_cost + " " + currency
                     document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-increase-red.png\"></img>"
                 } else {
-                    document.getElementById("sub-stats-nbr-you").innerText = diff_cost + " €"
+                    document.getElementById("sub-stats-nbr-you").innerText = diff_cost + " " + currency
                     document.getElementById("stats-icon-you").innerHTML = "<img src=\"static/img/arrow-decrease-green.png\"></img>"
                 }      
 
