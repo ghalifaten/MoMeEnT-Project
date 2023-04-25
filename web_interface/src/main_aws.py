@@ -329,17 +329,17 @@ def index(qualtrics_data):
         hh_type = int(request.args.get('hh_type'))
         frequency_laundry = int(request.args.get('frequency_laundry'))   
         frequency_dishwashing = int(request.args.get('frequency_dishwashing'))   
-        program30 = int(request.args.get('program30'))
-        program40 = int(request.args.get('program40'))
-        program60 = int(request.args.get('program60'))
-        program90 = int(request.args.get('program90'))
-        programECO = int(request.args.get('programECO'))
-        programNormal = int(request.args.get('programNormal'))
-        programIntensive = int(request.args.get('programIntensive'))
-        programAuto = int(request.args.get('programAuto'))
-        programGentle = int(request.args.get('programGentle'))
-        programQuickLow = int(request.args.get('programQuickLow'))
-        programQuickHigh = int(request.args.get('programQuickHigh'))
+        program30 = int(request.args.get('program30')) - 1
+        program40 = int(request.args.get('program40')) - 1
+        program60 = int(request.args.get('program60')) - 1
+        program90 = int(request.args.get('program90')) - 1
+        programECO = int(request.args.get('programECO')) - 1
+        programNormal = int(request.args.get('programNormal')) - 1
+        programIntensive = int(request.args.get('programIntensive')) - 1
+        programAuto = int(request.args.get('programAuto')) - 1
+        programGentle = int(request.args.get('programGentle')) - 1
+        programQuickLow = int(request.args.get('programQuickLow')) - 1
+        programQuickHigh = int(request.args.get('programQuickHigh')) - 1
 
     except:
         return 'Error in extracting arguments from URL. Either missing or data type not correct.'
@@ -368,17 +368,40 @@ def index(qualtrics_data):
     avg_peak = record['peak'].values[0]
     avg_res = record['RES'].values[0]
 
+
+    freq_laundry_dict = {1:0.25,  # once a month
+                        2:0.5,   # every second week
+                        3:1,  
+                        4:2,   
+                        5:3,   
+                        6:4,   
+                        7:5,
+                        8:6,
+                        9:7,
+                        10:8}  
+    freq_dishwashing_dict = {1:0.5,  # less than one load a week
+                        2:1,  
+                        3:2,  
+                        4:3,   
+                        5:4,   
+                        6:5,   
+                        7:6,
+                        8:7,
+                        9:8,
+                        10:9,
+                        11:10}  
+
     #update usage patterns 
     if appliance == "WASHING_MACHINE":
         avg_temp = (program30 * 30 + program40 * 40 + program60 * 55 + program90 * 90) /\
                    (program30 + program40 + program60 + program90)
         energy_cycle = 0.95 + 0.02 * (avg_temp - 60)
-        weekly_freq = frequency_laundry
+        weekly_freq = freq_laundry_dict[frequency_laundry]
     elif appliance == "DISH_WASHER":
         energy_cycle = (programECO * 0.9 + programNormal * 1.1 + programIntensive * 1.44 + programAuto * 0.93 +\
                        programGentle * 0.65 + programQuickLow * 0.8 + programQuickHigh * 1.3 ) /\
                        (programECO + programNormal + programIntensive + programAuto + programGentle * + programQuickLow + programQuickHigh)
-        weekly_freq = frequency_dishwashing
+        weekly_freq = freq_dishwashing_dict[frequency_dishwashing]
     usage_patterns['energy_cycle'][appliance] = energy_cycle
     usage_patterns['target_cycles'][appliance] = weekly_freq * 52
 
