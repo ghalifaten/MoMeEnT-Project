@@ -408,6 +408,7 @@ def index(qualtrics_data):
     #save args to session
     session["appliance"] = appliance
     session["peer"] = peer
+    session["m_field"] = m
     session["ID"] = ID
     session["country"] = country
     session["hh_size"] = hh_size
