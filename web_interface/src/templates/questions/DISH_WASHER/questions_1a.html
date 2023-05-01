@@ -56,22 +56,4 @@
         </form>
     </div>
 
-    <script>
-        const text_box = document.getElementById('option-other-text');
-
-        function handleRadioClick() {
-        if (document.getElementById('option-other').checked) {
-            text_box.style.display = 'inline-block';
-        } else {
-            text_box.style.display = 'none';
-        }
-        }
-
-        const radioButtons = document.querySelectorAll('input[name="q1a_r2"]');
-        radioButtons.forEach(radio => {
-        radio.addEventListener('click', handleRadioClick);
-        });
-
-    </script>
-
 </body>

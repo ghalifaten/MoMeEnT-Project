@@ -532,6 +532,7 @@
         border-left: none;
         border-right: none;
         background-color: transparent;
+        font-size: 20px;
     }
 
     input[type='radio'] {

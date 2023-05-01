@@ -279,7 +279,7 @@ def _index():
     hh_size = 1
     hh_type = 1
     weekly_freq = 2
-    appliance = "WASHING_MACHINE"
+    appliance = "DISH_WASHER"
     country = "CH"
     peer = "TRUE"
 
