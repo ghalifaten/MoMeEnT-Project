@@ -8,13 +8,6 @@
 
 		<title>MoMeEnt</title>
 
-		 
-		 
-		  
-		 
-	  
-  		 
-
 		<!-- css -->
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css')}}">
 
@@ -74,9 +67,11 @@
             </table>
 
             <p style="margin-top: 100px;">
-                <input class="link-btn button" onclick="window.location.href = '/experiment_4';" type="submit" value="Next page" />
-       
+                <input class="link-btn button" type="submit" value="Next page" />       
             </p>
         </form>
     </div>
+
+    <script src="{{ url_for('static', filename='js/questions.js')}}"></script>
+
 </body>

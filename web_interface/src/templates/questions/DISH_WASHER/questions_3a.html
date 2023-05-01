@@ -8,13 +8,6 @@
 
 		<title>MoMeEnt</title>
 
-		 
-		 
-		  
-		 
-	  
-  		 
-
 		<!-- css -->
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css')}}">
 
@@ -55,9 +48,12 @@
             <input type="radio" name="q3a_r2" value="4">I would not adjust my washing habits<br>
 
             <p style="margin-top: 100px;">
-                <input class="link-btn button" onclick="window.location.href = '/questions_3b';" type="submit" value="Next page" />
+                <input class="link-btn button" type="submit" value="Next page" />
        
             </p>
         </form>
     </div>
+
+    <script src="{{ url_for('static', filename='js/questions.js')}}"></script>
+
 </body>
