@@ -265,9 +265,23 @@ def get_3_values():
 
 def format_app(appliance):
     if appliance == "WASHING_MACHINE":
-        return "washing machine"
+        return {
+            1: "wasch",
+            2: "zu wasch",
+            3: "Waschgewohnheiten",
+            4: "die Waschmaschine",
+            5: "den Waschmaschine",
+            6: "der Waschmaschine"
+        }
     elif appliance == "DISH_WASHER":
-        return "dish washer"
+        return {
+            1: "abwasch",
+            2: "abzuwasch",
+            3: "Abwaschgewohnheiten",
+            4: "der Geschirrspüler",
+            5: "den Geschirrspüler",
+            6: "des Geschirrspülers"
+        }
 
 #---- ROUTES ----#
 ###---- TEMPORARY MAIN
@@ -315,7 +329,7 @@ def _index():
     session["avg_peak"] = avg_peak
     session["avg_res"] = avg_res
     
-    return render_template("index.html", appliance=format_app(appliance))
+    return render_template("index.html")
 #------------------------------------------
 # ORIGINAL MAIN
 @app.route('/<qualtrics_data>')
@@ -421,7 +435,7 @@ def index(qualtrics_data):
     session["avg_peak"] = avg_peak
     session["avg_res"] = avg_res
 
-    return render_template("index.html", appliance=format_app(appliance))
+    return render_template("index.html")
 
 
 @app.route('/experiment_0')
