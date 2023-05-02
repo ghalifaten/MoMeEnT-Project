@@ -282,6 +282,7 @@ def _index():
     #appliance = "DISH_WASHER"
     appliance = "WASHING_MACHINE"
     country = "CH"
+    #country = "DE"
     peer = "TRUE"
 
     #Choose the price_dict
@@ -600,6 +601,7 @@ def conclusion():
     session["final_answers_b"] = final_answers_b.to_dict()
     m_field = session["m_field"]
     appliance = session["appliance"]
+    country = session["country"]
     #choose table depending on appliance
     table = dynamodb.Table("MomeentData-"+appliance) 
     #Save inputs in DB
@@ -636,7 +638,12 @@ def conclusion():
     }
     item = json.loads(json.dumps(item), parse_float=Decimal)
     table.put_item(Item=item)
-    return render_template("conclusion.html", appliance=format_app(appliance), m_field=m_field)
+
+    data = {
+        "m_field": m_field,
+        "country": country
+    }
+    return render_template("conclusion.html", data=data)
 
 
 #---- MAIN CALL ----# 

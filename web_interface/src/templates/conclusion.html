@@ -46,30 +46,44 @@
 							</p>
 						</div>
 						<p>
-							<button class="link-btn" id="scroll-down" onclick="location.href='https://survey.maximiles.com/complete?p=74503_634d9f5e&m={{m_field}}'">Submit</button>
+							<button class="link-btn" id="scroll-down" onclick="redirect()">Submit</button>
 						</p>
 				</div>
 			</div>
 		</div>
 	</div>
-</body>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.0/fullpage.min.js"></script>
-<script>
-	new fullpage('#fullPage',{
-			anchors: ['Conclusion'],
-			autoScrolling : true,
-			navigation : true,
-			slidesNavigation : true,
-			controlArrows : false,
-			scrollingSpeed :1000,
-		navigationTooltips: [
-			"Conclusion",
-		],
-		afterSlideLoad: function( section, origin, destination, direction){
-		var loadedSlide = this;
-		},
-	})
-</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.0/fullpage.min.js"></script>
+	<script>
+		new fullpage('#fullPage',{
+				anchors: ['Conclusion'],
+				autoScrolling : true,
+				navigation : true,
+				slidesNavigation : true,
+				controlArrows : false,
+				scrollingSpeed :1000,
+			navigationTooltips: [
+				"Conclusion",
+			],
+			afterSlideLoad: function( section, origin, destination, direction){
+			var loadedSlide = this;
+			},
+		})
+	</script>
+
+	<script>
+		function redirect() {
+			console.log("I am in redirect")
+			var country = {{data.country|tojson}}
+			var m_field = {{data.m_field|tojson}}
+
+			if (country == "CH") {
+				return location.href='https://survey.maximiles.com/complete?p=103944_d65beba0&m='+m_field
+			}else if (country == "DE") {
+				return location.href='https://survey.maximiles.com/complete?p=103944_9e3b8041&m='+m_field
+			}
+		}
+	</script>
+</body>
 
 </html>
