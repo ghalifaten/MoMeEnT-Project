@@ -27,10 +27,8 @@ dynamodb = boto3.resource('dynamodb',
                         aws_access_key_id=conf.aws_access_key_id,
                         aws_secret_access_key=conf.aws_secret_access_key)
 
-#secret = secrets.token_urlsafe(32) #generate secret key for the current session
-secret = "something fixed"
 app = Flask(__name__, template_folder='templates')
-app.secret_key = secret
+app.secret_key = app.secret_key = conf.flask_secret_key
 
 
 #---- INITIALIZE VARIABLES ----#
