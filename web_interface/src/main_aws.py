@@ -283,7 +283,7 @@ def _index():
     appliance = "WASHING_MACHINE"
     country = "CH"
     #country = "DE"
-    peer = "TRUE"
+    peer = "FALSE"
 
     #Choose the price_dict
     if (country == "DE"):
@@ -591,8 +591,9 @@ def questions_final_b():
     final_answers_a = request.args
     session["final_answers_a"] = final_answers_a.to_dict()
     appliance = session["appliance"]
+    peer = session["peer"]
     file_path = "questions/{app}/questions_final_b.html".format(app=appliance)
-    return render_template(file_path)
+    return render_template(file_path, peer=peer)
 
 
 @app.route('/conclusion')
