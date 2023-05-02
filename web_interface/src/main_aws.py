@@ -1,5 +1,3 @@
-#http://www.momeent-experiment//data?appliance=DISH_WASHING&m=xxxx&ID=xxxxx&country=DE&hh_size=1&hh_type=1&frequency_laundry=3&program30=2&program40=1&program60=0&program90=0&frequency_dishwashing=3&programECO=3&programNormal=2&programIntensive=1&programAuto=2&programGentle=0&programQuickLow=0&programQuickHigh=0
-
 from flask import Flask, request, render_template, jsonify, session, abort
 import os, sys, json
 import datetime
@@ -27,10 +25,8 @@ dynamodb = boto3.resource('dynamodb',
                         aws_access_key_id=conf.aws_access_key_id,
                         aws_secret_access_key=conf.aws_secret_access_key)
 
-#secret = secrets.token_urlsafe(32) #generate secret key for the current session
-secret = "something fixed"
 app = Flask(__name__, template_folder='templates')
-app.secret_key = secret
+app.secret_key = conf.flask_secret_key
 
 
 #---- INITIALIZE VARIABLES ----#
