@@ -151,7 +151,6 @@ function updateChart(morningValue, middayValue, afternoonValue, eveningValue, ni
         document.getElementById("link-to-quests").disabled = true;
         document.getElementById("stats-btn").disabled = true;
     }else {
-        document.getElementById("link-to-quests").disabled = false;
         document.getElementById("stats-btn").disabled = false;
     }
     

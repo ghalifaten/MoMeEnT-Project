@@ -8,12 +8,6 @@
 
 		<title>MoMeEnt</title>
 
-		 
-		 
-		 
-	  
-  		 
-
 		<!-- css -->
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css')}}">
 
@@ -33,7 +27,7 @@
     <div class="questions-form"> 
         <form  action="/questions_1b" method="get">
             
-            <p><font color="red">*</font><strong>Assuming the scenario comes true, how likely is it that you will actually run the dishwasher as you have indicated?</strong></p>
+            <p><strong>Assuming the scenario comes true, how likely is it that you will actually run the dishwasher as you have indicated?</strong></p>
             <!--Single answer-->
             <input type="radio" name="q1a_r1" value="1">Not at all likely&emsp;&emsp;
             <input type="radio" name="q1a_r1" value="2">Not likely&emsp;&emsp;
@@ -56,22 +50,6 @@
         </form>
     </div>
 
-    <script>
-        const text_box = document.getElementById('option-other-text');
-
-        function handleRadioClick() {
-        if (document.getElementById('option-other').checked) {
-            text_box.style.display = 'inline-block';
-        } else {
-            text_box.style.display = 'none';
-        }
-        }
-
-        const radioButtons = document.querySelectorAll('input[name="q1a_r2"]');
-        radioButtons.forEach(radio => {
-        radio.addEventListener('click', handleRadioClick);
-        });
-
-    </script>
+    <script src="{{ url_for('static', filename='js/questions.js')}}"></script>
 
 </body>

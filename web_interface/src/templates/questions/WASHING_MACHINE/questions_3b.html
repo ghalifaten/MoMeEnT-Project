@@ -8,13 +8,6 @@
 
 		<title>MoMeEnt</title>
 
-		 
-		 
-		  
-		 
-	  
-  		 
-
 		<!-- css -->
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css')}}">
 
@@ -35,7 +28,7 @@
         <form  action="/experiment_4" method="get">
             
             <p><strong>
-                To consume more energy from renewable sources, how likely are you or your household to implement the following actions?
+                To consume more energy from renewable sources (e.g. sun or wind), how likely are you or your household to implement the following actions?
             </strong></p>
             <table cellspacing="0" style="width: 100%;"> 
                 <tr >
@@ -55,7 +48,7 @@
                     <td><input type="radio" name="q3b_r1_1" value="4"></td>
                     </tr>
                 <tr>
-                    <td >To schedule washing on days when more renewable power (e.g. PV or wind) is available</td>
+                    <td >To schedule washing on days when more renewable power is available</td>
                     <td><input type="radio" name="q3b_r1_2" value="0"></td> 
                     <td><input type="radio" name="q3b_r1_2" value="1"></td>
                     <td><input type="radio" name="q3b_r1_2" value="2"></td> 
@@ -63,7 +56,7 @@
                     <td><input type="radio" name="q3b_r1_2" value="4"></td>
                     </tr>
                 <tr>
-                    <td >To use the tumble dryer only when more renewable power (e.g. PV or wind) is available</td>
+                    <td >To use the tumble dryer only when more renewable power is available</td>
                     <td><input type="radio" name="q3b_r1_3" value="0"></td> 
                     <td><input type="radio" name="q3b_r1_3" value="1"></td>
                     <td><input type="radio" name="q3b_r1_3" value="2"></td> 
@@ -74,9 +67,11 @@
             </table>
 
             <p style="margin-top: 100px;">
-                <input class="link-btn button" onclick="window.location.href = '/experiment_4';" type="submit" value="Next page" />
-       
+                <input class="link-btn button" type="submit" value="Next page" />       
             </p>
         </form>
     </div>
+
+    <script src="{{ url_for('static', filename='js/questions.js')}}"></script>
+
 </body>

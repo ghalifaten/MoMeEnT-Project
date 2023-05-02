@@ -28,14 +28,13 @@
 
 			<p><strong>In the previous scenarios, how did you adjust your washing habits?</strong></p>
             <!--Single answer-->
-            <input type="radio" name="qfb_r1" value="1">To achieve the maximum economic saving<br>
-            <input type="radio" name="qfb_r1" value="2">To achieve the right trade-off between economic savings and inconvenience<br>
-            <input type="radio" name="qfb_r1" value="3">To achieve higher than average economic savings<br>
+            <input type="radio" name="qfb_r1" value="1">To achieve maximum performance (e.g., economic savings, peak consumption reduction and renewable energy consumption)<br>
+            <input type="radio" name="qfb_r1" value="2">To achieve the right trade-off between performance and inconvenience<br>
+            <div id="conditional"><input type="radio" name="qfb_r1" value="3">To achieve higher performance than an average household<br></div>
             <input type="radio" name="qfb_r1" value="4">For the interest in testing the results of different actions<br>
             <input type="radio" name="qfb_r1" value="5">For the fun of using the tool<br>
             <input type="radio" name="qfb_r1" value="6">I did not adjust my washing habits<br>
             <input type="radio" name="qfb_r1" value="7" id="option-other">Other  <input type="text" id="option-other-text" placeholder="..." style="display: none;">
-			
 
             <br><br><br>
 
@@ -111,25 +110,49 @@
 			</tr>
 			<tr>
 				<td >Heat pump for space heating</td>
-				<td><input type="radio" name="qfb_r2_7" value="0"></td> 
-				<td><input type="radio" name="qfb_r2_7" value="1"></td>
-				<td><input type="radio" name="qfb_r2_7" value="2"></td>
-				<td><input type="radio" name="qfb_r2_7" value="3"></td>
+				<td><input type="radio" name="qfb_r2_9" value="0"></td> 
+				<td><input type="radio" name="qfb_r2_9" value="1"></td>
+				<td><input type="radio" name="qfb_r2_9" value="2"></td>
+				<td><input type="radio" name="qfb_r2_9" value="3"></td>
 			</tr>
 			<tr>
 				<td >Electric vehicle</td>
-				<td><input type="radio" name="qfb_r2_8" value="0"></td> 
-				<td><input type="radio" name="qfb_r2_8" value="1"></td>
-				<td><input type="radio" name="qfb_r2_8" value="2"></td>
-				<td><input type="radio" name="qfb_r2_8" value="3"></td>
+				<td><input type="radio" name="qfb_r2_10" value="0"></td> 
+				<td><input type="radio" name="qfb_r2_10" value="1"></td>
+				<td><input type="radio" name="qfb_r2_10" value="2"></td>
+				<td><input type="radio" name="qfb_r2_10" value="3"></td>
 			</tr>
 			</table>	
 
             <p style="margin-top: 100px;">
-                <input class="link-btn button" onclick="window.location.href = '/conclusion';" type="submit" value="Next page" />
+                <input class="link-btn button" type="submit" value="Next page" />
             </p>
         </form>
     </div>	
+
+	<script src="{{ url_for('static', filename='js/questions.js')}}"></script>
+	<script>
+		const text_box = document.getElementById('option-other-text');
+	
+		function handleRadioClick() {
+		if (document.getElementById('option-other').checked) {
+			text_box.style.display = 'inline-block';
+		} else {
+			text_box.style.display = 'none';
+		}
+		}
+	
+		const radioButtons = document.querySelectorAll('input[name="qfb_r1"]');
+		radioButtons.forEach(radio => {
+		radio.addEventListener('click', handleRadioClick);
+		});
+	
+		const peer = {{peer|tojson}}
+		if (peer == "FALSE") {
+			document.getElementById("conditional").remove()
+		}
+	</script>
+
  </body>
 
 </html>

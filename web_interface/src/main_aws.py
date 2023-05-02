@@ -50,6 +50,8 @@ df = pd.read_csv(dir_path+"/static/data/vals_peer_comparison.csv")
 #or add another axis on the bar_chart     
 # TODO to be removed generic price_dict
 
+price_dict = {}
+
 price_dict_DE = {'morning':0.467,
               'midday':0.334, 
               'afternoon':0.346, 
@@ -81,9 +83,6 @@ def process_data(data):
 
 def calculate_params(load):
     price_dict = session["price_dict"]
-    print()
-    print(price_dict)
-    print()
     price = min_profile_from_val_period(price_dict)
     unit_conv = 1 / 60 / 1000 * 365.25 
     cost = np.sum(load * price * unit_conv)
@@ -280,18 +279,23 @@ def _index():
     hh_size = 1
     hh_type = 1
     weekly_freq = 2
-    appliance = "DISH_WASHER"
+    #appliance = "DISH_WASHER"
+    appliance = "WASHING_MACHINE"
     country = "CH"
+    #country = "DE"
+    peer = "FALSE"
 
     #Choose the price_dict
     if (country == "DE"):
-        session["price_dict"] = price_dict_DE
+        price_dict = price_dict_DE
         session["currency"] = "€"
     elif (country == "CH"):
-        session["price_dict"] = price_dict_CH
+        price_dict = price_dict_CH
         session["currency"] = "CHF"
 
-    record = df.loc[(df['appliance'] == appliance) & (df['n_residents'] == hh_size) & (df['household_type'] == hh_type)]
+    session["price_dict"] = price_dict
+
+    record = df.loc[(df['appliance'] == appliance) & (df['country'] == country) & (df['n_residents'] == hh_size) & (df['household_type'] == hh_type)]
     avg_cost = record['cost'].values[0]
     avg_peak = record['peak'].values[0]
     avg_res = record['RES'].values[0]
@@ -305,7 +309,7 @@ def _index():
     session["hh_type"] = hh_type
     session["n_households"] = n_households
     session["appliance"] = appliance
-    session["peer"] = "TRUE"
+    session["peer"] = peer
     session["weekly_freq"] = weekly_freq
     session["avg_cost"] = avg_cost
     session["avg_peak"] = avg_peak
@@ -327,26 +331,27 @@ def index(qualtrics_data):
         hh_type = int(request.args.get('hh_type'))
         frequency_laundry = int(request.args.get('frequency_laundry'))   
         frequency_dishwashing = int(request.args.get('frequency_dishwashing'))   
-        program30 = int(request.args.get('program30'))
-        program40 = int(request.args.get('program40'))
-        program60 = int(request.args.get('program60'))
-        program90 = int(request.args.get('program90'))
-        programECO = int(request.args.get('programECO'))
-        programNormal = int(request.args.get('programNormal'))
-        programIntensive = int(request.args.get('programIntensive'))
-        programAuto = int(request.args.get('programAuto'))
-        programGentle = int(request.args.get('programGentle'))
-        programQuickLow = int(request.args.get('programQuickLow'))
-        programQuickHigh = int(request.args.get('programQuickHigh'))
+        program30 = int(request.args.get('program30')) - 1
+        program40 = int(request.args.get('program40')) - 1
+        program60 = int(request.args.get('program60')) - 1
+        program90 = int(request.args.get('program90')) - 1
+        programECO = int(request.args.get('programECO')) - 1
+        programNormal = int(request.args.get('programNormal')) - 1
+        programIntensive = int(request.args.get('programIntensive')) - 1
+        programAuto = int(request.args.get('programAuto')) - 1
+        programGentle = int(request.args.get('programGentle')) - 1
+        programQuickLow = int(request.args.get('programQuickLow')) - 1
+        programQuickHigh = int(request.args.get('programQuickHigh')) - 1
 
     except:
         return 'Error in extracting arguments from URL. Either missing or data type not correct.'
 
-    #Choose the price_dict
     if (country == "DE"):
         session["price_dict"] = price_dict_DE
+        session["currency"] = "€"
     elif (country == "CH"):
         session["price_dict"] = price_dict_CH
+        session["currency"] = "CHF"
 
     #Adapt hh_size and hh_type to the values available in the csv file
     if hh_size > 5:
@@ -365,23 +370,47 @@ def index(qualtrics_data):
     avg_peak = record['peak'].values[0]
     avg_res = record['RES'].values[0]
 
+
+    freq_laundry_dict = {1:0.25,  # once a month
+                        2:0.5,   # every second week
+                        3:1,  
+                        4:2,   
+                        5:3,   
+                        6:4,   
+                        7:5,
+                        8:6,
+                        9:7,
+                        10:8}  
+    freq_dishwashing_dict = {1:0.5,  # less than one load a week
+                        2:1,  
+                        3:2,  
+                        4:3,   
+                        5:4,   
+                        6:5,   
+                        7:6,
+                        8:7,
+                        9:8,
+                        10:9,
+                        11:10}  
+
     #update usage patterns 
     if appliance == "WASHING_MACHINE":
         avg_temp = (program30 * 30 + program40 * 40 + program60 * 55 + program90 * 90) /\
                    (program30 + program40 + program60 + program90)
         energy_cycle = 0.95 + 0.02 * (avg_temp - 60)
-        weekly_freq = frequency_laundry
+        weekly_freq = freq_laundry_dict[frequency_laundry]
     elif appliance == "DISH_WASHER":
         energy_cycle = (programECO * 0.9 + programNormal * 1.1 + programIntensive * 1.44 + programAuto * 0.93 +\
                        programGentle * 0.65 + programQuickLow * 0.8 + programQuickHigh * 1.3 ) /\
                        (programECO + programNormal + programIntensive + programAuto + programGentle * + programQuickLow + programQuickHigh)
-        weekly_freq = frequency_dishwashing
+        weekly_freq = freq_dishwashing_dict[frequency_dishwashing]
     usage_patterns['energy_cycle'][appliance] = energy_cycle
     usage_patterns['target_cycles'][appliance] = weekly_freq * 52
 
     #save args to session
     session["appliance"] = appliance
     session["peer"] = peer
+    session["m_field"] = m
     session["ID"] = ID
     session["country"] = country
     session["hh_size"] = hh_size
@@ -562,8 +591,9 @@ def questions_final_b():
     final_answers_a = request.args
     session["final_answers_a"] = final_answers_a.to_dict()
     appliance = session["appliance"]
+    peer = session["peer"]
     file_path = "questions/{app}/questions_final_b.html".format(app=appliance)
-    return render_template(file_path)
+    return render_template(file_path, peer=peer)
 
 
 @app.route('/conclusion')
@@ -572,6 +602,7 @@ def conclusion():
     session["final_answers_b"] = final_answers_b.to_dict()
     m_field = session["m_field"]
     appliance = session["appliance"]
+    country = session["country"]
     #choose table depending on appliance
     table = dynamodb.Table("MomeentData-"+appliance) 
     #Save inputs in DB
@@ -608,7 +639,12 @@ def conclusion():
     }
     item = json.loads(json.dumps(item), parse_float=Decimal)
     table.put_item(Item=item)
-    return render_template("conclusion.html", appliance=format_app(appliance), m_field=m_field)
+
+    data = {
+        "m_field": m_field,
+        "country": country
+    }
+    return render_template("conclusion.html", data=data)
 
 
 #---- MAIN CALL ----# 

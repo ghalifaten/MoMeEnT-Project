@@ -8,13 +8,6 @@
 
 		<title>MoMeEnt</title>
 
-		 
-		 
-		  
-		 
-	  
-  		 
-
 		<!-- css -->
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css')}}">
 
@@ -25,7 +18,6 @@
                 window.history.go(1);
             };
         </script>
-
 
 </head>
 
@@ -105,12 +97,21 @@
                 </tr>
             </table>
 
+            <br><br>
+
+            <p><strong>
+                Please list any other factors that limit you or your household from changing the run time of the dishwasher that are not listed above. 
+            </strong></p>
+            <textarea placeholder="Type your text here..."></textarea>
+            
             <p style="margin-top: 100px;">
-                <input class="link-btn button" onclick="window.location.href = '/questions_final_b';" type="submit" value="Next page" />
+                <input class="link-btn button" type="submit" value="Next page" />
        
             </p>
         </form>
     </div>
+
+    <script src="{{ url_for('static', filename='js/questions.js')}}"></script>
 	
  </body>
 </html>

@@ -6,14 +6,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<title>MoMeEnt</title>
-
-		 
-		 
-		  
-		 
-	  
-  		 
+		<title>MoMeEnt</title>  		 
 
 		<!-- css -->
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css')}}">
@@ -97,9 +90,11 @@
             </table>
 
             <p style="margin-top: 100px;">
-                <input class="link-btn button" onclick="window.location.href = '/experiment_2';" type="submit" value="Next page" />
-       
+                <input class="link-btn button" type="submit" value="Next page" />       
             </p>
         </form>
     </div>
+
+    <script src="{{ url_for('static', filename='js/questions.js')}}"></script>
+
 </body>

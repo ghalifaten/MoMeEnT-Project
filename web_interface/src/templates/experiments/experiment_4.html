@@ -74,16 +74,16 @@
                     <div id="text">
                     <p style="margin-bottom: 50px;">
                         Suppose you have signed a variable-price energy contract. 
-                        Also, although they are very sunny days, most people consume too much electricity in the afternoon hours increase the risk of blackouts. 
+                        Also, although photovoltaic electricity generation is very high, most people consume too much electricity in the afternoon and evening hours increase the risk of blackouts. 
                         <strong> You can save on your energy bill, reduce emissions from the energy you consume, 
                         and reduce the risk of blackouts by changing your washing habits</strong>.  
                         However, you may face some inconvenience. 
                         <br>
                        <strong> In this situation, what time of day would you run the {{data.appliance}}? </strong> 
                        <br><br>
-                       <em>* Try to answer as realistically as possible
-                       <br>
-                       * You can change your habits and see the statistics up to three times to find the results that best suit you. </em> 
+                       <em> * Try to answer as realistically as possible
+                        <br>
+                       * Once you have identified the configuration that best suits you, you can proceed by clicking on the "Next Page" button below.  </em> 
                     </p>
 
                     </div>
@@ -138,9 +138,9 @@
                             <button id="stats-btn"  onclick="show_avg()">See statistics</button> 
                         </div>
 
-                        <!--Statistics grid-->
+                        <!--Statistics grid - PEER == TRUE-->
 
-                        <div class="combined-stats visualization-column3"> <!--combined-stats: grid, column3 for position-->
+                        <div class="combined-stats visualization-column3" id="combined-stats"> <!--combined-stats: grid, column3 for position-->
                             <!--yearly cost-->
                             <div class="upper-text-1 sub-stats-upper-txt-cost">
                             <strong>Yearly energy cost for running the {{data.appliance}}:</strong>
@@ -163,7 +163,7 @@
                                 <div class="loader" id="loader"></div>
                             </div>
 
-                            <div class="stats-avg-1 sub-stats-container">
+                            <div class="stats-avg stats-avg-1 sub-stats-container">
                                 <div class="smaller" style="margin-top: 12px;">For an average household</div>
                                 <div class="combined-stats-nbr-avg" id="stats-nbr-avg-cost">  
                                     ? 
@@ -193,7 +193,7 @@
                                 <div class="loader" id="loader"></div>
                             </div>
 
-                            <div class="stats-avg-2 sub-stats-container">
+                            <div class="stats-avg stats-avg-2 sub-stats-container">
                                 <div class="smaller" style="margin-top: 12px;">Average household</div>
                                 <div class="combined-stats-nbr-avg" id="stats-nbr-avg-peak">  
                                     ? 
@@ -223,7 +223,7 @@
                                 <div class="loader" id="loader"></div>
                             </div>
 
-                            <div class="stats-avg-3 sub-stats-container">
+                            <div class="stats-avg stats-avg-3 sub-stats-container">
                                 <div class="smaller" style="margin-top: 12px;">For an average household</div>
                                 <div class="combined-stats-nbr-avg" id="stats-nbr-avg-share">  
                                     ? 
@@ -231,11 +231,14 @@
                                 <div class="small-txt"></div>
                             </div>
                         </div>
+
+                        
+
                     </div>
                     
                     <div style="clear:both">
                         <p style="margin-top: 100px;">
-                            <button class="link-btn" id="link-to-quests">Next page</button> 
+                            <button class="link-btn" id="link-to-quests" disabled>Next page</button> 
                         </p>
                     </div>
                 </div> 
@@ -254,13 +257,21 @@
             document.getElementById("stats-nbr-avg-share").innerText = Math.ceil({{data.avg_res|tojson}}) + " %";
         }  
     </script>
-    <!--script>
-        var element = document.getElementById('avg-stats')
+    <script>    
+        var e1 = document.getElementById('combined-stats')
         var group = {{data.group|tojson}}
         if(group == "TRUE") {
-            element.style.display = 'block'; 
+            e1.style.display = 'grid'; 
         }else if(group == "FALSE") {
-            element.style.display = 'none'; 
+            for(let i=0; i<3; i++) { 
+                document.getElementsByClassName("stats-avg")[i].style.visibility = "hidden"; 
+            }
+            e1.style.gridTemplateColumns = "[v0] 320px [v1] 0px [v2]"
+            e1.style.gridGap = "0px"
+            e1.style.rowGap = "5px"
+            e1.style.marginLeft = "60px";
+            document.getElementById("stats-btn").style.marginLeft = "60px";
         }
-    </script-->
+        
+    </script>
 </body>
