@@ -139,8 +139,10 @@
 		function handleRadioClick() {
 		if (document.getElementById('option-other').checked) {
 			text_box.style.display = 'inline-block';
+			text_box.required = true;
 		} else {
 			text_box.style.display = 'none';
+			text_box.required = false;
 		}
 		}
 	
