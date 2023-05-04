@@ -110,9 +110,9 @@ var legendSpacing = 10;
 var xOffset = 0;
 var yOffset = 10;
 
-var legend_data = [ { Text: "Habitual washing behavior", Color: "#D3D3D3" },
-                    { Text: "New washing behavior", Color: "#69b3a2" },
-                    { Text: "Peak hours", Color: "#f9d4da"}];
+var legend_data = [ { Text: "Gewohnheitsmäßiges Waschverhalten", Color: "#D3D3D3" },
+                    { Text: "Neues Waschverhalten", Color: "#69b3a2" },
+                    { Text: "Spitzenlastzeiten", Color: "#f9d4da"}];
 
 var legend = d3.select('#bar-chart-legend')
                 .append('svg')

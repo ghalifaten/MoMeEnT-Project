@@ -73,17 +73,17 @@
                 <div id="exp1">
                     <div id="text">
                     <p style="margin-bottom: 50px;">
-                        Suppose you have signed a variable-price energy contract. 
-                        Also, although photovoltaic electricity generation is very high, most people consume too much electricity in the afternoon and evening hours increase the risk of blackouts. 
-                        <strong> You can save on your energy bill, reduce emissions from the energy you consume, 
-                        and reduce the risk of blackouts by changing your washing habits</strong>.  
-                        However, you may face some inconvenience. 
+                        Angenommen, Sie haben einen Stromvertrag mit variablen Preisen abgeschlossen. 
+                        Auch wenn die photovoltaische Stromerzeugung sehr hoch ist, verbrauchen die meisten Menschen in den Nachmittags- und Abendstunden zu viel Strom, was das Risiko von Stromausfällen erhöht.  
+                        <strong> Wenn Sie Ihre Abwaschgewohnheiten ändern, können Sie Ihre Energierechnung senken, 
+                        die durch den Energieverbrauch verursachten Kohlenstoffemissionen reduzieren und das Risiko von Stromausfällen verringern.</strong>  
+                        Das kann jedoch zu Unannehmlichkeiten führen. 
                         <br>
-                       <strong> In this situation, what time of day would you run the {{data.appliance}}? </strong> 
+                       <strong> Zu welcher Tageszeit würden Sie in dieser Situation {{data.appliance.5}} laufen lassen? </strong> 
                        <br><br>
-                       <em> * Try to answer as realistically as possible
+                       <em> * Versuchen Sie, so realistisch wie möglich zu antworten.
                         <br>
-                       * Once you have identified the configuration that best suits you, you can proceed by clicking on the "Next Page" button below.  </em> 
+                       * Wenn Sie die für Sie beste Konfiguration gefunden haben, können Sie durch Klicken auf die Schaltfläche "Nächste Seite" fortfahren.</em> 
                     </p>
 
                     </div>
@@ -98,11 +98,11 @@
                             </div>
                             <div class="sliders-section" style="margin-left: -142px;">
                                 <ul class="sliders-labels">
-                                    <li>Always</li>
-                                    <li>Often</li>
-                                    <li>Sometimes</li>
-                                    <li>Rarely</li>
-                                    <li>Never</li>
+                                    <li>Immer</li>
+                                    <li>Oft</li>
+                                    <li>Gelegentlich</li>
+                                    <li>Selten</li>
+                                    <li>Nie</li>
                                 </ul>
                                 <div class="slider-container">
                                     <div class="slider" >
@@ -135,7 +135,7 @@
                         <!--See Statistics Button-->
 
                         <div class="visualization-column2">
-                            <button id="stats-btn"  onclick="show_avg()">See statistics</button> 
+                            <button id="stats-btn"  onclick="show_avg()">Siehe Statistik</button> 
                         </div>
 
                         <!--Statistics grid - PEER == TRUE-->
@@ -143,7 +143,7 @@
                         <div class="combined-stats visualization-column3" id="combined-stats"> <!--combined-stats: grid, column3 for position-->
                             <!--yearly cost-->
                             <div class="upper-text-1 sub-stats-upper-txt-cost">
-                            <strong>Yearly energy cost for running the {{data.appliance}}:</strong>
+                            <strong>Jährliche Energiekosten für den Betrieb {{data.appliance.6}}:</strong>
                             </div>
 
                             <div class="stats-you-1 sub-stats-container sub-stats-grid"> <!--stats-you-1 for grid, sub-stats-container for border sub-stats-grid for old/new val-->
@@ -153,18 +153,18 @@
                                 </div>
                                 <div class="sub-stats-item stats-nbr" id="stats-nbr-you-cost">
                                     <!--Default value-->
-                                    <div class="change smaller">Change</div> <div id="sub-stats-nbr-you-cost">?</div>
+                                    <div class="change smaller">Änderung</div> <div id="sub-stats-nbr-you-cost">?</div>
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you-cost">
-                                    <div class="stats-old-val smaller" >Old value<div id="stats-old-val-cost">{{data.old_cost}} {{data.currency}}</div></div>
-                                    <div class="stats-new-val smaller" >New value<div id="stats-new-val-cost">?</div></div>
+                                    <div class="stats-old-val smaller" >Alter Wert<div id="stats-old-val-cost">{{data.old_cost}} {{data.currency}}</div></div>
+                                    <div class="stats-new-val smaller" >Neuer Wert<div id="stats-new-val-cost">?</div></div>
                                 </div>
                                 <!--Loading Spinner-->
                                 <div class="loader" id="loader"></div>
                             </div>
 
                             <div class="stats-avg stats-avg-1 sub-stats-container">
-                                <div class="smaller" style="margin-top: 12px;">For an average household</div>
+                                <div class="smaller" style="margin-top: 12px;">Für einen durchschnittlichen Haushalt</div>
                                 <div class="combined-stats-nbr-avg" id="stats-nbr-avg-cost">  
                                     ? 
                                 </div>
@@ -173,7 +173,7 @@
 
                             <!--peak hours-->
                             <div class="upper-text-2 sub-stats-upper-txt-peak">
-                            <strong>Percentage of energy consumed during peak hours:</strong>
+                            <strong>Prozentualer Anteil des Energieverbrauchs während der Spitzenzeiten:</strong>
                             </div>
 
                             <div class="stats-you-2 sub-stats-container sub-stats-grid">
@@ -183,18 +183,18 @@
                                 </div>
                                 <div class="sub-stats-item stats-nbr" id="stats-nbr-you-peak">
                                     <!--Default value-->
-                                    <div class="change smaller">Change</div> <div id="sub-stats-nbr-you-peak">?</div>
+                                    <div class="change smaller">Änderung</div> <div id="sub-stats-nbr-you-peak">?</div>
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you-peak">
-                                    <div class="stats-old-val smaller" >Old value<div id="stats-old-val-peak">{{data.old_peak}} %</div></div>
-                                    <div class="stats-new-val smaller" >New value<div id="stats-new-val-peak">?</div></div>
+                                    <div class="stats-old-val smaller" >Alter Wert<div id="stats-old-val-peak">{{data.old_peak}} %</div></div>
+                                    <div class="stats-new-val smaller" >Neuer Wert<div id="stats-new-val-peak">?</div></div>
                                 </div>
                                 <!--Loading Spinner-->
                                 <div class="loader" id="loader"></div>
                             </div>
 
                             <div class="stats-avg stats-avg-2 sub-stats-container">
-                                <div class="smaller" style="margin-top: 12px;">Average household</div>
+                                <div class="smaller" style="margin-top: 12px;">Für einen durchschnittlichen Haushalt</div>
                                 <div class="combined-stats-nbr-avg" id="stats-nbr-avg-peak">  
                                     ? 
                                 </div>
@@ -203,7 +203,7 @@
 
                             <!--res share-->
                             <div class="upper-text-3 sub-stats-upper-txt-pv">
-                                <strong>Percentage of energy consumed from PV:</strong>
+                                <strong>Prozentualer Anteil des Energieverbrauchs aus der Photovoltaikanlage:</strong>
                             </div>
 
                             <div class="stats-you-3 sub-stats-container sub-stats-grid">
@@ -213,18 +213,18 @@
                                 </div>
                                 <div class="sub-stats-item stats-nbr" id="stats-nbr-you-share">
                                     <!--Default value-->
-                                    <div class="change smaller">Change</div> <div id="sub-stats-nbr-you-share">?</div>
+                                    <div class="change smaller">Änderung</div> <div id="sub-stats-nbr-you-share">?</div>
                                 </div>
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you-share">
-                                    <div class="stats-old-val smaller" >Old value<div id="stats-old-val-share">{{data.old_share}} %</div></div>
-                                    <div class="stats-new-val smaller" >New value<div id="stats-new-val-share">?</div></div>
+                                    <div class="stats-old-val smaller" >Alter Wert<div id="stats-old-val-share">{{data.old_share}} %</div></div>
+                                    <div class="stats-new-val smaller" >Neuer Wert<div id="stats-new-val-share">?</div></div>
                                 </div>
                                 <!--Loading Spinner-->
                                 <div class="loader" id="loader"></div>
                             </div>
 
                             <div class="stats-avg stats-avg-3 sub-stats-container">
-                                <div class="smaller" style="margin-top: 12px;">For an average household</div>
+                                <div class="smaller" style="margin-top: 12px;">Für einen durchschnittlichen Haushalt</div>
                                 <div class="combined-stats-nbr-avg" id="stats-nbr-avg-share">  
                                     ? 
                                 </div>
@@ -238,7 +238,7 @@
                     
                     <div style="clear:both">
                         <p style="margin-top: 100px;">
-                            <button class="link-btn" id="link-to-quests" disabled>Next page</button> 
+                            <button class="link-btn" id="link-to-quests" disabled>Nächste Seite</button> 
                         </p>
                     </div>
                 </div> 

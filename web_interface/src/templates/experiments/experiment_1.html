@@ -43,21 +43,21 @@
                 <div id="exp1">
                     <div id="text">
                     <p style="margin-bottom: 30px;">
-                        Suppose you signed up for variable-price energy contract, so there are times of the day when electricity is more expensive and 
-                        others when it is cheaper. 
-                        <strong> You can save on your energy bill</strong>, for example by anticipating or 
-                        waiting for the low price hours to use electricity. 
-                        However, you may face some incovenience. 
+                        Angenommen, Sie haben einen Stromvertrag mit variablen Preisen abgeschlossen, so dass es Tageszeiten gibt, an denen der Strom teurer ist, und andere, an denen er günstiger ist. 
+                         
+                        
+                        <strong> Sie können bei Ihrer Stromrechnung sparen,</strong>, indem Sie z. B. die günstigen Stunden abwarten, um Strom zu verbrauchen. 
+                        Das kann jedoch zu Unannehmlichkeiten führen. 
                         <br>
-                       <strong> In this situation, what time of day would you run the {{data.appliance}}?</strong> 
+                       <strong> Zu welcher Tageszeit würden Sie in dieser Situation {{data.appliance.5}} laufen lassen?</strong> 
                        <br><br>
-                       <em> * Try to answer as realistically as possible
+                       <em> * Versuchen Sie, so realistisch wie möglich zu antworten.
                         <br>
-                       * Electricity price is reported in value relative to night price
+                       * Der Strompreis wird als Wert im Verhältnis zum Nachtpreis angegeben.
                         <br>
-                       * Press the "see statistics" button to estimate the savings you can achieve.
+                       * Klicken Sie auf die Schaltfläche "Siehe Statistik", um die möglichen Einsparungen zu ermitteln.
                        <br>
-                       * Once you have identified the configuration that best suits you, you can proceed by clicking on the "Next Page" button below. </em> 
+                       * Wenn Sie die für Sie am besten geeignete Konfiguration gefunden haben, können Sie durch Klicken auf die Schaltfläche "Nächste Seite" unten fortfahren. </em> 
                     </p>
 
 
@@ -72,11 +72,11 @@
                             </div>
                             <div class="sliders-section" style="margin-left: -142px;">
                                 <ul class="sliders-labels">
-                                    <li>Always</li>
-                                    <li>Often</li>
-                                    <li>Sometimes</li>
-                                    <li>Rarely</li>
-                                    <li>Never</li>
+                                    <li>Immer</li>
+                                    <li>Oft</li>
+                                    <li>Gelegentlich</li>
+                                    <li>Selten</li>
+                                    <li>Nie</li>
                                 </ul>
                                 <div class="slider-container">
                                     <div class="slider" >
@@ -108,22 +108,22 @@
 
 
                         <div class="visualization-column2">
-                            <button id="stats-btn" onclick="show_avg()">See statistics</button> 
+                            <button id="stats-btn" onclick="show_avg()">Siehe Statistik</button> 
                         </div>
 
 
                         <div class="statistics visualization-column3">
 
-                            <div class="sub-stats-upper-txt-cost"><strong>Yearly energy cost for running the {{data.appliance}}:</strong></div> 
+                            <div class="sub-stats-upper-txt-cost"><strong>Jährliche Energiekosten für den Betrieb {{data.appliance.6}}:</strong></div> 
 
                             <div class="sub-stats" id="stats-title">
-                                For you
+                                Für Sie
                             </div>
 
                             <div class="sub-stats-container sub-stats-grid" id="stats-average">
                                 <div class="sub-stats-item stats-txt" id="stats-txt-you" >
-                                    <div class="stats-old-val" id="stats-old-val"><strong><span>Old value</span><br>{{data.old_cost}} {{data.currency}}</strong></div>
-                                    <div class="stats-new-val" id="stats-new-val"><strong><span>New value</span><br>?</strong></div>
+                                    <div class="stats-old-val" id="stats-old-val"><strong><span>Alter Wert</span><br>{{data.old_cost}} {{data.currency}}</strong></div>
+                                    <div class="stats-new-val" id="stats-new-val"><strong><span>Neuer Wert</span><br>?</strong></div>
                                 </div>
 
                                 <div class="sub-stats-item stats-icon" id="stats-icon-you">
@@ -132,7 +132,7 @@
                                 </div>
                                 <div class="sub-stats-item stats-nbr" id="stats-nbr-you">
                                     <!--Default value-->
-                                    <div class="change">Change</div> <div id="sub-stats-nbr-you">?</div>
+                                    <div class="change">Änderung</div> <div id="sub-stats-nbr-you">?</div>
                                 </div>
                                 
                                 <!--Loading Spinner-->
@@ -142,7 +142,7 @@
                                                    
                             <div id="avg-stats">
                                 <div class="sub-stats" id="stats-title">
-                                    For an average household
+                                    Für einen durchschnittlichen Haushalt
                                 </div>
 
                                 <div class="sub-stats-container stats-nbr" id="stats-nbr-avg"> 
@@ -155,7 +155,7 @@
                     
                     <div style="clear:both">
                         <p style="margin-top: 100px;">
-                            <button class="link-btn" id="link-to-quests" disabled>Next page</button> 
+                            <button class="link-btn" id="link-to-quests" disabled>Nächste Seite</button> 
                         </p>
                     </div>
                 </div> 

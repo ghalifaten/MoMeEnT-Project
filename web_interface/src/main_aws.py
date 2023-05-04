@@ -291,9 +291,10 @@ def _index():
     weekly_freq = 2
     #appliance = "DISH_WASHER"
     appliance = "WASHING_MACHINE"
-    country = "CH"
-    #country = "DE"
-    peer = "FALSE"
+    #country = "CH"
+    country = "DE"
+    #peer = "FALSE"
+    peer = "TRUE"
 
     #Choose the price_dict
     if (country == "DE"):

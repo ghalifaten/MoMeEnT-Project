@@ -73,7 +73,7 @@ svg.selectAll("bar")
     .attr("rx", 10)
     .attr("ry", 10)
     .attr("transform", "translate(-75,0)")
-    .attr("class", "new-bar")
+    .attr("class", "new-bar") 
 
 var morningValue   = current_data[0].Value,
     middayValue    = current_data[1].Value,
@@ -94,9 +94,9 @@ var legendSpacing = 10;
 var xOffset = 0;
 var yOffset = 10;
 
-var legend_data = [ { Text: "Habitual washing behavior", Color: "#D3D3D3" },
-                    { Text: "New washing behavior", Color: "#69b3a2" },
-                    { Text: "Electricity price", Color: "rgba(255, 77, 0, 0.719)"} ];
+var legend_data = [ { Text: "Gewohnheitsmäßiges Waschverhalten", Color: "#D3D3D3" },
+                    { Text: "Neues Waschverhalten", Color: "#69b3a2" },
+                    { Text: "Preis der Elektrizität", Color: "rgba(255, 77, 0, 0.719)"} ];
 
 var legend = d3.select('#bar-chart-legend')
                 .append('svg')
