@@ -125,28 +125,32 @@
 			</table>	
 
             <p style="margin-top: 100px;">
-                <input class="link-btn button" type="submit" value="Next page" />
+                <input id="button" class="link-btn button" type="submit" value="Next page" />
             </p>
         </form>
     </div>	
 
 	<script src="{{ url_for('static', filename='js/questions.js')}}"></script>
+
 	<script>
+		//Display text box when option Other is selected
 		const text_box = document.getElementById('option-other-text');
-	
 		function handleRadioClick() {
 		if (document.getElementById('option-other').checked) {
 			text_box.style.display = 'inline-block';
+			text_box.required = true
 		} else {
 			text_box.style.display = 'none';
+			text_box.required = false
 		}
 		}
-	
 		const radioButtons = document.querySelectorAll('input[name="qfb_r1"]');
 		radioButtons.forEach(radio => {
 		radio.addEventListener('click', handleRadioClick);
 		});
-	
+	</script>
+	<script>
+		//remove an option from form if peer is FALSE
 		const peer = {{peer|tojson}}
 		if (peer == "FALSE") {
 			document.getElementById("conditional").remove()

@@ -594,7 +594,7 @@ def questions_final_b():
     return render_template(file_path, peer=peer)
 
 
-@app.route('/conclusion')
+@app.route('/conclusion', methods=['GET','POST'])
 def conclusion():
     final_answers_b = request.args
     session["final_answers_b"] = final_answers_b.to_dict()
