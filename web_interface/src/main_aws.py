@@ -84,7 +84,7 @@ def calculate_params(load):
     cost = np.sum(load * price * unit_conv)
     local_generation = min_profile_from_val_period(RES_dict)
     res_share = np.sum(load * local_generation / np.sum(load))
-    peak_load = np.sum(load[14*60:18*60])/np.sum(load)*100
+    peak_load = np.sum(load[14*60:22*60])/np.sum(load)*100
     return (cost, res_share, peak_load)
 
 def get_load(data):   
@@ -187,7 +187,7 @@ def get_peak_load():
     data = request.get_json()['data']
     load = get_load(data) 
     #claculate peak load
-    peak_load = np.sum(load[14*60:18*60])/np.sum(load)*100
+    peak_load = np.sum(load[14*60:22*60])/np.sum(load)*100
     #send baseline peak load along with new cost
     baseline_peak_load = session["baseline_peak_load"]
     response = {

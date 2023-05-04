@@ -126,8 +126,8 @@ var legendSpacing = 10;
 var xOffset = 0;
 var yOffset = 10;
 
-var legend_data = [ { Text: "Gewohnheitsmäßiges Waschverhalten", Color: "#D3D3D3" },
-                    { Text: "Neues Waschverhalten", Color: "#69b3a2" },
+var legend_data = [ { Text: "Gewohnheitsmäßiges Verhalten", Color: "#D3D3D3" },
+                    { Text: "Neues Verhalten", Color: "#69b3a2" },
                     { Text: "Preis der Elektrizität", Color: "rgba(255, 77, 0, 0.719)"},
                     { Text: "Spitzenlastzeiten", Color: "#f9d4da"},
                     { Text: "Stunden mit erneuerbarer Energie", Color: "#d2f8d2"}];
