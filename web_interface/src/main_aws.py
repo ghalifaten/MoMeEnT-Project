@@ -344,7 +344,7 @@ def index(qualtrics_data):
     except:
         return 'Error in extracting arguments from URL. Either missing or data type not correct.'
 
-        if (country == "DE"):
+    if (country == "DE"):
         price_dict = price_dict_DE
         session["currency"] = "€"
     elif (country == "CH"):
