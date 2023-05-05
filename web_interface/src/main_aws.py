@@ -344,12 +344,14 @@ def index(qualtrics_data):
     except:
         return 'Error in extracting arguments from URL. Either missing or data type not correct.'
 
-    if (country == "DE"):
-        session["price_dict"] = price_dict_DE
+        if (country == "DE"):
+        price_dict = price_dict_DE
         session["currency"] = "€"
     elif (country == "CH"):
-        session["price_dict"] = price_dict_CH
+        price_dict = price_dict_CH
         session["currency"] = "CHF"
+
+    session["price_dict"] = price_dict
 
     #Adapt hh_size and hh_type to the values available in the csv file
     if hh_size > 5:
