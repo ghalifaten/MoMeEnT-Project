@@ -56,7 +56,7 @@
                     <td><input type="radio" name="q3b_r1_2" value="3"></td>
                     <td><input type="radio" name="q3b_r1_2" value="4"></td>
                     </tr>
-                <tr>
+                <tr id="q3b_r1_3">
                     <td >Den Wäschetrockner nur dann zu benutzen, wenn mehr Strom aus erneuerbaren Energien verfügbar ist</td>
                     <td><input type="radio" name="q3b_r1_3" value="0"></td> 
                     <td><input type="radio" name="q3b_r1_3" value="1"></td>
@@ -74,5 +74,11 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/questions.js')}}"></script>
-
+    <script>
+        var drying = {{data.drying|tojson}}
+        if (drying == "FALSE") {
+          document.getElementById("q3b_r1_3").remove()
+        }
+    </script>
+    
 </body>

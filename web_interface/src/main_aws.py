@@ -295,6 +295,7 @@ def _index():
     country = "DE"
     #peer = "FALSE"
     peer = "TRUE"
+    drying = "FALSE"
 
     #Choose the price_dict
     if (country == "DE"):
@@ -325,6 +326,7 @@ def _index():
     session["avg_cost"] = avg_cost
     session["avg_peak"] = avg_peak
     session["avg_res"] = avg_res
+    session["drying"] = drying
     
     return render_template("index.html")
 #------------------------------------------
@@ -353,6 +355,7 @@ def index(qualtrics_data):
         programGentle = int(request.args.get('programGentle')) - 1
         programQuickLow = int(request.args.get('programQuickLow')) - 1
         programQuickHigh = int(request.args.get('programQuickHigh')) - 1
+        drying = request.args.get('drying')
 
     except:
         return 'Error in extracting arguments from URL. Either missing or data type not correct.'
@@ -433,6 +436,7 @@ def index(qualtrics_data):
     session["avg_cost"] = avg_cost
     session["avg_peak"] = avg_peak
     session["avg_res"] = avg_res
+    session["drying"] = drying
 
     return render_template("index.html")
 
@@ -446,8 +450,12 @@ def experiment_0():
 @app.route('/questions_0', methods=['GET','POST'])
 def questions_0():
     appliance = session["appliance"]
+    drying = session["drying"]
     file_path = "questions/{app}/questions_0.html".format(app=appliance)
-    return render_template(file_path)
+    data = {
+        "drying": drying
+    }
+    return render_template(file_path, data=data)
 
 
 @app.route('/tutorial')
@@ -491,8 +499,12 @@ def questions_1b():
     q1a_answers = request.args
     session["q1a_answers"] = q1a_answers.to_dict()
     appliance = session["appliance"]
+    drying = session["drying"]
     file_path = "questions/{app}/questions_1b.html".format(app=appliance)
-    return render_template(file_path)
+    data = {
+        "drying": drying
+    }
+    return render_template(file_path, data=data)
 
 
 @app.route('/experiment_2')
@@ -526,8 +538,12 @@ def questions_2b():
     q2a_answers = request.args
     session["q2a_answers"] = q2a_answers.to_dict()
     appliance = session["appliance"]
+    drying = session["drying"]
     file_path = "questions/{app}/questions_2b.html".format(app=appliance)
-    return render_template(file_path)
+    data = {
+        "drying": drying
+    }
+    return render_template(file_path, data=data)
 
 
 @app.route('/experiment_3')
@@ -560,8 +576,12 @@ def questions_3b():
     q3a_answers = request.args
     session["q3a_answers"] = q3a_answers.to_dict()
     appliance = session["appliance"]
+    drying = session["drying"]
     file_path = "questions/{app}/questions_3b.html".format(app=appliance)
-    return render_template(file_path)
+    data = {
+        "drying": drying
+    }
+    return render_template(file_path, data=data)
 
 
 @app.route('/experiment_4')
