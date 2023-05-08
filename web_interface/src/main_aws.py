@@ -295,11 +295,7 @@ def _index():
     country = "DE"
     #peer = "FALSE"
     peer = "TRUE"
-<<<<<<< HEAD
-    drying = "FALSE"
-=======
     drying = "TRUE"
->>>>>>> b4cb281 (implement new arg drying)
 
     #Choose the price_dict
     if (country == "DE"):
