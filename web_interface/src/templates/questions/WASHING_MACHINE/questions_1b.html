@@ -79,7 +79,7 @@
                     <td><input type="radio" name="q1b_r1_5" value="3"></td>
                     <td><input type="radio" name="q1b_r1_5" value="4"></td>
                     </tr>
-                <tr>
+                <tr id="q1b_r1_6">
                     <td >To avoid drying with tumble dryer during high price periods.</td>
                     <td><input type="radio" name="q1b_r1_6" value="0"></td> 
                     <td><input type="radio" name="q1b_r1_6" value="1"></td>
@@ -96,5 +96,11 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/questions.js')}}"></script>
-
+    <script>
+        var drying = {{data.drying|tojson}}
+        if (drying == "FALSE") {
+          document.getElementById("q1b_r1_5").remove()
+          document.getElementById("q1b_r1_6").remove()
+        }
+      </script>
 </body>

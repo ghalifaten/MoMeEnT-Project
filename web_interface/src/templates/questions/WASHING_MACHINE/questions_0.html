@@ -112,7 +112,7 @@
                     <td><input type="radio" name="q0_r1_8" value="4"></td>
                     <td><input type="radio" name="q0_r1_8" value="99"></td>
                   </tr>
-                  <tr>
+                  <tr id="q0_r1_9">
                     <td >when I/we have time to unload afterwards</td>
                     <td><input type="radio" name="q0_r1_9" value="0"></td> 
                     <td><input type="radio" name="q0_r1_9" value="1"></td>
@@ -121,7 +121,7 @@
                     <td><input type="radio" name="q0_r1_9" value="4"></td>
                     <td><input type="radio" name="q0_r1_9" value="99"></td>
                   </tr>
-                  <tr>
+                  <tr id="q0_r1_10">
                     <td >when it is sunny, warm or windy (e.g., because drying is faster)</td>  
                     <td><input type="radio" name="q0_r1_10" value="0"></td>  
                     <td><input type="radio" name="q0_r1_10" value="1"></td>
@@ -139,5 +139,12 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/questions.js')}}"></script>
+    <script>
+      var drying = {{data.drying|tojson}}
+      if (drying == "FALSE") {
+        document.getElementById("q0_r1_9").remove()
+        document.getElementById("q0_r1_10").remove()
+      }
+    </script>
     
 </body>
