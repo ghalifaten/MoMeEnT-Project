@@ -261,7 +261,7 @@ d3.select("#stats-btn").on("click", function(d){
                 const diff_peak = peak - response.baseline_peak_load;
             
                 //update stats-you 
-                document.getElementById("stats-new-val").innerHTML = "<strong>New share <br>" + peak + " %</strong>" 
+                document.getElementById("stats-new-val").innerHTML = "<strong>Neuer Wert <br>" + peak + " %</strong>" 
                 document.getElementById("stats-old-val").hidden = false; 
                 document.getElementById("stats-new-val").hidden = false;
 

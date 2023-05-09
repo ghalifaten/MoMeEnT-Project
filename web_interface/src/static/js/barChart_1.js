@@ -294,7 +294,7 @@ d3.select("#stats-btn").on("click", function(d){
                 const diff_cost = cost - response.baseline_cost;
 
                 //update stats-you 
-                document.getElementById("stats-new-val").innerHTML = "<strong><span>New cost</span><br>" + cost + " " + currency + "</strong>" 
+                document.getElementById("stats-new-val").innerHTML = "<strong><span>Neuer Wert</span><br>" + cost + " " + currency + "</strong>" 
                 document.getElementById("stats-old-val").hidden = false; 
                 document.getElementById("stats-new-val").hidden = false;
 

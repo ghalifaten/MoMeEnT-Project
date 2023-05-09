@@ -277,7 +277,7 @@ d3.select("#stats-btn").on("click", function(d){
                 const diff_share = res_share - response.baseline_res_share;
             
                 //update stats-you 
-                document.getElementById("stats-new-val").innerHTML = "<strong>New share<br>" + res_share + " %</strong>" 
+                document.getElementById("stats-new-val").innerHTML = "<strong>Neuer Wert<br>" + res_share + " %</strong>" 
                 document.getElementById("stats-old-val").hidden = false; 
                 document.getElementById("stats-new-val").hidden = false;
 
