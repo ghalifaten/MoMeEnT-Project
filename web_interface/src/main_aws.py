@@ -266,8 +266,9 @@ def format_app(appliance):
             2: "zu wasch",
             3: "Waschgewohnheiten",
             4: "die Waschmaschine",
-            5: "den Waschmaschine",
-            6: "der Waschmaschine"
+            5: "die Waschmaschine",
+            6: "der Waschmaschine",
+            7: "die Waschmaschine"
         }
     elif appliance == "DISH_WASHER":
         return {
@@ -276,7 +277,8 @@ def format_app(appliance):
             3: "Abwaschgewohnheiten",
             4: "der Geschirrspüler",
             5: "den Geschirrspüler",
-            6: "des Geschirrspülers"
+            6: "des Geschirrspülers",
+            7: "den Geschirrspüler"
         }
 
 #---- ROUTES ----#
