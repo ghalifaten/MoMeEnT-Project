@@ -51,21 +51,21 @@ price_dict = {}
 price_dict_DE = {'Morgens':0.467,
               'Mittags':0.334, 
               'Nachmittags':0.346, 
-              'Abend':0.512,
-              'Nacht':0.375
+              'Abends':0.512,
+              'Nachts':0.375
               }
 price_dict_CH = {'Morgens':0.310,
               'Mittags':0.222, 
               'Nachmittags':0.229, 
-              'Abend':0.340,
-              'Nacht':0.249
+              'Abends':0.340,
+              'Nachts':0.249
               }
 
 RES_dict = {'Morgens':47.8,
               'Mittags':69.9, 
               'Nachmittags':33.3, 
-              'Abend':0,
-              'Nacht':0
+              'Abends':0,
+              'Nachts':0
               }
 
 #---- FUNCTIONS AND POST METHODS----#
@@ -74,7 +74,7 @@ def process_data(data):
     for d in data:
         key = d["Period"].split()[0] #remove the additional information of time between ()
         value = d["Value"]
-        values_dict[key] = int(value) #values_dict has the format: {'Morgens': 0, 'Mittags': 1, 'Nachmittags': 2, 'Abend': 3, 'Nacht': 4}
+        values_dict[key] = int(value) #values_dict has the format: {'Morgens': 0, 'Mittags': 1, 'Nachmittags': 2, 'Abends': 3, 'Nachts': 4}
     return values_dict
 
 def calculate_params(load):
@@ -114,22 +114,22 @@ def get_load(data):
     return response['load']
 
 def generate_profile(values_dict):
-    raw_profile = np.asarray([values_dict['Nacht']] * 6 * 6 + \
+    raw_profile = np.asarray([values_dict['Nachts']] * 6 * 6 + \
                              [values_dict['Morgens']] * 4 * 6 + \
                              [values_dict['Mittags']] * 4 * 6 + \
                              [values_dict['Nachmittags']] * 4 * 6 + \
-                             [values_dict['Abend']] * 4 * 6 + \
-                             [values_dict['Nacht']] * 2 * 6
+                             [values_dict['Abends']] * 4 * 6 + \
+                             [values_dict['Nachts']] * 2 * 6
                             )
     return raw_profile 
 
 def min_profile_from_val_period(period_dict):
-    profile = np.asarray([period_dict['Nacht']] * 6 * 60 + \
+    profile = np.asarray([period_dict['Nachts']] * 6 * 60 + \
                         [period_dict['Morgens']] * 4 * 60 + \
                         [period_dict['Mittags']] * 4 * 60+ \
                         [period_dict['Nachmittags']] * 4 * 60+ \
-                        [period_dict['Abend']] * 4 * 60+ \
-                        [period_dict['Nacht']] * 2 * 60
+                        [period_dict['Abends']] * 4 * 60+ \
+                        [period_dict['Nachts']] * 2 * 60
                         )
     return profile
 

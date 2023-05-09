@@ -24,8 +24,8 @@ var morningValue = 0, middayValue = 0, afternoonValue = 0, eveningValue = 0, nig
 var data = [{ Period: "Morgens 06:00-09:59", Value: "0" },
             { Period: "Mittags 10:00-13:59", Value: "0" },
             { Period: "Nachmittags 14:00-17:59", Value: "0" },
-            { Period: "Abend 18:00-21:59", Value: "0" },
-            { Period: "Nacht 22:00-05:59", Value: "0" }];
+            { Period: "Abends 18:00-21:59", Value: "0" },
+            { Period: "Nachts 22:00-05:59", Value: "0" }];
 
 // Add X axis
 var x = d3.scaleBand()
