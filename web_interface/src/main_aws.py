@@ -141,6 +141,7 @@ def get_baseline_values():
     load = get_load(data) 
     #claculate (baseline) cost, share, and peak
     (cost, res_share, peak_load) = calculate_params(load)
+    session["baseline_frequencies"] = data
     session["baseline_cost"] = cost
     session["baseline_peak_load"] = peak_load
     session["baseline_res_share"] = res_share
@@ -171,6 +172,7 @@ def get_cost():
         }
     #save first trial
     if (session["trial"] == 0):
+        session["sc1_freq_first"] = data
         session["sc1_cost_first"] = cost
         session["trial"] += 1
     
@@ -178,6 +180,7 @@ def get_cost():
     #Note that the cost for final trial is based on the very last changes before clicking on "Next page"
     #even if the user doesn't visualize statistics of those changes
     if (request.get_json()["trial"] == "FINAL"):
+        session["sc1_freq_final"] = data
         session["sc1_cost_final"] = cost
     return jsonify(response)
 
@@ -196,10 +199,12 @@ def get_peak_load():
         }
     #save first trial
     if (session["trial"] == 0):
+        session["sc2_freq_first"] = data
         session["sc2_peak_load_first"] = peak_load
         session["trial"] += 1
     #Save last trial in session upon clicking on next page, to then save it in DB
     if (request.get_json()["trial"] == "FINAL"):
+        session["sc2_freq_final"] = data
         session["sc2_peak_load_final"] = peak_load
     return jsonify(response)
 
@@ -219,10 +224,12 @@ def get_res_share():
         }
     #save first trial
     if (session["trial"] == 0):
+        session["sc3_freq_first"] = data
         session["sc3_res_share_first"] = res_share
         session["trial"] += 1
     #Save last trial in session upon clicking on next page, to then save it in DB
     if (request.get_json()["trial"] == "FINAL"):
+        session["sc3_freq_final"] = data
         session["sc3_res_share_final"] = res_share
     return jsonify(response)
 
@@ -248,12 +255,14 @@ def get_3_values():
         }
     #save first trial
     if (session["trial"] == 0):
+        session["sc4_freq_first"] = data
         session["sc4_first"] = {"cost": cost,
                                 "peak_load": peak_load,
                                 "res_share": res_share}
         session["trial"] += 1
     #Save last trial in session upon clicking on next page, to then save it in DB
     if (request.get_json()["trial"] == "FINAL"):
+        session["sc4_freq_final"] = data
         session["sc4_final"] = {"cost": cost,
                                 "peak_load": peak_load,
                                 "res_share": res_share}
@@ -291,8 +300,8 @@ def _index():
     hh_size = 1
     hh_type = 1
     weekly_freq = 2
-    #appliance = "DISH_WASHER"
-    appliance = "WASHING_MACHINE"
+    appliance = "DISH_WASHER"
+    #appliance = "WASHING_MACHINE"
     #country = "CH"
     country = "DE"
     #peer = "FALSE"
@@ -462,15 +471,15 @@ def questions_0():
 
 @app.route('/tutorial')
 def tutorial():
+    #retrieve answers to questions_0 here
+    q0_answers = request.args
+    session["q0_answers"] = q0_answers.to_dict()
     return render_template("tutorial.html")
 
 
 @app.route('/experiment_1')
 def experiment_1():
     session["trial"] = 0
-    #retrieve answers to questions_0 here
-    q0_answers = request.args
-    session["q0_answers"] = q0_answers.to_dict()
 
     appliance = session["appliance"]
     peer = session["peer"]
@@ -648,20 +657,32 @@ def conclusion():
         "hh_size": session["hh_size"],
         "hh_type": session["hh_type"],
         "weekly_freq": session["weekly_freq"],
+
         "baseline_cost": session["baseline_cost"],
         "baseline_peak_load": session["baseline_peak_load"],
         "baseline_res_share": session["baseline_res_share"],
+        "baseline_frequencies": session["baseline_frequencies"],
 
         "sc1_cost_first": session["sc1_cost_first"],
-        "sc2_peak_load_first": session["sc2_peak_load_first"],
-        "sc3_res_share_first": session["sc3_res_share_first"],
-        "sc4_first": session["sc4_first"],
-
+        "sc1_freq_first": session["sc1_freq_first"],
         "sc1_cost_final": session["sc1_cost_final"],
-        "sc2_peak_load_final": session["sc2_peak_load_final"],
-        "sc3_res_share_final": session["sc3_res_share_final"],
-        "sc4_final": session["sc4_final"],
+        "sc1_freq_final": session["sc1_freq_final"],
 
+        "sc2_peak_load_first": session["sc2_peak_load_first"],
+        "sc2_freq_first": session["sc2_freq_first"],
+        "sc2_peak_load_final": session["sc2_peak_load_final"],
+        "sc2_freq_final": session["sc2_freq_final"],
+
+        "sc3_res_share_first": session["sc3_res_share_first"],
+        "sc3_freq_first": session["sc3_freq_first"],
+        "sc3_res_share_final": session["sc3_res_share_final"],
+        "sc3_freq_final": session["sc3_freq_final"],
+
+        "sc4_first": session["sc4_first"],
+        "sc4_freq_first": session["sc4_freq_first"],
+        "sc4_final": session["sc4_final"],
+        "sc4_freq_final": session["sc4_freq_final"],
+        
         "q0_answers" : session["q0_answers"],
         "q1a_answers" : session["q1a_answers"],
         "q1b_answers" : session["q1b_answers"],
@@ -669,8 +690,8 @@ def conclusion():
         "q2b_answers" : session["q2b_answers"],
         "q3a_answers" : session["q3a_answers"],
         "q3b_answers" : session["q3b_answers"],
-        "final_answers_a" : session["final_answers_a"],
-        "final_answers_b" : session["final_answers_b"]
+        "qfa_answers" : session["final_answers_a"],
+        "qfb_answers" : session["final_answers_b"]
     }
     item = json.loads(json.dumps(item), parse_float=Decimal)
     table.put_item(Item=item)
