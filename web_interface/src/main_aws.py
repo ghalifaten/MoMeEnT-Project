@@ -91,21 +91,6 @@ def get_load(data):
     usage_patterns = session["usage_patterns"]
     usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
     #invoke lambda function to calculate load
-    print("****************************************************************")
-    print()
-    print("n_residents = ", n_residents)
-    print()
-
-    print()
-    print("household_type = ", household_type)
-    print()
-
-    print()
-    print("usage_patterns = ", usage_patterns)
-    print()
-
-    print("****************************************************************")
-
     payload = {
         "n_residents": n_residents, 
         "household_type": household_type, 
@@ -167,17 +152,11 @@ def get_baseline_values():
 def get_cost():
     data = request.get_json()['data']
     load = get_load(data) 
-    print()
-    print("load = ", load)
-    print()
     #claculate cost
     price_dict = session["price_dict"]
     price = min_profile_from_val_period(price_dict)
     unit_conv = 1 / 60 / 1000 * 365.25 
     cost = np.sum(load * price * unit_conv)
-    print()
-    print("cost = ", cost)
-    print()
 
     #send baseline cost along with new cost
     baseline_cost = session["baseline_cost"]
