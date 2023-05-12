@@ -31,13 +31,6 @@ app.secret_key = conf.flask_secret_key
 
 #---- INITIALIZE VARIABLES ----#
 n_households = 1000
-usage_patterns = {'target_cycles':{'DISH_WASHER':251,
-                                    'WASHING_MACHINE':100},
-                  'day_prob_profiles':{'DISH_WASHER':(np.ones(24)).tolist(),  
-                                       'WASHING_MACHINE':(np.ones(24)).tolist()
-                                       },
-                    'energy_cycle': {'DISH_WASHER': 1, 'WASHING_MACHINE':1}
-                }
 
 df = pd.read_csv(dir_path+"/static/data/vals_peer_comparison.csv")
 
@@ -95,8 +88,24 @@ def get_load(data):
     #generate profile and update usage_patterns
     values_dict = process_data(data)
     profile = generate_profile(values_dict) #ndarray(1000,24)
+    usage_patterns = session["usage_patterns"]
     usage_patterns["day_prob_profiles"][appliance] = profile.tolist()
     #invoke lambda function to calculate load
+    print("****************************************************************")
+    print()
+    print("n_residents = ", n_residents)
+    print()
+
+    print()
+    print("household_type = ", household_type)
+    print()
+
+    print()
+    print("usage_patterns = ", usage_patterns)
+    print()
+
+    print("****************************************************************")
+
     payload = {
         "n_residents": n_residents, 
         "household_type": household_type, 
@@ -158,11 +167,18 @@ def get_baseline_values():
 def get_cost():
     data = request.get_json()['data']
     load = get_load(data) 
+    print()
+    print("load = ", load)
+    print()
     #claculate cost
     price_dict = session["price_dict"]
     price = min_profile_from_val_period(price_dict)
     unit_conv = 1 / 60 / 1000 * 365.25 
     cost = np.sum(load * price * unit_conv)
+    print()
+    print("cost = ", cost)
+    print()
+
     #send baseline cost along with new cost
     baseline_cost = session["baseline_cost"]
     response = {
@@ -291,56 +307,6 @@ def format_app(appliance):
         }
 
 #---- ROUTES ----#
-###---- TEMPORARY MAIN
-@app.route('/') 
-def _index():
-    #Default args
-    m = "1"
-    ID = "__test"
-    hh_size = 1
-    hh_type = 1
-    weekly_freq = 2
-    appliance = "DISH_WASHER"
-    #appliance = "WASHING_MACHINE"
-    #country = "CH"
-    country = "DE"
-    #peer = "FALSE"
-    peer = "TRUE"
-    drying = "TRUE"
-
-    #Choose the price_dict
-    if (country == "DE"):
-        price_dict = price_dict_DE
-        session["currency"] = "€"
-    elif (country == "CH"):
-        price_dict = price_dict_CH
-        session["currency"] = "CHF"
-
-    session["price_dict"] = price_dict
-
-    record = df.loc[(df['appliance'] == appliance) & (df['country'] == country) & (df['n_residents'] == hh_size) & (df['household_type'] == hh_type)]
-    avg_cost = record['cost'].values[0]
-    avg_peak = record['peak'].values[0]
-    avg_res = record['RES'].values[0]
-
-    usage_patterns['target_cycles'][appliance] = weekly_freq * 52
-
-    session["ID"] = ID
-    session["m_field"] = m
-    session["country"] = country
-    session["hh_size"] = hh_size
-    session["hh_type"] = hh_type
-    session["n_households"] = n_households
-    session["appliance"] = appliance
-    session["peer"] = peer
-    session["weekly_freq"] = weekly_freq
-    session["avg_cost"] = avg_cost
-    session["avg_peak"] = avg_peak
-    session["avg_res"] = avg_res
-    session["drying"] = drying
-    
-    return render_template("index.html")
-#------------------------------------------
 # ORIGINAL MAIN
 @app.route('/<qualtrics_data>')
 def index(qualtrics_data):
@@ -370,6 +336,14 @@ def index(qualtrics_data):
 
     except:
         return 'Error in extracting arguments from URL. Either missing or data type not correct.'
+    
+    usage_patterns = {'target_cycles':{'DISH_WASHER':251,
+                                    'WASHING_MACHINE':100},
+                  'day_prob_profiles':{'DISH_WASHER':(np.ones(24)).tolist(),  
+                                       'WASHING_MACHINE':(np.ones(24)).tolist()
+                                       },
+                    'energy_cycle': {'DISH_WASHER': 1, 'WASHING_MACHINE':1}
+                }
 
     if (country == "DE"):
         price_dict = price_dict_DE
@@ -449,6 +423,7 @@ def index(qualtrics_data):
     session["avg_res"] = avg_res
     session["drying"] = drying
 
+    session["usage_patterns"] = usage_patterns
     return render_template("index.html")
 
 
