@@ -289,6 +289,9 @@ def format_app(appliance):
 # ORIGINAL MAIN
 @app.route('/<qualtrics_data>')
 def index(qualtrics_data):
+    print("This is session")
+    print(session)
+
     try:
         #All args are of type str, change type here if needed.
         appliance = request.args.get('appliance')
@@ -596,6 +599,7 @@ def questions_final_b():
 
 @app.route('/conclusion')
 def conclusion():
+    print("THIS IS CONCLUSION")
     final_answers_b = request.args
     session["final_answers_b"] = final_answers_b.to_dict()
     m_field = session["m_field"]
@@ -654,6 +658,8 @@ def conclusion():
         "m_field": m_field,
         "country": country
     }
+
+
     return render_template("conclusion.html", data=data)
 
 
