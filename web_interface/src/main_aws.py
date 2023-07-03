@@ -22,11 +22,6 @@ client = boto3.client('lambda',
                         aws_access_key_id=conf.aws_access_key_id,
                         aws_secret_access_key=conf.aws_secret_access_key)
 
-dynamodb = boto3.resource('dynamodb', 
-                        region_name= conf.region,
-                        aws_access_key_id=conf.aws_access_key_id,
-                        aws_secret_access_key=conf.aws_secret_access_key)
-
 app = Flask(__name__, template_folder='templates')
 app.secret_key = app.secret_key = conf.flask_secret_key
 
@@ -42,11 +37,6 @@ usage_patterns = {'target_cycles':{'DISH_WASHER':251,
                 }
 
 df = pd.read_csv(dir_path+"/static/data/vals_peer_comparison.csv")
-
-#TODO should be read from the csv file 
-#map the values to the [0-4] range (?)         
-#or add another axis on the bar_chart     
-# TODO to be removed generic price_dict
 
 price_dict = {}
 
@@ -154,7 +144,7 @@ def get_baseline_values():
     }
     return jsonify(response)
 
-
+#TODO remove useless variables from session (first and last trial etc ...)
 @app.route('/get-cost', methods=['POST'])
 def get_cost():
     data = request.get_json()['data']
@@ -268,19 +258,20 @@ def format_app(appliance):
         return "dish washer"
 
 #---- ROUTES ----#
-###---- TEMPORARY MAIN
 @app.route('/') 
 def _index():
     #Default args
-    m = "1"
-    ID = "__test"
+    #TODO remove
+    #m = "1"
+    #ID = "__test"
     hh_size = 1
     hh_type = 1
     weekly_freq = 2
     #appliance = "DISH_WASHER"
     appliance = "WASHING_MACHINE"
-    country = "CH"
-    #country = "DE"
+    #country = "CH"
+    country = "DE"
+
     peer = "FALSE"
     drying = "FALSE"
 
@@ -301,8 +292,6 @@ def _index():
 
     usage_patterns['target_cycles'][appliance] = weekly_freq * 52
 
-    session["ID"] = ID
-    session["m_field"] = m
     session["country"] = country
     session["hh_size"] = hh_size
     session["hh_type"] = hh_type
@@ -317,7 +306,8 @@ def _index():
     
     return render_template("index.html", appliance=format_app(appliance))
 #------------------------------------------
-# ORIGINAL MAIN
+#TODO remove this main route
+"""
 @app.route('/<qualtrics_data>')
 def index(qualtrics_data):
     try:
@@ -426,7 +416,7 @@ def index(qualtrics_data):
     session["drying"] = drying
 
     return render_template("index.html", appliance=format_app(appliance))
-
+"""
 
 @app.route('/experiment_0')
 def experiment_0():
@@ -623,42 +613,6 @@ def conclusion():
     m_field = session["m_field"]
     appliance = session["appliance"]
     country = session["country"]
-    #choose table depending on appliance
-    table = dynamodb.Table("MomeentData-"+appliance) 
-    #Save inputs in DB
-    item = {
-        "m": m_field,
-        "ResponseID": session["ID"],
-        "country": session["country"],
-        "hh_size": session["hh_size"],
-        "hh_type": session["hh_type"],
-        "weekly_freq": session["weekly_freq"],
-        "baseline_cost": session["baseline_cost"],
-        "baseline_peak_load": session["baseline_peak_load"],
-        "baseline_res_share": session["baseline_res_share"],
-
-        "sc1_cost_first": session["sc1_cost_first"],
-        "sc2_peak_load_first": session["sc2_peak_load_first"],
-        "sc3_res_share_first": session["sc3_res_share_first"],
-        "sc4_first": session["sc4_first"],
-
-        "sc1_cost_final": session["sc1_cost_final"],
-        "sc2_peak_load_final": session["sc2_peak_load_final"],
-        "sc3_res_share_final": session["sc3_res_share_final"],
-        "sc4_final": session["sc4_final"],
-
-        "q0_answers" : session["q0_answers"],
-        "q1a_answers" : session["q1a_answers"],
-        "q1b_answers" : session["q1b_answers"],
-        "q2a_answers" : session["q2a_answers"],
-        "q2b_answers" : session["q2b_answers"],
-        "q3a_answers" : session["q3a_answers"],
-        "q3b_answers" : session["q3b_answers"],
-        "final_answers_a" : session["final_answers_a"],
-        "final_answers_b" : session["final_answers_b"]
-    }
-    item = json.loads(json.dumps(item), parse_float=Decimal)
-    table.put_item(Item=item)
 
     data = {
         "m_field": m_field,
