@@ -417,12 +417,24 @@ def index(qualtrics_data):
 
     return render_template("index.html", appliance=format_app(appliance))
 """
+@app.route('/socio_demo')
+def socio_demo():
+    return render_template("socio_demo.html")
+
+@app.route('/appliance')
+def appliance():
+    return render_template("appliance.html")
+
+@app.route('/questions__0', methods=['GET','POST'])
+def questions__0():
+    appliance = request.args.get("appliance")
+    file_path = "questions/{app}/questions__0.html".format(app=appliance)
+    return render_template(file_path)
 
 @app.route('/experiment_0')
 def experiment_0():
     appliance = session["appliance"]
     return render_template("experiments/experiment_0.html", appliance=format_app(appliance))
-
 
 @app.route('/questions_0', methods=['GET','POST'])
 def questions_0():
