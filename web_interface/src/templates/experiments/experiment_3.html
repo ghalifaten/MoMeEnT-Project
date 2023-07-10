@@ -17,14 +17,6 @@
 		<!-- css -->
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css')}}">
 
-        <!--Disable Browser Back Button-->
-        <script type="text/javascript">
-            window.history.pushState(null, null, window.location.href);
-            window.onpopstate = function () {
-                window.history.go(1);
-            };
-        </script>
-
         <!--D3.js-->
         <script src="https://d3js.org/d3.v4.js"></script>
 
