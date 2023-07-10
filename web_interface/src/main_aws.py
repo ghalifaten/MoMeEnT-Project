@@ -82,7 +82,6 @@ def calculate_params(load):
 def get_load(data):   
     n_residents = session["hh_size"]
     household_type = session["hh_type"]
-    n_households = session["n_households"]
     appliance = session["appliance"]
     #generate profile and update usage_patterns
     values_dict = process_data(data)
@@ -262,17 +261,9 @@ def format_app(appliance):
 def _index():
     peer = "FALSE"
     drying = "FALSE"
-
-    """
-    session["n_households"] = n_households
-    session["appliance"] = appliance
     session["peer"] = peer
-    session["weekly_freq"] = weekly_freq
-    session["avg_cost"] = avg_cost
-    session["avg_peak"] = avg_peak
-    session["avg_res"] = avg_res
     session["drying"] = drying
-    """
+
     return render_template("index.html", appliance=format_app(appliance))
 
 @app.route('/socio_demo')
@@ -322,12 +313,51 @@ def questions_usage():
     avg_res = record['RES'].values[0]
 
     session["appliance"] = appliance
+    session["hh_size"] = hh_size
+    session["avg_cost"] = avg_cost
+    session["avg_peak"] = avg_peak
+    session["avg_res"] = avg_res
     file_path = "questions/{app}/questions_usage.html".format(app=appliance)
     return render_template(file_path)
 
 @app.route('/experiment_0')
 def experiment_0():
     appliance = session["appliance"]
+
+    if(appliance == "DISH_WASHER"):
+        try:
+            weekly_freq = float(request.args.get('frequency_dishwashing')) 
+            programECO = int(request.args.get('programECO')) - 1
+            programNormal = int(request.args.get('programNormal')) - 1
+            programIntensive = int(request.args.get('programIntensive')) - 1
+            programAuto = int(request.args.get('programAuto')) - 1
+            programGentle = int(request.args.get('programGentle')) - 1
+            programQuickLow = int(request.args.get('programQuickLow')) - 1
+            programQuickHigh = int(request.args.get('programQuickHigh')) - 1
+        except:
+           return 'Error in extracting arguments from URL. Either missing or data type not correct.'
+
+        energy_cycle = (programECO * 0.9 + programNormal * 1.1 + programIntensive * 1.44 + programAuto * 0.93 +\
+                       programGentle * 0.65 + programQuickLow * 0.8 + programQuickHigh * 1.3 ) /\
+                       (programECO + programNormal + programIntensive + programAuto + programGentle * + programQuickLow + programQuickHigh)
+
+    elif(appliance == "WASHING_MACHINE"):
+        try:
+            weekly_freq = float(request.args.get('frequency_laundry'))  
+            program30 = int(request.args.get('program30')) - 1
+            program40 = int(request.args.get('program40')) - 1
+            program60 = int(request.args.get('program60')) - 1
+            program90 = int(request.args.get('program90')) - 1
+        except:
+            return 'Error in extracting arguments from URL. Either missing or data type not correct.'
+
+        avg_temp = (program30 * 30 + program40 * 40 + program60 * 55 + program90 * 90) /\
+                   (program30 + program40 + program60 + program90)
+        energy_cycle = 0.95 + 0.02 * (avg_temp - 60)
+
+    usage_patterns['energy_cycle'][appliance] = energy_cycle
+    usage_patterns['target_cycles'][appliance] = weekly_freq * 52        
+
     return render_template("experiments/experiment_0.html", appliance=format_app(appliance))
 
 @app.route('/questions_0', methods=['GET','POST'])
