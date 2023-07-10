@@ -300,8 +300,8 @@ def appliance():
     }
     return render_template("appliance.html", data=data)
 
-@app.route('/questions__0', methods=['GET','POST'])
-def questions__0():
+@app.route('/questions_usage', methods=['GET','POST'])
+def questions_usage():
     appliance = request.args.get("appliance")
     country = session["country"]
     hh_type = int(session["hh_type"])
@@ -322,7 +322,7 @@ def questions__0():
     avg_res = record['RES'].values[0]
 
     session["appliance"] = appliance
-    file_path = "questions/{app}/questions__0.html".format(app=appliance)
+    file_path = "questions/{app}/questions_usage.html".format(app=appliance)
     return render_template(file_path)
 
 @app.route('/experiment_0')
