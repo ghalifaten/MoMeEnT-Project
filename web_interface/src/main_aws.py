@@ -259,7 +259,7 @@ def format_app(appliance):
 #---- ROUTES ----#
 @app.route('/') 
 def _index():
-    peer = "FALSE"
+    peer = "TRUE"
     drying = "FALSE"
     session["peer"] = peer
     session["drying"] = drying
@@ -379,10 +379,6 @@ def tutorial():
 @app.route('/experiment_1')
 def experiment_1():
     session["trial"] = 0
-    #retrieve answers to questions_0 here
-    q0_answers = request.args
-    session["q0_answers"] = q0_answers.to_dict()
-
     appliance = session["appliance"]
     peer = session["peer"]
 
@@ -409,8 +405,6 @@ def questions_1a():
 
 @app.route('/questions_1b', methods=['GET','POST'])
 def questions_1b():
-    q1a_answers = request.args
-    session["q1a_answers"] = q1a_answers.to_dict()
     appliance = session["appliance"]
     drying = session["drying"]
     file_path = "questions/{app}/questions_1b.html".format(app=appliance)
@@ -423,8 +417,6 @@ def questions_1b():
 @app.route('/experiment_2')
 def experiment_2():
     session["trial"] = 0
-    q1b_answers = request.args
-    session["q1b_answers"] = q1b_answers.to_dict()
     peer = session["peer"]
     appliance = session["appliance"]
     baseline_peak = session["baseline_peak_load"]
@@ -448,8 +440,6 @@ def questions_2a():
 
 @app.route('/questions_2b', methods=['GET','POST'])
 def questions_2b():
-    q2a_answers = request.args
-    session["q2a_answers"] = q2a_answers.to_dict()
     appliance = session["appliance"]
     drying = session["drying"]
     file_path = "questions/{app}/questions_2b.html".format(app=appliance)
@@ -462,8 +452,6 @@ def questions_2b():
 @app.route('/experiment_3')
 def experiment_3():
     session["trial"] = 0
-    q2b_answers = request.args
-    session["q2b_answers"] = q2b_answers.to_dict()
     appliance = session["appliance"] 
     peer = session["peer"]
     baseline_share = session['baseline_res_share']
@@ -486,8 +474,6 @@ def questions_3a():
 
 @app.route('/questions_3b', methods=['GET','POST'])
 def questions_3b():
-    q3a_answers = request.args
-    session["q3a_answers"] = q3a_answers.to_dict()
     appliance = session["appliance"]
     drying = session["drying"]
     file_path = "questions/{app}/questions_3b.html".format(app=appliance)
@@ -500,8 +486,6 @@ def questions_3b():
 @app.route('/experiment_4')
 def experiment_4():       
     session["trial"] = 0 
-    q3b_answers = request.args
-    session["q3b_answers"] = q3b_answers.to_dict()
     appliance = session["appliance"]
     peer = session["peer"]
     baseline_cost = session["baseline_cost"]
@@ -534,8 +518,6 @@ def questions_final_a():
 
 @app.route('/questions_final_b', methods=['GET','POST'])
 def questions_final_b():    
-    final_answers_a = request.args
-    session["final_answers_a"] = final_answers_a.to_dict()
     appliance = session["appliance"]
     peer = session["peer"]
     file_path = "questions/{app}/questions_final_b.html".format(app=appliance)
@@ -544,17 +526,7 @@ def questions_final_b():
 
 @app.route('/conclusion', methods=['GET','POST'])
 def conclusion():
-    final_answers_b = request.args
-    session["final_answers_b"] = final_answers_b.to_dict()
-    m_field = session["m_field"]
-    appliance = session["appliance"]
-    country = session["country"]
-
-    data = {
-        "m_field": m_field,
-        "country": country
-    }
-    return render_template("conclusion.html", data=data)
+    return render_template("conclusion.html")
 
 
 #---- MAIN CALL ----# 

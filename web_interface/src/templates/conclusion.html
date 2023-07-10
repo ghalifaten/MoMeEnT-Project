@@ -38,15 +38,11 @@
 							<p style="text-align: center;"> 
 								We thank you for your time spent taking this survey. 
 								<br> <br>
-								Please press the button at the bottom to proceed and record your answers.
-								<br> <br>
 								If you want to have more information about the project you can contact directly the reference researcher at the following email: 
 								<br> matteo.barsanti@epfl.ch
 							</p>
 						</div>
-						<p>
-							<button class="link-btn" id="scroll-down" onclick="redirect()">Submit</button>
-						</p>
+	
 				</div>
 			</div>
 		</div>
@@ -70,18 +66,6 @@
 		})
 	</script>
 
-	<script>
-		function redirect() {
-			var country = {{data.country|tojson}}
-			var m_field = {{data.m_field|tojson}}
-
-			if (country == "CH") {
-				return location.href='https://survey.maximiles.com/complete?p=103944_d65beba0&m='+m_field
-			}else if (country == "DE") {
-				return location.href='https://survey.maximiles.com/complete?p=103944_9e3b8041&m='+m_field
-			}
-		}
-	</script>
 </body>
 
 </html>
