@@ -7,10 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 		<title>MoMeEnt</title>
-
-		<!--Scrolling page-->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.0/fullpage.min.css" /> 
-  
+		
 		<!-- css -->
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css')}}">
 </head>
@@ -20,7 +17,6 @@
 	<div id="fullPage">
 		<div class="section s1">
 			<div class="title">
-				<!-- <h1 class="main_title">Adaptive-experiment</h1> -->
 
 				<img src="../static/img/EPFL_logo.png" class="img-epfl" alt="tool">
 
@@ -47,27 +43,6 @@
 		</div>
 		
 	</div>	
- 	<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.0/fullpage.min.js"></script>
-	<script>
-		new fullpage('#fullPage',{
-				anchors: ['Title', 'Demo1','Demo2'],
-				autoScrolling : true,
-				navigation : true,
-				slidesNavigation : true,
-				controlArrows : false,
-				scrollingSpeed :1000,
-			navigationTooltips: [
-				"Title",
-				"Tutorial1",
-				"Tutorial2",
-			],
-			afterSlideLoad: function( section, origin, destination, direction){
-			var loadedSlide = this;
-			//load();
-			},
-		})
-	</script>
-
 </body>
 
 </html>
