@@ -228,7 +228,6 @@ def _index():
     drying = "FALSE"
     session["peer"] = peer
     session["drying"] = drying
-
     return render_template("index.html", appliance=format_app(appliance))
 
 @app.route('/socio_demo')
@@ -343,10 +342,8 @@ def tutorial():
 
 @app.route('/experiment_1')
 def experiment_1():
-    session["trial"] = 0
     appliance = session["appliance"]
     peer = session["peer"]
-
     baseline_cost = session["baseline_cost"]
     avg_cost = session["avg_cost"]
     currency = session["currency"]
@@ -381,7 +378,6 @@ def questions_1b():
 
 @app.route('/experiment_2')
 def experiment_2():
-    session["trial"] = 0
     peer = session["peer"]
     appliance = session["appliance"]
     baseline_peak = session["baseline_peak_load"]
@@ -392,7 +388,6 @@ def experiment_2():
         "old_peak": math.trunc(baseline_peak),
         "avg_peak": avg_peak
     }
-
     return render_template("experiments/experiment_2.html", data=data)
 
 
@@ -416,7 +411,6 @@ def questions_2b():
 
 @app.route('/experiment_3')
 def experiment_3():
-    session["trial"] = 0
     appliance = session["appliance"] 
     peer = session["peer"]
     baseline_share = session['baseline_res_share']
@@ -449,8 +443,7 @@ def questions_3b():
 
 
 @app.route('/experiment_4')
-def experiment_4():       
-    session["trial"] = 0 
+def experiment_4():        
     appliance = session["appliance"]
     peer = session["peer"]
     baseline_cost = session["baseline_cost"]
