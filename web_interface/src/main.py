@@ -160,16 +160,6 @@ def get_cost():
         "cost": math.trunc(cost),
         "currency": session["currency"]
         }
-    #save first trial
-    if (session["trial"] == 0):
-        session["sc1_cost_first"] = cost
-        session["trial"] += 1
-    
-    #Save last trial in session upon clicking on next page, to then save it in DB
-    #Note that the cost for final trial is based on the very last changes before clicking on "Next page"
-    #even if the user doesn't visualize statistics of those changes
-    if (request.get_json()["trial"] == "FINAL"):
-        session["sc1_cost_final"] = cost
     return jsonify(response)
 
 
@@ -185,13 +175,6 @@ def get_peak_load():
         "baseline_peak_load": math.trunc(baseline_peak_load), 
         "peak_load": math.trunc(peak_load)
         }
-    #save first trial
-    if (session["trial"] == 0):
-        session["sc2_peak_load_first"] = peak_load
-        session["trial"] += 1
-    #Save last trial in session upon clicking on next page, to then save it in DB
-    if (request.get_json()["trial"] == "FINAL"):
-        session["sc2_peak_load_final"] = peak_load
     return jsonify(response)
 
 
@@ -208,13 +191,6 @@ def get_res_share():
         "baseline_res_share": math.trunc(baseline_res_share), 
         "res_share": math.trunc(res_share)
         }
-    #save first trial
-    if (session["trial"] == 0):
-        session["sc3_res_share_first"] = res_share
-        session["trial"] += 1
-    #Save last trial in session upon clicking on next page, to then save it in DB
-    if (request.get_json()["trial"] == "FINAL"):
-        session["sc3_res_share_final"] = res_share
     return jsonify(response)
 
 
@@ -237,17 +213,6 @@ def get_3_values():
         "res_share": math.trunc(res_share),
         "currency": session["currency"]
         }
-    #save first trial
-    if (session["trial"] == 0):
-        session["sc4_first"] = {"cost": cost,
-                                "peak_load": peak_load,
-                                "res_share": res_share}
-        session["trial"] += 1
-    #Save last trial in session upon clicking on next page, to then save it in DB
-    if (request.get_json()["trial"] == "FINAL"):
-        session["sc4_final"] = {"cost": cost,
-                                "peak_load": peak_load,
-                                "res_share": res_share}
     return jsonify(response)
 
 def format_app(appliance):
